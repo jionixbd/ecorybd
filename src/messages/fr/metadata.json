@@ -1,0 +1,10 @@
+{
+  "title": "AletheiaSpire - Plateforme pour les développeurs en herbe",
+  "description": "Une plateforme complète pour les développeurs en herbe afin d'apprendre, de grandir et de construire leur carrière avec des outils et des ressources de pointe.",
+  "pages": {
+    "home": {
+      "title": "Accueil",
+      "description": "Bienvenue sur AletheiaSpire - Votre plateforme pour la croissance et l'apprentissage des développeurs."
+    }
+  }
+}

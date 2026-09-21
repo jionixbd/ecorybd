@@ -1,0 +1,25 @@
+{
+    "editor.defaultFormatter": "biomejs.biome",
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[snippets]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "js/ts.preferences.importModuleSpecifier": "non-relative",
+    "tailwindCSS.experimental.classRegex": [
+        [
+            "tw=\\{([^}]+)\\}",
+            "'([^']*)'|\"([^\"]*)\"|`([^`]*)`"
+        ],
+        "tw=\"([^\"]*)\"",
+        "tw='([^']*)'",
+        "tw=`([^`]*)`"
+    ]
+}

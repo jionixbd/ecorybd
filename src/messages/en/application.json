@@ -1,0 +1,35 @@
+{
+  "theme": {
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "locale": {
+    "en": "English",
+    "fr": "French",
+    "language": "Language"
+  },
+  "user": {
+    "profile": "Profile"
+  },
+  "organization": {
+    "organization": "Organization",
+    "memberships": "Memberships",
+    "CreateOrganization": "Create Organization"
+  },
+  "account": {
+    "homepage": "Homepage",
+    "signOut": "Sign Out"
+  },
+  "menu": {
+    "home": "Home",
+    "library": "Library",
+    "favorites": "Favorites"
+  },
+  "secondaryMenu": {
+    "settings": "Settings",
+    "help": "Get Help",
+    "search": "Search"
+  }
+}

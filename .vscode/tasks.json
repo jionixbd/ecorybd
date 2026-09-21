@@ -1,0 +1,101 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start All Tasks",
+            "icon": {
+                "id": "issue-reopened"
+            },
+            "dependsOn": [
+                "Start DX (dev)",
+                "Start ngrok (webhook)",
+                "Start Drizzle Studio (dev)",
+                "Start Email (dev)"
+            ],
+            "dependsOrder": "parallel"
+        },
+        {
+            "label": "Start DX (dev)",
+            "type": "npm",
+            "script": "dx",
+            "path": ".",
+            "isBackground": true,
+            "icon": {
+                "id": "globe"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "group": "dev-server"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Start ngrok (webhook)",
+            "type": "shell",
+            "command": "ngrok start webhook",
+            "isBackground": true,
+            "icon": {
+                "id": "debug-connected"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "group": "ngrok"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Start Drizzle Studio (dev)",
+            "type": "npm",
+            "script": "db:studio:dev",
+            "path": ".",
+            "isBackground": true,
+            "icon": {
+                "id": "database"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "group": "drizzle-studio"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Start Email (dev)",
+            "type": "npm",
+            "script": "email",
+            "path": ".",
+            "isBackground": true,
+            "icon": {
+                "id": "mail"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "group": "react-email"
+            },
+            "problemMatcher": []
+        },
+    ]
+}

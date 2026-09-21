@@ -1,0 +1,16 @@
+{
+  "newsletter-confirmation": {
+    "preview": "Veuillez confirmer votre abonnement à {appName}",
+    "title": "Vous y êtes presque !",
+    "description": "Merci de vous être abonné à {appName}.<br></br> Veuillez confirmer votre adresse e-mail pour finaliser votre configuration et activer votre accès.",
+    "confirm": "Confirmer l'abonnement",
+    "confirmDescription": "Si vous n'avez pas demandé cet abonnement, vous pouvez ignorer ce message."
+  },
+  "newsletter-welcome": {
+    "preview": "Bienvenue sur {appName} ! Vous êtes officiellement sur la liste.",
+    "title": "Bienvenue à bord !",
+    "description": "Merci d'avoir confirmé votre abonnement à {appName}. <br></br> Nous sommes ravis de vous compter parmi nous. Vous recevrez nos meilleures analyses directement dans votre boîte de réception.",
+    "action": "Découvrir {appName}",
+    "note": "Vous pouvez mettre à jour vos préférences ou vous désabonner à tout moment via le lien dans le pied de page ci-dessous."
+  }
+}

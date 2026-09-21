@@ -1,0 +1,30 @@
+{
+  "hero": {
+    "badge": "BULLETIN",
+    "appName": "Aletheia'Spire",
+    "motto": "Une plateforme permettant aux développeurs en herbe d'apprendre et de progresser."
+  },
+  "already_subscribed": {
+    "description": "Votre adresse e-mail est déjà active sur notre liste de diffusion. Aucune action supplémentaire n'est requise.",
+    "title": "Déjà abonné",
+    "home": "Accueil"
+  },
+
+  "subscribed": {
+    "description": "Merci d'avoir confirmé votre adresse e-mail. Vous êtes officiellement inscrit sur la liste et recevrez nos dernières actualités directement dans votre boîte de réception.",
+    "title": "Abonnement confirmé !",
+    "home": "Accueil"
+  },
+
+  "unsubscribed": {
+    "description": "Vous avez été retiré de notre liste de diffusion. Nous sommes désolés de vous voir partir !",
+    "title": "Désabonnement réussi",
+    "home": "Accueil"
+  },
+
+  "invalid": {
+    "description": "Ce lien de confirmation est invalide ou a expiré. Veuillez réessayer de soumettre votre adresse e-mail.",
+    "title": "Lien invalide ou expiré",
+    "home": "Accueil"
+  }
+}

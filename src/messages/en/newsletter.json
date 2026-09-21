@@ -1,0 +1,30 @@
+{
+  "hero": {
+    "badge": "NEWSLETTER",
+    "appName": "Aletheia'Spire",
+    "motto": "A platform for aspiring developers to learn and grow."
+  },
+  "already_subscribed": {
+    "description": "Your email address is already active on our newsletter list. No further action is required.",
+    "title": "Already Subscribed",
+    "home": "Home"
+  },
+
+  "subscribed": {
+    "description": "Thank you for confirming your email. You're officially on the list and will receive our latest updates directly to your inbox",
+    "title": "Subscription Confirmed!",
+    "home": "Home"
+  },
+
+  "unsubscribed": {
+    "description": "You have been removed from our newsletter distribution list. We're sorry to see you go!",
+    "title": "Unsubscribed Successfully",
+    "home": "Home"
+  },
+
+  "invalid": {
+    "description": "This confirmation link is invalid or has expired. Please try submitting your email address again.",
+    "title": "Invalid or Expired Link",
+    "home": "Home"
+  }
+}
