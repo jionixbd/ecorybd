@@ -1,17 +1,23 @@
 import withBundleAnalyzer from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs/config";
 import withVercelToolbar from "@vercel/toolbar/plugins/next";
-import { createMDX } from "fumadocs-mdx/next";
 import type { NextConfig } from "next";
 import withNextIntl from "next-intl/plugin";
 import "./src/lib/env";
 
 const withNextIntlConfig = withNextIntl("./src/i18n/request.ts");
-const withMDX = createMDX();
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.0.10"],
   cacheComponents: true,
+  images: {
+    dangerouslyAllowLocalIP: true,
+    remotePatterns: [
+      {
+        hostname: "localhost",
+      },
+    ],
+  },
   logging: {
     browserToTerminal: true,
     fetches: {
@@ -40,7 +46,7 @@ const nextConfig: NextConfig = {
   skipTrailingSlashRedirect: true,
 };
 
-const withVercelToolbarConfig = withVercelToolbar()(withMDX(nextConfig));
+const withVercelToolbarConfig = withVercelToolbar()(nextConfig);
 
 const sentryWebpackPluginOption = {
   authToken: process.env.SENTRY_AUTH_TOKEN,

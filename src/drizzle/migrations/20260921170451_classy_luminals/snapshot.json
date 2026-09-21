@@ -1,79 +1,69 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "ea52562f-4705-4472-b7d9-e0273966eda5",
+  "id": "94f55e1f-8ff9-4ce4-9e9b-061af96d0d4e",
   "prevIds": [
-    "a5e3c319-333a-4a9c-844b-6aaaaeac3071"
+    "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
     {
       "values": [
-        "under_5k",
-        "5k_to_10k",
-        "10k_to_25k",
-        "25k_to_50k",
-        "50k_to_100k",
-        "above_100k",
-        "to_be_discussed"
+        "low",
+        "medium",
+        "high",
+        "urgent"
       ],
-      "name": "inquiries_budget",
+      "name": "inquiry_priority",
       "entityType": "enums",
       "schema": "public"
     },
     {
       "values": [
-        "saas",
-        "landing_page",
-        "business_website",
-        "e-commerce",
-        "portfolio",
-        "blog",
-        "web_application",
-        "api_development",
-        "other"
-      ],
-      "name": "inquiries_project",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "frontend",
-        "backend",
-        "fullstack",
-        "ui_ux_design",
-        "consulting",
-        "maintenance",
-        "ai"
-      ],
-      "name": "inquiries_service",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "urgent_1_month",
-        "1_to_3_months",
-        "3_to_6_months",
-        "6_plus_months",
-        "flexible"
-      ],
-      "name": "inquiries_timeline",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "new",
-        "reviewing",
-        "proposal_sent",
-        "negotiation",
-        "accepted",
-        "in_progress",
-        "completed",
-        "cancelled"
+        "pending",
+        "in_review",
+        "resolved",
+        "closed"
       ],
       "name": "inquiry_status",
+      "entityType": "enums",
+      "schema": "public"
+    },
+    {
+      "values": [
+        "general",
+        "product_question",
+        "order_issue",
+        "return_request",
+        "wholesale"
+      ],
+      "name": "inquiry_type",
+      "entityType": "enums",
+      "schema": "public"
+    },
+    {
+      "values": [
+        "en",
+        "fr"
+      ],
+      "name": "newsletter_subscribers_locale",
+      "entityType": "enums",
+      "schema": "public"
+    },
+    {
+      "values": [
+        "resend"
+      ],
+      "name": "newsletter_subscribers_source",
+      "entityType": "enums",
+      "schema": "public"
+    },
+    {
+      "values": [
+        "pending",
+        "subscribed",
+        "unsubscribed"
+      ],
+      "name": "newsletter_subscribers_status",
       "entityType": "enums",
       "schema": "public"
     },
@@ -91,6 +81,12 @@
     },
     {
       "isRlsEnabled": false,
+      "name": "newsletter_subscribers",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
       "name": "organizations",
       "entityType": "tables",
       "schema": "public"
@@ -102,53 +98,27 @@
       "schema": "public"
     },
     {
-      "type": "inquiries_budget",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "budget",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "inquiries"
-    },
-    {
-      "type": "varchar(128)",
+      "type": "jsonb",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "company_name",
+      "name": "admin_notes",
       "entityType": "columns",
       "schema": "public",
       "table": "inquiries"
     },
     {
-      "type": "varchar(64)",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "company_size",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "inquiries"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "company_website",
+      "name": "assigned_to",
       "entityType": "columns",
       "schema": "public",
       "table": "inquiries"
@@ -167,9 +137,9 @@
       "table": "inquiries"
     },
     {
-      "type": "varchar(64)",
+      "type": "varchar(320)",
       "typeSchema": null,
-      "notNull": true,
+      "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
@@ -193,9 +163,9 @@
       "table": "inquiries"
     },
     {
-      "type": "text",
+      "type": "jsonb",
       "typeSchema": null,
-      "notNull": true,
+      "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
@@ -219,6 +189,19 @@
       "table": "inquiries"
     },
     {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "order_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
       "type": "varchar(32)",
       "typeSchema": null,
       "notNull": false,
@@ -232,27 +215,27 @@
       "table": "inquiries"
     },
     {
-      "type": "inquiries_project",
+      "type": "inquiry_priority",
       "typeSchema": "public",
       "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "'medium'",
       "generated": null,
       "identity": null,
-      "name": "project",
+      "name": "priority",
       "entityType": "columns",
       "schema": "public",
       "table": "inquiries"
     },
     {
-      "type": "inquiries_service",
-      "typeSchema": "public",
-      "notNull": true,
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "service",
+      "name": "product_id",
       "entityType": "columns",
       "schema": "public",
       "table": "inquiries"
@@ -262,7 +245,7 @@
       "typeSchema": "public",
       "notNull": true,
       "dimensions": 0,
-      "default": "'new'",
+      "default": "'pending'",
       "generated": null,
       "identity": null,
       "name": "status",
@@ -271,14 +254,40 @@
       "table": "inquiries"
     },
     {
-      "type": "inquiries_timeline",
-      "typeSchema": "public",
+      "type": "varchar(128)",
+      "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "timeline",
+      "name": "subject",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "temp_message",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
+      "type": "inquiry_type",
+      "typeSchema": "public",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'general'",
+      "generated": null,
+      "identity": null,
+      "name": "type",
       "entityType": "columns",
       "schema": "public",
       "table": "inquiries"
@@ -292,6 +301,19 @@
       "generated": null,
       "identity": null,
       "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "user_id",
       "entityType": "columns",
       "schema": "public",
       "table": "inquiries"
@@ -336,6 +358,19 @@
       "table": "memberships"
     },
     {
+      "type": "varchar(64)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'org:member'",
+      "generated": null,
+      "identity": null,
+      "name": "role",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "memberships"
+    },
+    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -349,7 +384,163 @@
       "table": "memberships"
     },
     {
-      "type": "varchar(32)",
+      "type": "timestamp with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "varchar(255)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "email",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "varchar(55)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "first_name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "varchar(55)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "last_name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "newsletter_subscribers_locale",
+      "typeSchema": "public",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'en'",
+      "generated": null,
+      "identity": null,
+      "name": "locale",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "varchar(55)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "resend_contact_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "newsletter_subscribers_source",
+      "typeSchema": "public",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'resend'",
+      "generated": null,
+      "identity": null,
+      "name": "source",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "newsletter_subscribers_status",
+      "typeSchema": "public",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'pending'",
+      "generated": null,
+      "identity": null,
+      "name": "status",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "timestamp with time zone",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "subscribed_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "subscriber_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "timestamp with time zone",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "unsubscribed_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "timestamp with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "newsletter_subscribers"
+    },
+    {
+      "type": "varchar(64)",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -466,7 +657,7 @@
       "table": "users"
     },
     {
-      "type": "varchar(32)",
+      "type": "varchar(64)",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -583,6 +774,124 @@
       "table": "users"
     },
     {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "idx_inquiries_user_id",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "product_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "idx_inquiries_product_id",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "order_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "idx_inquiries_order_id",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "assigned_to",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "idx_inquiries_assign_to",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "assigned_to"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "user_id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "name": "inquiries_assigned_to_users_user_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "user_id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "name": "inquiries_user_id_users_user_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "inquiries"
+    },
+    {
       "nameExplicit": false,
       "columns": [
         "organization_id"
@@ -638,6 +947,16 @@
     },
     {
       "columns": [
+        "subscriber_id"
+      ],
+      "nameExplicit": false,
+      "name": "newsletter_subscribers_pkey",
+      "schema": "public",
+      "table": "newsletter_subscribers",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
         "organization_id"
       ],
       "nameExplicit": false,
@@ -677,6 +996,17 @@
       "name": "unq_memberships_clerk_membership_id",
       "schema": "public",
       "table": "memberships",
+      "entityType": "uniques"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "email"
+      ],
+      "nullsNotDistinct": false,
+      "name": "unq_newsletter_subscribers_email",
+      "schema": "public",
+      "table": "newsletter_subscribers",
       "entityType": "uniques"
     },
     {

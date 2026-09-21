@@ -7,7 +7,6 @@ import { DEFAULT_METADATA } from "@/lib/metadata/constants";
 import { generateAlternateLanguages } from "@/lib/metadata/generators";
 import "@/styles/tailwind.css";
 import { VercelToolbar } from "@vercel/toolbar/next";
-import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
@@ -47,13 +46,11 @@ export default async function RootLayout({
         >
           <NuqsAdapter>
             <AnalyticsProvider>
-              <RootProvider theme={{}}>
-                <NextIntlClientProvider>
-                  {children}
-                  {/* FIX: Failed to proxy http://127.0.0.1:25004/events?token= Error: socket hang up at ignore-listed frames {code: 'ECONNRESET'} */}
-                  {shouldInjectToolbar && <VercelToolbar />}
-                </NextIntlClientProvider>
-              </RootProvider>
+              <NextIntlClientProvider>
+                {children}
+                {/* FIX: Failed to proxy http://127.0.0.1:25004/events?token= Error: socket hang up at ignore-listed frames {code: 'ECONNRESET'} */}
+                {shouldInjectToolbar && <VercelToolbar />}
+              </NextIntlClientProvider>
             </AnalyticsProvider>
           </NuqsAdapter>
         </ThemeProvider>

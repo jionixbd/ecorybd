@@ -8,7 +8,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { FluidGradient } from "@/features/web/components/fluid-gradient";
 import { Link } from "@/i18n/navigation";
 import { AlertTriangle, CheckCircle2, Undo2, UserX2 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -24,18 +23,6 @@ export default async function NewsletterSubscribedPage(
       <Card className="w-full max-w-2xl bg-muted/10 p-0">
         <CardContent className="p-0">
           <div className="full relative flex aspect-video flex-col items-center justify-center">
-            <FluidGradient
-              className="absolute"
-              colorStops={[
-                "#0A192F",
-                "#3A0088",
-                "#9B4DCA",
-                "#00FFB2",
-                "#0A192F",
-              ]}
-              speed={1}
-            />
-
             <PageTitle
               badge={t("badge")}
               motto={t("motto")}

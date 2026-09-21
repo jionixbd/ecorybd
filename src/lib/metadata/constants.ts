@@ -5,29 +5,22 @@ import type { Metadata } from "next";
 export const SITE_CONFIG = {
   authors: [
     {
-      name: "AletheiaSpire Team",
+      name: "Ecory Team",
       url: getBaseUrl(),
     },
   ],
   creator: "@sizarcorpse",
   description:
     "A comprehensive platform for aspiring developers to learn, grow, and build their careers with cutting-edge tools and resources.",
-  keywords: [
-    "developer platform",
-    "coding education",
-    "programming resources",
-    "web development",
-    "software engineering",
-    "learning platform",
-  ],
-  name: "AletheiaSpire",
+  keywords: [],
+  name: "Ecory",
   ogImage: `${getBaseUrl()}/api/open-graph`,
   social: {
-    github: "https://github.com/sizarcorpse",
-    linkedin: "https://linkedin.com/in/ramizimran",
-    twitter: "https://twitter.com/sizarcorpse",
+    facebook: "https://www.facebook.com/ecorybd",
+    instagram: "https://www.instagram.com/ecory_bd",
+    youtube: "https://www.youtube.com/@ecorybd",
   },
-  title: "AletheiaSpire - Platform for Aspiring Developers",
+  title: "Ecory – Stay Healthy With Nature",
   twitterHandle: "@sizarcorpse",
   url: getBaseUrl(),
 };

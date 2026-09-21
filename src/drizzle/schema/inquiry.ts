@@ -1,4 +1,7 @@
+import { users } from "@/drizzle/schema/user";
 import {
+  index,
+  jsonb,
   pgEnum,
   snakeCase,
   text,
@@ -8,81 +11,70 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const inquiryStatusEnum = pgEnum("inquiry_status", [
-  "new",
-  "reviewing",
-  "proposal_sent",
-  "negotiation",
-  "accepted",
-  "in_progress",
-  "completed",
-  "cancelled",
+  "pending",
+  "in_review",
+  "resolved",
+  "closed",
 ]);
 
-export const inquiriesServiceEnum = pgEnum("inquiries_service", [
-  "frontend",
-  "backend",
-  "fullstack",
-  "ui_ux_design",
-  "consulting",
-  "maintenance",
-  "ai",
+export const inquiryPriorityEnum = pgEnum("inquiry_priority", [
+  "low",
+  "medium",
+  "high",
+  "urgent",
 ]);
 
-export const inquiriesProjectEnum = pgEnum("inquiries_project", [
-  "saas",
-  "landing_page",
-  "business_website",
-  "e-commerce",
-  "portfolio",
-  "blog",
-  "web_application",
-  "api_development",
-  "other",
+export const inquiryTypeEnum = pgEnum("inquiry_type", [
+  "general",
+  "product_question",
+  "order_issue",
+  "return_request",
+  "wholesale",
 ]);
 
-export const inquiriesBudgetEnum = pgEnum("inquiries_budget", [
-  "under_5k",
-  "5k_to_10k",
-  "10k_to_25k",
-  "25k_to_50k",
-  "50k_to_100k",
-  "above_100k",
-  "to_be_discussed",
-]);
-
-export const inquiriesTimelineEnum = pgEnum("inquiries_timeline", [
-  "urgent_1_month",
-  "1_to_3_months",
-  "3_to_6_months",
-  "6_plus_months",
-  "flexible",
-]);
-
-export const inquiries = snakeCase.table("inquiries", {
-  budget: inquiriesBudgetEnum().notNull(),
-  companyName: varchar( { length: 128 }),
-  companySize: varchar( { length: 64 }),
-  companyWebsite: varchar( { length: 256 }),
-  createdAt: timestamp( { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  email: varchar( { length: 64 }).notNull(),
-  inquiryId: uuid().defaultRandom().primaryKey(),
-  message: text().notNull(),
-  name: varchar( { length: 64 }).notNull(),
-  phone: varchar( { length: 32 }),
-  project: inquiriesProjectEnum().notNull(),
-  service: inquiriesServiceEnum().notNull(),
-  status: inquiryStatusEnum().default("new").notNull(),
-  timeline: inquiriesTimelineEnum().notNull(),
-  updatedAt: timestamp( { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
+export const inquiries = snakeCase.table(
+  "inquiries",
+  {
+    adminNotes: jsonb(),
+    assignedTo: uuid().references(() => users.userId, { onDelete: "set null" }),
+    createdAt: timestamp({
+      withTimezone: true,
+    })
+      .defaultNow()
+      .notNull(),
+    email: varchar({ length: 320 }),
+    inquiryId: uuid().primaryKey().defaultRandom(),
+    // TODO add type `$type<JSONContent>()` to message after tiptap setup
+    message: jsonb(),
+    name: varchar({ length: 64 }).notNull(),
+    // TODO: add `orderId` ref after create order table.
+    orderId: uuid(),
+    phone: varchar({ length: 32 }),
+    priority: inquiryPriorityEnum().default("medium").notNull(),
+    // TODO: add `productId` ref after create product table.
+    productId: uuid(),
+    status: inquiryStatusEnum().default("pending").notNull(),
+    subject: varchar({ length: 128 }).notNull(),
+    // DEPRECATED: temporary util tiptap setup.
+    tempMessage: text(),
+    type: inquiryTypeEnum().default("general").notNull(),
+    updatedAt: timestamp({
+      withTimezone: true,
+    })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+    userId: uuid().references(() => users.userId, { onDelete: "set null" }),
+  },
+  (t) => [
+    index("idx_inquiries_user_id").on(t.userId),
+    index("idx_inquiries_product_id").on(t.productId),
+    index("idx_inquiries_order_id").on(t.orderId),
+    index("idx_inquiries_assign_to").on(t.assignedTo),
+  ]
+);
 
 export type Inquiry = typeof inquiries.$inferSelect;
 export type InquiryStatus = (typeof inquiries.status.enumValues)[number];
-export type InquiryService = (typeof inquiries.service.enumValues)[number];
-export type InquiryProject = (typeof inquiries.project.enumValues)[number];
-export type InquiryBudget = (typeof inquiries.budget.enumValues)[number];
-export type InquiryTimeline = (typeof inquiries.timeline.enumValues)[number];
+export type InquiryPriority = (typeof inquiries.priority.enumValues)[number];
+export type InquiryType = (typeof inquiries.type.enumValues)[number];

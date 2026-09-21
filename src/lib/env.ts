@@ -12,8 +12,11 @@ export const env = createEnv({
     NEXT_PUBLIC_POSTHOG_ENABLED: z
       .enum(["true", "false"])
       .transform((v) => v === "true"),
-    NEXT_PUBLIC_POSTHOG_HOST: z.url().optional(),
-    NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: z.string().min(1).optional(),
+    NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
+    NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: z.string().optional(),
+    NEXT_PUBLIC_RESEND_ENABLED: z
+      .enum(["true", "false"])
+      .transform((v) => v === "true"),
     NEXT_PUBLIC_SENTRY_DSN: z.string().min(1).optional(),
     NEXT_PUBLIC_SENTRY_ENABLED: z
       .enum(["true", "false"])
@@ -32,6 +35,7 @@ export const env = createEnv({
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN:
       process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN,
+    NEXT_PUBLIC_RESEND_ENABLED: process.env.NEXT_PUBLIC_RESEND_ENABLED,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_SENTRY_ENABLED: process.env.NEXT_PUBLIC_SENTRY_ENABLED,
   },
@@ -44,10 +48,10 @@ export const env = createEnv({
     PGHOST: z.string().min(1).optional(),
     PGPASSWORD: z.string().min(1).optional(),
     PGUSER: z.string().min(1).optional(),
-    RESEND_API_KEY: z.string().min(1).optional(),
-    RESEND_EMAIL_FROM: z.string().min(1).optional(),
-    RESEND_SEGMENT_ID: z.string().min(1).optional(),
-    RESEND_WEBHOOK_SECRET: z.string().min(1).optional(),
+    RESEND_API_KEY: z.string().optional(),
+    RESEND_EMAIL_FROM: z.string().optional(),
+    RESEND_SEGMENT_ID: z.string().optional(),
+    RESEND_WEBHOOK_SECRET: z.string().optional(),
     SENTRY_AUTH_TOKEN: z.string().min(1).optional(),
     SENTRY_HOST: z.string().min(1).optional(),
     SENTRY_ORG: z.string().min(1).optional(),

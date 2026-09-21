@@ -59,7 +59,7 @@ export const OrganizationSwitcher = ({
     });
   };
 
-  const loaded = isLoaded && memberships.data && memberships.data.length > 1;
+  const loaded = isLoaded && memberships.data && memberships.data.length > 0;
 
   return (
     <SidebarMenu>

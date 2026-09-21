@@ -2,8 +2,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "./typeset.css";
-@import "fumadocs-ui/css/shadcn.css";
-@import "fumadocs-ui/css/preset.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -49,21 +47,6 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-  --color-fd-background: var(--fd-background);
-  --color-fd-foreground: var(--fd-foreground);
-  --color-fd-accent-foreground: var(--fd-accent-foreground);
-  --color-fd-accent: var(--fd-accent);
-  --color-fd-muted-foreground: var(--fd-muted-foreground);
-  --color-fd-muted: var(--fd-muted);
-  --color-fd-secondary-foreground: var(--fd-secondary-foreground);
-  --color-fd-secondary: var(--fd-secondary);
-  --color-fd-primary-foreground: var(--fd-primary-foreground);
-  --color-fd-primary: var(--fd-primary);
-  --color-fd-popover-foreground: var(--fd-popover-foreground);
-  --color-fd-popover: var(--fd-popover);
-  --color-fd-card-foreground: var(--fd-card-foreground);
-  --color-fd-card: var(--fd-card);
-  --color-fd-border: var(--fd-border);
 }
 
 :root {
@@ -99,22 +82,6 @@
   --sidebar-accent-foreground: oklch(0.218 0.008 223.9);
   --sidebar-border: oklch(0.925 0.005 214.3);
   --sidebar-ring: oklch(0.723 0.014 214.4);
-  --fd-background: oklch(1 0 0);
-  --fd-foreground: oklch(0.148 0.004 228.8);
-  --fd-card: oklch(1 0 0);
-  --fd-card-foreground: oklch(0.148 0.004 228.8);
-  --fd-popover: oklch(1 0 0);
-  --fd-popover-foreground: oklch(0.148 0.004 228.8);
-  --fd-primary: oklch(0.218 0.008 223.9);
-  --fd-primary-foreground: oklch(0.987 0.002 197.1);
-  --fd-secondary: oklch(0.963 0.002 197.1);
-  --fd-secondary-foreground: oklch(0.218 0.008 223.9);
-  --fd-muted: oklch(0.963 0.002 197.1);
-  --fd-muted-foreground: oklch(0.56 0.021 213.5);
-  --fd-accent: oklch(0.963 0.002 197.1);
-  --fd-accent-foreground: oklch(0.218 0.008 223.9);
-  --fd-ring: oklch(0.723 0.014 214.4);
-  --fd-border: oklch(0.925 0.005 214.3);
 }
 
 .dark {
@@ -149,22 +116,6 @@
   --sidebar-accent-foreground: oklch(0.987 0.002 197.1);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.56 0.021 213.5);
-  --fd-background: oklch(0.148 0.004 228.8);
-  --fd-foreground: oklch(0.987 0.002 197.1);
-  --fd-muted: oklch(0.275 0.011 216.9);
-  --fd-muted-foreground: oklch(0.723 0.014 214.4);
-  --fd-popover: oklch(0.218 0.008 223.9);
-  --fd-popover-foreground: oklch(0.987 0.002 197.1);
-  --fd-card: oklch(0.218 0.008 223.9);
-  --fd-card-foreground: oklch(0.987 0.002 197.1);
-  --fd-border: oklch(1 0 0 / 10%);
-  --fd-primary: oklch(0.925 0.005 214.3);
-  --fd-primary-foreground: oklch(0.218 0.008 223.9);
-  --fd-secondary: oklch(0.275 0.011 216.9);
-  --fd-secondary-foreground: oklch(0.987 0.002 197.1);
-  --fd-accent: oklch(0.275 0.011 216.9);
-  --fd-accent-foreground: oklch(0.987 0.002 197.1);
-  --fd-ring: oklch(0.56 0.021 213.5);
 }
 
 @layer base {

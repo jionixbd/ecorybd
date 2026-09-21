@@ -10,7 +10,7 @@
                 "Start DX (dev)",
                 "Start ngrok (webhook)",
                 "Start Drizzle Studio (dev)",
-                "Start Email (dev)"
+                // "Start Email (dev)"
             ],
             "dependsOrder": "parallel"
         },
@@ -76,26 +76,26 @@
             },
             "problemMatcher": []
         },
-        {
-            "label": "Start Email (dev)",
-            "type": "npm",
-            "script": "email",
-            "path": ".",
-            "isBackground": true,
-            "icon": {
-                "id": "mail"
-            },
-            "runOptions": {
-                "runOn": "folderOpen"
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "dedicated",
-                "group": "react-email"
-            },
-            "problemMatcher": []
-        },
+        // {
+        //     "label": "Start Email (dev)",
+        //     "type": "npm",
+        //     "script": "email",
+        //     "path": ".",
+        //     "isBackground": true,
+        //     "icon": {
+        //         "id": "mail"
+        //     },
+        //     "runOptions": {
+        //         "runOn": "folderOpen"
+        //     },
+        //     "presentation": {
+        //         "echo": true,
+        //         "reveal": "always",
+        //         "focus": false,
+        //         "panel": "dedicated",
+        //         "group": "react-email"
+        //     },
+        //     "problemMatcher": []
+        // },
     ]
 }
