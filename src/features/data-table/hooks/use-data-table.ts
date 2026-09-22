@@ -72,7 +72,7 @@ export function useDataTable<TData extends RowData>(
   props: UseDataTableProps<TData>
 ) {
   "use no memo";
-  
+
   const {
     columns,
     pageCount,
@@ -133,7 +133,7 @@ export function useDataTable<TData extends RowData>(
     perPageKey,
     parseAsInteger
       .withOptions(queryStateOptions)
-      .withDefault(initialState?.pagination?.pageSize ?? 10)
+      .withDefault(initialState?.pagination?.pageSize ?? 20)
   );
 
   const pagination: PaginationState = React.useMemo(

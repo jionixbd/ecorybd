@@ -35,12 +35,18 @@ export function DataTablePagination<TData extends RowData>({
       {...props}
     >
       <div className="flex-1 whitespace-nowrap text-muted-foreground text-sm">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {table.getFilteredSelectedRowModel().rows.length > 0 ? (
+          <code>
+            {table.getFilteredSelectedRowModel().rows.length} {" / "}
+            {table.getFilteredRowModel().rows.length} row(s) selected.
+          </code>
+        ) : null}
       </div>
       <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
         <div className="flex items-center space-x-2">
-          <p className="whitespace-nowrap font-medium text-sm">Rows per page</p>
+          {/* <p className="whitespace-nowrap font-medium font-mono text-sm">
+            Limit
+          </p> */}
           <Select
             onValueChange={(value) => {
               table.setPageSize(Number(value));
@@ -63,27 +69,13 @@ export function DataTablePagination<TData extends RowData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center justify-center font-medium text-sm">
-          Page {table.store.state.pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+        <div className="flex items-center justify-center font-medium font-mono text-sm">
+          <code>
+            {table.store.state.pagination.pageIndex + 1} of {" / "}
+            {table.getPageCount()}
+          </code>
         </div>
         <div className="flex items-center space-x-2">
-          <Button
-            aria-label="Go to first page"
-            className="hidden size-8 lg:flex"
-            disabled={!table.getCanPreviousPage()}
-            onClick={() => table.setPageIndex(0)}
-            size="icon"
-            variant="outline"
-          >
-            <IconPlaceholder
-              hugeicons="ArrowLeftDoubleIcon"
-              lucide="ChevronsLeft"
-              phosphor="CaretDoubleLeftIcon"
-              remixicon="RiSkipLeftLine"
-              tabler="IconChevronsLeft"
-            />
-          </Button>
           <Button
             aria-label="Go to previous page"
             className="size-8"
@@ -114,22 +106,6 @@ export function DataTablePagination<TData extends RowData>({
               phosphor="CaretRightIcon"
               remixicon="RiArrowRightSLine"
               tabler="IconChevronRight"
-            />
-          </Button>
-          <Button
-            aria-label="Go to last page"
-            className="hidden size-8 lg:flex"
-            disabled={!table.getCanNextPage()}
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            size="icon"
-            variant="outline"
-          >
-            <IconPlaceholder
-              hugeicons="ArrowRightDoubleIcon"
-              lucide="ChevronsRight"
-              phosphor="CaretDoubleRightIcon"
-              remixicon="RiSkipRightLine"
-              tabler="IconChevronsRight"
             />
           </Button>
         </div>

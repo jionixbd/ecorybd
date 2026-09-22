@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
       {
         hostname: "localhost",
       },
+      {
+        hostname: "img.clerk.com",
+      },
     ],
   },
   logging: {

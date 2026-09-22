@@ -1,6 +1,6 @@
 import { media } from "@/drizzle/schema/media";
 import { organizations } from "@/drizzle/schema/organization";
-import { products, productStatusEnum } from "@/drizzle/schema/product";
+import { products } from "@/drizzle/schema/product";
 import { users } from "@/drizzle/schema/user";
 import { sql } from "drizzle-orm";
 import {
@@ -9,6 +9,7 @@ import {
   decimal,
   index,
   integer,
+  pgEnum,
   snakeCase,
   timestamp,
   unique,
@@ -16,6 +17,13 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+
+// FIX: move this
+const productStatusEnum = pgEnum("product_status", [
+  "draft",
+  "published",
+  "archived",
+]);
 
 export const productVariants = snakeCase.table(
   "product_variants",

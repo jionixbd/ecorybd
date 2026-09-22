@@ -3,10 +3,12 @@ import { DataTableBooleanCell } from "@/features/data-table/components/cells/dat
 import { DataTableDateCell } from "@/features/data-table/components/cells/data-table-date-cell";
 import { DataTableEmailCell } from "@/features/data-table/components/cells/data-table-email-cell";
 import { DataTableEnumCell } from "@/features/data-table/components/cells/data-table-enum-cell";
+import { DataTableImageCell } from "@/features/data-table/components/cells/data-table-image-cell";
 import { DataTableLinkCell } from "@/features/data-table/components/cells/data-table-link-cell";
 import { DataTableNullCell } from "@/features/data-table/components/cells/data-table-null-cell";
 import { DataTableNumberCell } from "@/features/data-table/components/cells/data-table-number-cell";
 import { DataTablePhoneCell } from "@/features/data-table/components/cells/data-table-phone-cell";
+import { DataTablePriceCell } from "@/features/data-table/components/cells/data-table-price-cell";
 import { DataTableTextCell } from "@/features/data-table/components/cells/data-table-text-cell";
 import { DataTableColumnHeader } from "@/features/data-table/components/common/data-table-column-header";
 import type { DataTableFeatures } from "@/features/data-table/lib/table-features";
@@ -30,12 +32,15 @@ export type DataColumnType =
   | "email"
   | "link"
   | "phone"
-  | "selection";
+  | "selection"
+  | "image"
+  | "price";
 
 export interface BuildDataColumnConfig<
   TData extends RowData,
   TValue extends CellData = unknown,
 > {
+  accessorFn?: (row: TData) => TValue;
   accessorKey?: Extract<keyof TData, string>;
   enableFiltering?: boolean;
   enableSorting?: boolean;
@@ -58,9 +63,11 @@ const FILTER_VARIANTS = {
   datetime: "dateRange",
   email: "text",
   enum: "multiSelect",
+  image: "text",
   link: "text",
   number: "number",
   phone: "text",
+  price: "number",
   text: "text",
 } as const;
 
@@ -99,6 +106,12 @@ function renderDefault<TData extends RowData>(
     case "link":
       return <DataTableLinkCell href={href} row={row} value={value} />;
 
+    case "image":
+      return <DataTableImageCell value={value} />;
+
+    case "price":
+      return <DataTablePriceCell value={value} />;
+
     case "phone":
       return <DataTablePhoneCell value={value} />;
 
@@ -112,6 +125,7 @@ export function buildDataColumn<
   TData extends RowData,
   TValue extends CellData = unknown,
 >({
+  accessorFn,
   accessorKey,
   id,
   label,
@@ -156,12 +170,20 @@ export function buildDataColumn<
     };
   }
 
-  if (!accessorKey) {
-    throw new Error("accessorKey is required for non-selection columns");
+  const columnId = id ?? accessorKey;
+
+  if (!(accessorKey || accessorFn)) {
+    throw new Error(
+      "accessorKey or accessorFn is required for non-selection columns"
+    );
+  }
+
+  if (!columnId) {
+    throw new Error("id is required when using accessorFn");
   }
 
   return {
-    accessorKey,
+    ...(accessorFn ? { accessorFn } : { accessorKey }),
     cell: (context) => {
       const value = context.cell.getValue();
 
@@ -181,7 +203,7 @@ export function buildDataColumn<
     header: ({ column }) => (
       <DataTableColumnHeader column={column} label={label} />
     ),
-    id: accessorKey,
+    id: columnId,
     meta: {
       icon,
       label,

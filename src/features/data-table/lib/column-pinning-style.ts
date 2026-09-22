@@ -15,7 +15,7 @@ export function getColumnPinningStyle<TData extends RowData>({
     isPinned === "end" && column.getIsFirstColumn("end");
 
   return {
-    background: isPinned ? "var(--background)" : "var(--background)",
+    background: isPinned ? "var(--accent)" : "var(--sidebar)",
     boxShadow: (() => {
       if (!withBorder) {
         return;
