@@ -1,14 +1,19 @@
-import { AppSidebarGroupMenu } from "@/components/application/sidebar/menu/app-sidebar-group-menu";
 import { AppSidebarMenu } from "@/components/application/sidebar/menu/app-sidebar-menu";
+import { AppSidebarProductsMenu } from "@/components/application/sidebar/menu/app-sidebar-products-menu";
 import { AppSidebarSecondaryMenu } from "@/components/application/sidebar/menu/app-sidebar-secondary-menu";
+import { AsyncBoundary } from "@/components/boundaries/async-boundary";
 
 export default function SidebarPage(
-  _: PageProps<"/[locale]/workspace/[organization]">
+  props: PageProps<"/[locale]/workspace/[organization]">
 ) {
   return (
     <>
-      <AppSidebarMenu />
-      <AppSidebarGroupMenu />
+      <AsyncBoundary>
+        <AppSidebarMenu {...props} />
+      </AsyncBoundary>
+      <AsyncBoundary>
+        <AppSidebarProductsMenu {...props} />
+      </AsyncBoundary>
       <AppSidebarSecondaryMenu className="mt-auto" />
     </>
   );

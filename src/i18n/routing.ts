@@ -15,6 +15,11 @@ export const routing = defineRouting({
     "/sign-in": "/sign-in",
     "/sign-up": "/sign-up",
     "/workspace/[organization]": "/workspace/[organization]",
+    "/workspace/[organization]/products": "/workspace/[organization]/products",
+    "/workspace/[organization]/products/[product]":
+      "/workspace/[organization]/products/[product]",
+    "/workspace/[organization]/products/new":
+      "/workspace/[organization]/products/new",
   },
 });
 
