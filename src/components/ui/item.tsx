@@ -43,6 +43,7 @@ const itemVariants = cva(
     variants: {
       size: {
         default: "gap-3.5 px-4 py-3.5",
+        md: "gap-3.5 px-4 py-3.5 md:gap-4 md:px-8 md:py-4",
         sm: "gap-3.5 px-3.5 py-3",
         xs: "gap-2 in-data-[slot=dropdown-menu-content]:p-0 px-2.5 py-2",
       },
@@ -192,6 +193,5 @@ export {
   ItemHeader,
   ItemMedia,
   ItemSeparator,
-  ItemTitle
+  ItemTitle,
 };
-

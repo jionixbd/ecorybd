@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { products } from "@/drizzle/schema/product";
 import { buildDataColumn } from "@/features/data-table/lib/build-data-column";
 import type { DataTableFeatures } from "@/features/data-table/lib/table-features";
@@ -8,7 +9,8 @@ import type {
   ProductWithRelations,
 } from "@/features/product/types/product";
 import type { ColumnDef } from "@tanstack/react-table";
-import { CircleDashed } from "lucide-react";
+import { ArrowUpRight, CircleDashed } from "lucide-react";
+import Link from "next/link";
 import type { Dispatch, SetStateAction } from "react";
 
 interface ProductsTableColumnsProps {
@@ -69,5 +71,20 @@ export function productsTableColumns(
       })),
       type: "enum",
     }),
+    {
+      cell({ row }) {
+        return (
+          <Button asChild>
+            <Link
+              href={`/workspace/${row.original.organization.slug}/products/${row.original.slug}`}
+            >
+              View <ArrowUpRight />
+            </Link>
+          </Button>
+        );
+      },
+      id: "actions",
+      size: 20,
+    },
   ];
 }

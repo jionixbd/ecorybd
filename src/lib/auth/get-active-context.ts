@@ -15,6 +15,12 @@ export interface ActiveContext {
   user: User | null;
 }
 
+export interface RequiredActiveContext {
+  membership: Membership;
+  organization: Organization;
+  user: User;
+}
+
 export const getActiveContext = cache(async (): Promise<ActiveContext> => {
   try {
     const { userId: clerkUserId, orgId: clerkOrganizationId } = await auth();
