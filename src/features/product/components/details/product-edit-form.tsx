@@ -61,6 +61,7 @@ export const ProductEditForm = ({ product }: ProductEditFormProps) => {
       }
     },
   });
+
   const form = useForm<ProductFormInput>({
     defaultValues: {
       badge: product.badge ?? "",

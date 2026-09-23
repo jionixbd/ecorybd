@@ -8,7 +8,7 @@ export default async function ProductDetailPage(
   return (
     <div className="flex">
       <AsyncBoundary>
-        <ProductDetailsWrapper {...props} />
+        <ProductDetailWrapper {...props} />
       </AsyncBoundary>
     </div>
   );

@@ -11,7 +11,10 @@ import { buildPagination } from "@/drizzle/utils/pagination";
 import { buildOrderBy } from "@/drizzle/utils/sort";
 import { filterColumns } from "@/features/data-table/lib/filter-columns";
 import type { ProductSearchParam } from "@/features/product/parsers/product";
-import type { UpdateProductInput } from "@/features/product/validations/product";
+import type {
+  InsertProductInput,
+  UpdateProductInput,
+} from "@/features/product/validations/product";
 import { and, asc, count, eq } from "drizzle-orm";
 
 function buildProductsWhere({ search }: { search: ProductSearchParam }) {
@@ -41,6 +44,25 @@ export async function existsProductOrganizationId({
         eq(products.organizationId, organizationId),
         eq(products.productId, productId)
       )
+    );
+
+  return result;
+}
+
+export async function existsProductSlugOrganizationId({
+  client,
+  organizationId,
+  slug,
+}: {
+  client: DbClient;
+  organizationId: string;
+  slug: string;
+}) {
+  const [result] = await client
+    .select({ productId: products.productId })
+    .from(products)
+    .where(
+      and(eq(products.organizationId, organizationId), eq(products.slug, slug))
     );
 
   return result;
@@ -182,6 +204,29 @@ export async function updateProduct({
     .update(products)
     .set(values)
     .where(eq(products.productId, productId))
+    .returning();
+
+  return result;
+}
+
+export async function insertProduct({
+  client,
+  organizationId,
+  userId,
+  values,
+}: {
+  client: DbClient;
+  organizationId: string;
+  userId: string;
+  values: InsertProductInput;
+}) {
+  const [result] = await client
+    .insert(products)
+    .values({
+      ...values,
+      createdBy: userId,
+      organizationId,
+    })
     .returning();
 
   return result;

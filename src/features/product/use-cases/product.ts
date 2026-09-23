@@ -5,20 +5,27 @@ import { buildPaginationMeta } from "@/drizzle/utils/pagination";
 import {
   countProducts,
   existsProductOrganizationId,
+  existsProductSlugOrganizationId,
   findProduct,
   findProducts,
   findProductSlug,
+  insertProduct,
   updateProduct,
 } from "@/features/product/data-access/product";
+import { insertProductVariant } from "@/features/product/data-access/product-variant";
 import {
   toProductsWithRelation,
   toProductWithRelation,
 } from "@/features/product/dto/product";
 import { productCache } from "@/features/product/lib/cache";
+import { generateDefaultVariant } from "@/features/product/lib/default-variant";
 import type { ProductSearchParam } from "@/features/product/parsers/product";
-import type { UpdateProductInput } from "@/features/product/validations/product";
+import type {
+  InsertProductInput,
+  UpdateProductInput,
+} from "@/features/product/validations/product";
 import { requireActiveContext } from "@/lib/auth/required-active-context";
-import { normalizeError, NotFoundError } from "@/lib/error";
+import { ConflictError, normalizeError, NotFoundError } from "@/lib/error";
 import { cacheLife, cacheTag, revalidateTag, updateTag } from "next/cache";
 
 export async function getProductsUseCase({
@@ -132,6 +139,52 @@ export async function updateProductUseCase({
 
     return data;
   } catch (error) {
+    throw normalizeError(error);
+  }
+}
+
+export async function insertProductUseCase({
+  input,
+}: {
+  input: InsertProductInput;
+}) {
+  try {
+    const context = await requireActiveContext();
+
+    const data = await db.transaction(async (trx) => {
+      const existing = await existsProductSlugOrganizationId({
+        client: trx,
+        organizationId: context.organization.organizationId,
+        slug: input.slug,
+      });
+
+      if (existing) {
+        throw new ConflictError("Product with same slug already exists");
+      }
+
+      const result = await insertProduct({
+        client: trx,
+        organizationId: context.organization.organizationId,
+        userId: context.user.userId,
+        values: input,
+      });
+
+      await insertProductVariant({
+        client: trx,
+        organizationId: context.organization.organizationId,
+        productId: result.productId,
+        userId: context.user.userId,
+        values: generateDefaultVariant({ productId: result.productId }),
+      });
+
+      return result;
+    });
+
+    revalidateTag(productCache.tags.list(), "max");
+
+    return data;
+  } catch (error) {
+    console.log(error);
     throw normalizeError(error);
   }
 }
