@@ -10,6 +10,7 @@ import { DataTableSort } from "@/features/data-table/components/sort/data-table-
 import { useDataTable } from "@/features/data-table/hooks/use-data-table";
 import type { QueryKeys } from "@/features/data-table/types";
 import { ProductVariantsCreate } from "@/features/product/components/product-variants/product-veriants-create";
+import { ProductVariantUpdate } from "@/features/product/components/product-variants/table/product-variants-update";
 import { ProductVariantsTableActionBar } from "@/features/product/components/product-variants/table/products-table-action-bar";
 import { productVariantsTableColumns } from "@/features/product/components/product-variants/table/products-table-columns";
 import type {
@@ -33,7 +34,7 @@ export function ProductVariantsTable({
   const { enableAdvancedFilter } = useDataTableAdvancedFilter();
   const [data] = use(promises);
 
-  const [, setRowAction] =
+  const [rowAction, setRowAction] =
     useState<ProductVariantsRowAction<ProductVariantWithRelations> | null>(
       null
     );
@@ -89,6 +90,11 @@ export function ProductVariantsTable({
       >
         {advanceFilter}
       </DataTable>
+      <ProductVariantUpdate
+        onOpenChange={() => setRowAction(null)}
+        open={rowAction?.variant === "update"}
+        variant={rowAction?.row.original ?? null}
+      />
     </div>
   );
 }

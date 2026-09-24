@@ -43,14 +43,14 @@ export const productVariants = snakeCase.table(
       .references(() => organizations.organizationId, {
         onDelete: "cascade",
       }),
-    price: decimal({ precision: 10, scale: 2 }).notNull(),
+    price: decimal({ mode: "number", precision: 10, scale: 2 }).notNull(),
     productId: uuid()
       .notNull()
       .references(() => products.productId, {
         onDelete: "cascade",
       }),
     productVariantId: uuid().primaryKey().defaultRandom(),
-    salePrice: decimal({ precision: 10, scale: 2 }),
+    salePrice: decimal({ mode: "number", precision: 10, scale: 2 }),
     sku: varchar({ length: 64 }).notNull().unique("unq_product_variant_sku"),
     slug: varchar({ length: 255 }).notNull().unique("unq_product_variant_slug"),
     status: productStatusEnum().default("draft").notNull(),

@@ -7,7 +7,10 @@ import {
 import { buildPagination } from "@/drizzle/utils/pagination";
 import { buildOrderBy } from "@/drizzle/utils/sort";
 import type { ProductVariantSearchParam } from "@/features/product/parsers/product-variant";
-import type { InsertProductVariantInput } from "@/features/product/validations/product-variant";
+import type {
+  InsertProductVariantInput,
+  UpdateProductVariantInput,
+} from "@/features/product/validations/product-variant";
 import { and, asc, count, eq } from "drizzle-orm";
 
 function buildProductVariantsWhere({
@@ -30,6 +33,72 @@ function buildProductVariantsWhere({
   );
 }
 
+export async function existsProductVariantSlugOrganizationId({
+  client,
+  organizationId,
+  slug,
+}: {
+  client: DbClient;
+  organizationId: string;
+  slug: string;
+}) {
+  const [result] = await client
+    .select({ productVariantId: productVariants.productVariantId })
+    .from(productVariants)
+    .where(
+      and(
+        eq(productVariants.organizationId, organizationId),
+        eq(productVariants.slug, slug)
+      )
+    );
+
+  return result;
+}
+
+export async function existsProductVariantProductId({
+  client,
+  productId,
+  productVariantId,
+}: {
+  client: DbClient;
+  productId: string;
+  productVariantId: string;
+}) {
+  const [result] = await client
+    .select({ productVariantId: productVariants.productVariantId })
+    .from(productVariants)
+    .where(
+      and(
+        eq(productVariants.productVariantId, productVariantId),
+        eq(productVariants.productId, productId)
+      )
+    );
+
+  return result;
+}
+
+export async function existsProductVariantSlugProductId({
+  client,
+  productId,
+  productVariantSlug,
+}: {
+  client: DbClient;
+  productId: string;
+  productVariantSlug: string;
+}) {
+  const [result] = await client
+    .select({ productVariantId: productVariants.productVariantId })
+    .from(productVariants)
+    .where(
+      and(
+        eq(productVariants.slug, productVariantSlug),
+        eq(productVariants.productId, productId)
+      )
+    );
+
+  return result;
+}
+
 export async function insertProductVariant({
   client,
   organizationId,
@@ -49,9 +118,9 @@ export async function insertProductVariant({
       ...values,
       createdBy: userId,
       organizationId,
-      price: values.price.toString(),
+      price: values.price,
       productId,
-      salePrice: values.salePrice?.toString(),
+      salePrice: values.salePrice,
     })
     .returning();
 
@@ -113,4 +182,39 @@ export async function countProductVariants({
     .where(buildProductVariantsWhere({ productId, search }));
 
   return result?.count ?? 0;
+}
+
+export async function updateProductVariant({
+  client,
+  organizationId,
+  productId,
+  productVariantId,
+  values,
+}: {
+  client: DbClient;
+  organizationId: string;
+  userId: string;
+  productId: string;
+  productVariantId: string;
+  values: UpdateProductVariantInput;
+}) {
+  const [result] = await client
+    .update(productVariants)
+    .set({
+      ...values,
+      organizationId,
+      price: values.price,
+      productId,
+      salePrice: values.salePrice,
+    })
+    .where(
+      and(
+        eq(productVariants.productVariantId, productVariantId),
+        eq(productVariants.productId, productId),
+        eq(productVariants.organizationId, organizationId)
+      )
+    )
+    .returning();
+
+  return result;
 }

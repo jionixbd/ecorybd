@@ -8,14 +8,20 @@ import {
 } from "@/features/product/data-access/product";
 import {
   countProductVariants,
+  existsProductVariantProductId,
+  existsProductVariantSlugProductId,
   findProductVariants,
   insertProductVariant,
+  updateProductVariant,
 } from "@/features/product/data-access/product-variant";
 import { toProductVariants } from "@/features/product/dto/product-variants";
 import type { ProductVariantSearchParam } from "@/features/product/parsers/product-variant";
-import type { InsertProductVariantInput } from "@/features/product/validations/product-variant";
+import type {
+  InsertProductVariantInput,
+  UpdateProductVariantInput,
+} from "@/features/product/validations/product-variant";
 import { requireActiveContext } from "@/lib/auth/required-active-context";
-import { normalizeError, NotFoundError } from "@/lib/error";
+import { ConflictError, normalizeError, NotFoundError } from "@/lib/error";
 
 export async function getProductVariantsUseCase({
   search,
@@ -67,25 +73,37 @@ export async function insertProductVariantUseCase({
   input: InsertProductVariantInput;
 }) {
   try {
+    console.log(input);
+
     const context = await requireActiveContext();
 
     const data = await db.transaction(async (trx) => {
-      const existing = await existsProductSlugOrganizationId({
+      const product = await existsProductSlugOrganizationId({
         client: trx,
         organizationId: context.organization.organizationId,
         slug,
       });
 
-      if (!existing) {
+      if (!product) {
         throw new NotFoundError(
           "Product not found or you do no haver permission to update it"
         );
       }
 
+      const existing = await existsProductVariantSlugProductId({
+        client: trx,
+        productId: product.productId,
+        productVariantSlug: slug,
+      });
+
+      if (existing) {
+        throw new ConflictError("Product variant with slug already exists");
+      }
+
       const result = await insertProductVariant({
         client: trx,
         organizationId: context.organization.organizationId,
-        productId: existing.productId,
+        productId: product.productId,
         userId: context.user.userId,
         values: { ...input, isDefault: false },
       });
@@ -95,6 +113,62 @@ export async function insertProductVariantUseCase({
 
     return data;
   } catch (error) {
+    throw normalizeError(error);
+  }
+}
+
+export async function updateProductVariantUseCase({
+  productSlug,
+  productVariantId,
+  input,
+}: {
+  productSlug: string;
+  productVariantId: string;
+  input: UpdateProductVariantInput;
+}) {
+  try {
+    const context = await requireActiveContext();
+
+    const data = await db.transaction(async (trx) => {
+      const product = await existsProductSlugOrganizationId({
+        client: trx,
+        organizationId: context.organization.organizationId,
+        slug: productSlug,
+      });
+
+      if (!product) {
+        throw new NotFoundError(
+          "Product not found or you do no haver permission to update it"
+        );
+      }
+
+      const existing = await existsProductVariantProductId({
+        client: trx,
+        productId: product.productId,
+        productVariantId,
+      });
+
+      if (!existing) {
+        throw new NotFoundError(
+          "Product not found or you do no haver permission to update it"
+        );
+      }
+      console.log(input);
+      const result = await updateProductVariant({
+        client: trx,
+        organizationId: context.organization.organizationId,
+        productId: product.productId,
+        productVariantId,
+        userId: context.user.userId,
+        values: { ...input },
+      });
+
+      return result;
+    });
+
+    return data;
+  } catch (error) {
+    console.log(error);
     throw normalizeError(error);
   }
 }

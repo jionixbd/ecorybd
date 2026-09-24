@@ -3,6 +3,7 @@
 import { products } from "@/drizzle/schema/product";
 import { buildDataColumn } from "@/features/data-table/lib/build-data-column";
 import type { DataTableFeatures } from "@/features/data-table/lib/table-features";
+import { ProductVariantRowActions } from "@/features/product/components/product-variants/table/product-variants-row-actions";
 import type {
   ProductVariantsRowAction,
   ProductVariantWithRelations,
@@ -17,9 +18,12 @@ interface ProductVariantsTableColumnsProps {
   >;
 }
 
-export function productVariantsTableColumns(
-  _: ProductVariantsTableColumnsProps
-): ColumnDef<DataTableFeatures, ProductVariantWithRelations>[] {
+export function productVariantsTableColumns({
+  setRowAction,
+}: ProductVariantsTableColumnsProps): ColumnDef<
+  DataTableFeatures,
+  ProductVariantWithRelations
+>[] {
   return [
     buildDataColumn({
       id: "select",
@@ -74,5 +78,14 @@ export function productVariantsTableColumns(
       })),
       type: "enum",
     }),
+    {
+      cell({ row }) {
+        return (
+          <ProductVariantRowActions row={row} setRowAction={setRowAction} />
+        );
+      },
+      id: "actions",
+      size: 10,
+    },
   ];
 }

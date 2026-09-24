@@ -3,7 +3,7 @@ import type { Row, RowData } from "@tanstack/react-table";
 
 export interface ProductVariantsRowAction<TData extends RowData> {
   row: Row<DataTableFeatures, TData>;
-  type: "open" | "edit";
+  variant: "open" | "update" | "delete";
 }
 
 export interface ProductVariantWithRelations {
@@ -21,10 +21,10 @@ export interface ProductVariantWithRelations {
     organizationId: string;
     slug: string;
   };
-  price: string;
+  price: number;
   productId: string;
   productVariantId: string;
-  salePrice: string | null;
+  salePrice: number | null;
   sku: string;
   slug: string;
   status: "draft" | "published" | "archived";

@@ -26,8 +26,14 @@ export const insertProductVariantSchema = z.object({
   ),
 });
 
+export const updateProductVariantSchema = insertProductVariantSchema
+  .omit({
+    isDefault: true,
+  })
+  .partial();
+
 export const productVariantFormSchema = z.object({
-  name: z.string().min(5).max(255),
+  name: z.string().min(5).max(255).optional(),
   price: z
     .number()
     .min(0)
@@ -45,7 +51,16 @@ export const productVariantFormSchema = z.object({
   stockQuantity: z.number().int().min(0).max(2_147_483_647),
 });
 
+export const updateProductVariantFormSchema = productVariantFormSchema;
+
+export type UpdateProductVariantFromInput = z.infer<
+  typeof updateProductVariantFormSchema
+>;
+
 export type ProductVariantFromInput = z.infer<typeof productVariantFormSchema>;
 export type InsertProductVariantInput = z.infer<
   typeof insertProductVariantSchema
+>;
+export type UpdateProductVariantInput = z.infer<
+  typeof updateProductVariantSchema
 >;
