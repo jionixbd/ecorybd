@@ -1,4 +1,4 @@
-const PRODUCT_CACHE_LIFE = "minutes" as const;
+const PRODUCT_CACHE_LIFE = "weeks" as const;
 
 export const productCache = {
   profile: {
@@ -23,6 +23,15 @@ export const productCache = {
       productId: string;
     }) => `org:${organizationId}:product:id:${productId}`,
 
-    list: () => "organization:product:list",
+    list: ({ organizationId }: { organizationId: string }) =>
+      `organization:${organizationId}product:list`,
+
+    variants: ({
+      productSlug,
+      organizationId,
+    }: {
+      organizationId: string;
+      productSlug: string;
+    }) => `organization:${organizationId}:product:${productSlug}:variants`,
   } as const,
 };

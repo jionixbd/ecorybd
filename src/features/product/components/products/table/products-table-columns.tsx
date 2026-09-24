@@ -74,13 +74,15 @@ export function productsTableColumns(
     {
       cell({ row }) {
         return (
-          <Button asChild>
-            <Link
-              href={`/workspace/${row.original.organization.slug}/products/${row.original.slug}`}
-            >
-              View <ArrowUpRight />
-            </Link>
-          </Button>
+          <div className="flex items-center justify-center">
+            <Button asChild>
+              <Link
+                href={`/workspace/${row.original.organization.slug}/products/${row.original.slug}`}
+              >
+                View <ArrowUpRight />
+              </Link>
+            </Button>
+          </div>
         );
       },
       id: "actions",

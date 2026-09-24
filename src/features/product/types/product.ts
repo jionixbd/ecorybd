@@ -25,9 +25,9 @@ export interface ProductWithRelations {
     organizationId: string;
     logo: string | null;
   };
-  price: string;
+  price: number;
   productId: string;
-  salePrice: string | null;
+  salePrice: number | null;
   shortDescription: unknown;
   sku: string;
   slug: string;

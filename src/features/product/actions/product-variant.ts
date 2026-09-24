@@ -18,14 +18,14 @@ export const createProductVariantAction = organizationAction
   .inputSchema(
     z.object({
       input: insertProductVariantSchema,
-      slug: z.string(),
+      productSlug: z.string(),
     })
   )
   .action(
     async ({ parsedInput }) =>
       await insertProductVariantUseCase({
         input: parsedInput.input,
-        slug: parsedInput.slug,
+        productSlug: parsedInput.productSlug,
       })
   );
 

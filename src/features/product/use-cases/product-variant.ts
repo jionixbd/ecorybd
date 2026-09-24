@@ -15,6 +15,7 @@ import {
   updateProductVariant,
 } from "@/features/product/data-access/product-variant";
 import { toProductVariants } from "@/features/product/dto/product-variants";
+import { productCache } from "@/features/product/lib/cache";
 import type { ProductVariantSearchParam } from "@/features/product/parsers/product-variant";
 import type {
   InsertProductVariantInput,
@@ -22,17 +23,33 @@ import type {
 } from "@/features/product/validations/product-variant";
 import { requireActiveContext } from "@/lib/auth/required-active-context";
 import { ConflictError, normalizeError, NotFoundError } from "@/lib/error";
+import { cacheLife, cacheTag, updateTag } from "next/cache";
 
 export async function getProductVariantsUseCase({
   search,
-  slug,
+  organizationId,
+  productSlug,
 }: {
-  slug: string;
+  productSlug: string;
+  organizationId: string;
   search: ProductVariantSearchParam;
 }) {
+  "use cache";
+
+  cacheLife(productCache.profile.list.life);
+  cacheTag(
+    productCache.tags.variants({
+      organizationId,
+      productSlug,
+    })
+  );
+
   try {
     const { rawRows, rowCount } = await db.transaction(async (trx) => {
-      const existing = await existsProductSlug({ client: trx, slug });
+      const existing = await existsProductSlug({
+        client: trx,
+        slug: productSlug,
+      });
 
       if (!existing) {
         throw new NotFoundError("Product not found");
@@ -49,7 +66,7 @@ export async function getProductVariantsUseCase({
         search,
       });
 
-      return { rawRows: rows, rowCount: count };
+      return { product: existing, rawRows: rows, rowCount: count };
     });
 
     return {
@@ -66,22 +83,20 @@ export async function getProductVariantsUseCase({
 }
 
 export async function insertProductVariantUseCase({
-  slug,
+  productSlug,
   input,
 }: {
-  slug: string;
+  productSlug: string;
   input: InsertProductVariantInput;
 }) {
   try {
-    console.log(input);
-
     const context = await requireActiveContext();
 
     const data = await db.transaction(async (trx) => {
       const product = await existsProductSlugOrganizationId({
         client: trx,
         organizationId: context.organization.organizationId,
-        slug,
+        slug: productSlug,
       });
 
       if (!product) {
@@ -93,7 +108,7 @@ export async function insertProductVariantUseCase({
       const existing = await existsProductVariantSlugProductId({
         client: trx,
         productId: product.productId,
-        productVariantSlug: slug,
+        productVariantSlug: input.slug,
       });
 
       if (existing) {
@@ -110,6 +125,13 @@ export async function insertProductVariantUseCase({
 
       return result;
     });
+
+    updateTag(
+      productCache.tags.variants({
+        organizationId: data.organizationId,
+        productSlug,
+      })
+    );
 
     return data;
   } catch (error) {
@@ -153,7 +175,7 @@ export async function updateProductVariantUseCase({
           "Product not found or you do no haver permission to update it"
         );
       }
-      console.log(input);
+
       const result = await updateProductVariant({
         client: trx,
         organizationId: context.organization.organizationId,
@@ -165,6 +187,22 @@ export async function updateProductVariantUseCase({
 
       return result;
     });
+
+    updateTag(
+      productCache.tags.variants({
+        organizationId: data.organizationId,
+        productSlug,
+      })
+    );
+
+    if (data.isDefault) {
+      updateTag(
+        productCache.tags.detailId({
+          organizationId: data.organizationId,
+          productId: data.productId,
+        })
+      );
+    }
 
     return data;
   } catch (error) {

@@ -75,7 +75,7 @@ export const ProductVariantsCreateForm = () => {
     try {
       await executeAsync({
         input: values,
-        slug: product,
+        productSlug: product,
       });
     } catch {}
   }

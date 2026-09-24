@@ -5,6 +5,7 @@ import { getValidFilters } from "@/features/data-table/lib/valid-filters";
 import { ProductsTable } from "@/features/product/components/products/table/products-table";
 import { productSearchParam } from "@/features/product/parsers/product";
 import { getProductsUseCase } from "@/features/product/use-cases/product";
+import { getActiveContext } from "@/lib/auth/get-active-context";
 
 export default async function ProductsPage(
   props: PageProps<"/[locale]/workspace/[organization]/products">
@@ -30,9 +31,15 @@ const ProductsPageWrapper = async (
   const searchParams = await props.searchParams;
   const search = productSearchParam.parse(searchParams);
   const filters = getValidFilters(search.filters);
+  const context = await getActiveContext();
+
+  if (!context.organization) {
+    return null;
+  }
 
   const promises = Promise.all([
     getProductsUseCase({
+      organizationId: context.organization?.organizationId,
       search: {
         ...search,
         filters,

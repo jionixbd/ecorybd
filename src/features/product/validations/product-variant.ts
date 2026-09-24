@@ -33,7 +33,7 @@ export const updateProductVariantSchema = insertProductVariantSchema
   .partial();
 
 export const productVariantFormSchema = z.object({
-  name: z.string().min(5).max(255).optional(),
+  name: z.string().min(5).max(255),
   price: z
     .number()
     .min(0)

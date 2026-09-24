@@ -26,16 +26,19 @@ import type {
 } from "@/features/product/validations/product";
 import { requireActiveContext } from "@/lib/auth/required-active-context";
 import { ConflictError, normalizeError, NotFoundError } from "@/lib/error";
-import { cacheLife, cacheTag, revalidateTag, updateTag } from "next/cache";
+import { cacheLife, cacheTag, updateTag } from "next/cache";
 
 export async function getProductsUseCase({
   search,
+  organizationId,
 }: {
+  organizationId: string;
   search: ProductSearchParam;
 }) {
   "use cache";
+
   cacheLife(productCache.profile.list.life);
-  cacheTag(productCache.tags.list());
+  cacheTag(productCache.tags.list({ organizationId }));
 
   try {
     const { rawRows, rowCount } = await db.transaction(async (trx) => {
@@ -58,15 +61,64 @@ export async function getProductsUseCase({
   }
 }
 
+export async function insertProductUseCase({
+  input,
+}: {
+  input: InsertProductInput;
+}) {
+  try {
+    const context = await requireActiveContext();
+
+    const data = await db.transaction(async (trx) => {
+      const existing = await existsProductSlugOrganizationId({
+        client: trx,
+        organizationId: context.organization.organizationId,
+        slug: input.slug,
+      });
+
+      if (existing) {
+        throw new ConflictError("Product with same slug already exists");
+      }
+
+      const result = await insertProduct({
+        client: trx,
+        organizationId: context.organization.organizationId,
+        userId: context.user.userId,
+        values: input,
+      });
+
+      await insertProductVariant({
+        client: trx,
+        organizationId: context.organization.organizationId,
+        productId: result.productId,
+        userId: context.user.userId,
+        values: generateDefaultVariant({ productId: result.productId }),
+      });
+
+      return result;
+    });
+
+    updateTag(
+      productCache.tags.list({
+        organizationId: context.organization.organizationId,
+      })
+    );
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw normalizeError(error);
+  }
+}
+
 export async function getProductUseCase({ slug }: { slug: string }) {
   "use cache";
+
   cacheLife(productCache.profile.detail.life);
 
   try {
     const rawRow = await db.transaction(async (trx) => {
       const exits = await findProductSlug({ client: trx, slug });
-
-      console.log("🥰");
 
       if (!exits) {
         throw new NotFoundError("Product not found");
@@ -135,56 +187,14 @@ export async function updateProductUseCase({
       })
     );
 
-    revalidateTag(productCache.tags.list(), "max");
+    updateTag(
+      productCache.tags.list({
+        organizationId: context.organization.organizationId,
+      })
+    );
 
     return data;
   } catch (error) {
-    throw normalizeError(error);
-  }
-}
-
-export async function insertProductUseCase({
-  input,
-}: {
-  input: InsertProductInput;
-}) {
-  try {
-    const context = await requireActiveContext();
-
-    const data = await db.transaction(async (trx) => {
-      const existing = await existsProductSlugOrganizationId({
-        client: trx,
-        organizationId: context.organization.organizationId,
-        slug: input.slug,
-      });
-
-      if (existing) {
-        throw new ConflictError("Product with same slug already exists");
-      }
-
-      const result = await insertProduct({
-        client: trx,
-        organizationId: context.organization.organizationId,
-        userId: context.user.userId,
-        values: input,
-      });
-
-      await insertProductVariant({
-        client: trx,
-        organizationId: context.organization.organizationId,
-        productId: result.productId,
-        userId: context.user.userId,
-        values: generateDefaultVariant({ productId: result.productId }),
-      });
-
-      return result;
-    });
-
-    revalidateTag(productCache.tags.list(), "max");
-
-    return data;
-  } catch (error) {
-    console.log(error);
     throw normalizeError(error);
   }
 }
