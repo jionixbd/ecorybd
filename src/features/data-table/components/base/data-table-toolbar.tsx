@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { IconPlaceholder } from "@/components/ui/icon-placeholder";
+import { useDataTableAdvancedFilter } from "@/features/data-table/components/advanced/data-table-advanced-filter-provider";
 import { DataTableAdvancedFilterToggle } from "@/features/data-table/components/advanced/data-table-advanced-filter-toggle";
 import { DataTableFilter } from "@/features/data-table/components/base/filter/data-table-filter";
 import { DataTableViewOptions } from "@/features/data-table/components/common/data-table-view-options";
@@ -22,6 +23,7 @@ export function DataTableToolbar<TData extends RowData>({
   "use no memo";
 
   const isFiltered = table.store.state.columnFilters.length > 0;
+  const { enableAdvancedFilter } = useDataTableAdvancedFilter();
 
   const columns = useMemo(
     () => table.getAllColumns().filter((column) => column.getCanFilter()),
@@ -42,7 +44,8 @@ export function DataTableToolbar<TData extends RowData>({
       role="toolbar"
       {...props}
     >
-      <DataTableAdvancedFilterToggle />
+      {!!enableAdvancedFilter && <DataTableAdvancedFilterToggle />}
+
       <div className="flex flex-1 flex-wrap items-center gap-2">
         {columns.map((column) => (
           <DataTableFilter column={column} key={column.id} />
@@ -66,8 +69,8 @@ export function DataTableToolbar<TData extends RowData>({
         )}
       </div>
       <div className="flex items-center gap-2">
-        {children}
         <DataTableViewOptions align="end" table={table} />
+        {children}
       </div>
     </div>
   );

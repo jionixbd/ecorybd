@@ -68,6 +68,21 @@ export async function existsProductSlugOrganizationId({
   return result;
 }
 
+export async function existsProductSlug({
+  client,
+  slug,
+}: {
+  client: DbClient;
+  slug: string;
+}) {
+  const [result] = await client
+    .select({ productId: products.productId })
+    .from(products)
+    .where(eq(products.slug, slug));
+
+  return result;
+}
+
 export async function findProductId({
   client,
   productId,

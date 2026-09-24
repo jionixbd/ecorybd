@@ -178,7 +178,7 @@ export function DataTableSort<TData extends RowData>({
               remixicon="RiArrowUpDownLine"
               tabler="IconArrowsLeftRight"
             />
-            Sort
+            {/* Sort */}
             {sorting.length > 0 && (
               <Badge
                 className="h-[18.24px] rounded-md px-[5.12px] font-mono font-normal text-[10.4px]"

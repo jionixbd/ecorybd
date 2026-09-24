@@ -26,6 +26,26 @@ export const insertProductVariantSchema = z.object({
   ),
 });
 
+export const productVariantFormSchema = z.object({
+  name: z.string().min(5).max(255),
+  price: z
+    .number()
+    .min(0)
+    .max(99_999_999.99)
+    .refine((v) => TWO_DECIMAL_PLACES_REGEX.test(v.toFixed(2))),
+  salePrice: z
+    .number()
+    .min(0)
+    .max(99_999_999.99)
+    .refine((v) => TWO_DECIMAL_PLACES_REGEX.test(v.toFixed(2)))
+    .optional(),
+  sku: z.string().min(5).max(64),
+  slug: z.string().min(5).max(255),
+  status: z.enum(productStatusEnum.enumValues),
+  stockQuantity: z.number().int().min(0).max(2_147_483_647),
+});
+
+export type ProductVariantFromInput = z.infer<typeof productVariantFormSchema>;
 export type InsertProductVariantInput = z.infer<
   typeof insertProductVariantSchema
 >;

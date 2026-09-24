@@ -63,7 +63,7 @@ export function DataTableViewOptions<TData extends RowData>({
             remixicon="RiSettingsLine"
             tabler="IconSettings"
           />
-          View
+          {/* View */}
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-44 p-0", className)} {...props}>

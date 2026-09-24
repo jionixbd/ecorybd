@@ -3,7 +3,7 @@ export function DataTableBooleanCell({ value }: { value: unknown }) {
 
   return (
     <span className="max-w-125 truncate font-mono font-normal tabular-nums">
-      {booleanValue ? <code>True</code> : <code>False</code>}
+      {booleanValue === true ? <code>True</code> : <code>False</code>}
     </span>
   );
 }
