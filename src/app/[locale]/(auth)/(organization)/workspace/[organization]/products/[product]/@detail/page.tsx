@@ -1,6 +1,7 @@
 import { AsyncBoundary } from "@/components/boundaries/async-boundary";
 import { ProductDetailCard } from "@/features/product/components/details/product-detail-card";
 import { getProductUseCase } from "@/features/product/use-cases/product";
+import Link from "next/link";
 
 export default async function ProductDetailPage(
   props: PageProps<"/[locale]/workspace/[organization]/products/[product]">
@@ -24,6 +25,10 @@ async function ProductDetailWrapper(
   return (
     <div className="flex w-full justify-center">
       <ProductDetailCard product={product} />
+
+      <Link href={`/en/workspace/ecorybd/products/${product.slug}/media`}>
+        Upload image
+      </Link>
     </div>
   );
 }

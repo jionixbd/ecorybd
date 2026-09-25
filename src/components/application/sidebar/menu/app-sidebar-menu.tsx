@@ -26,7 +26,7 @@ export const AppSidebarMenu = async (
         </SidebarMenuItem>
         <SidebarMenuItem>
           <SidebarMenuButton asChild>
-            <Link href={`/workspace/${organization}`}>
+            <Link href={`/workspace/${organization}/library`}>
               <Library />
               Library
             </Link>

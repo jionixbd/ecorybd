@@ -5,6 +5,7 @@ import { geistMono, geistSans } from "@/lib/fonts";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { DEFAULT_METADATA } from "@/lib/metadata/constants";
 import { generateAlternateLanguages } from "@/lib/metadata/generators";
+import { ReactQueryProvider } from "@/lib/tanstack/react-query-provider";
 import "@/styles/tailwind.css";
 import { VercelToolbar } from "@vercel/toolbar/next";
 import type { Metadata } from "next";
@@ -38,22 +39,24 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          disableTransitionOnChange
-          enableSystem
-        >
-          <NuqsAdapter>
-            <AnalyticsProvider>
-              <NextIntlClientProvider>
-                {children}
-                {/* FIX: Failed to proxy http://127.0.0.1:25004/events?token= Error: socket hang up at ignore-listed frames {code: 'ECONNRESET'} */}
-                {shouldInjectToolbar && <VercelToolbar />}
-              </NextIntlClientProvider>
-            </AnalyticsProvider>
-          </NuqsAdapter>
-        </ThemeProvider>
+        <ReactQueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            disableTransitionOnChange
+            enableSystem
+          >
+            <NuqsAdapter>
+              <AnalyticsProvider>
+                <NextIntlClientProvider>
+                  {children}
+                  {/* FIX: Failed to proxy http://127.0.0.1:25004/events?token= Error: socket hang up at ignore-listed frames {code: 'ECONNRESET'} */}
+                  {shouldInjectToolbar && <VercelToolbar />}
+                </NextIntlClientProvider>
+              </AnalyticsProvider>
+            </NuqsAdapter>
+          </ThemeProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

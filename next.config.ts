@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
       {
         hostname: "img.clerk.com",
       },
+      {
+        hostname: "lxiscnt9tg.ufs.sh",
+      },
     ],
   },
   logging: {
