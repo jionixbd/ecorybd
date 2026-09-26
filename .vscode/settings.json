@@ -13,6 +13,13 @@
         "editor.defaultFormatter": "vscode.json-language-features"
     },
     "js/ts.preferences.importModuleSpecifier": "non-relative",
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/**": true,
+        "**/.next/**": true,
+        "**/dist/**": true
+    },
     "tailwindCSS.experimental.classRegex": [
         [
             "tw=\\{([^}]+)\\}",

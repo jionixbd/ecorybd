@@ -1,14 +1,14 @@
 import { AsyncBoundary } from "@/components/boundaries/async-boundary";
 import { ProductDetailCard } from "@/features/product/components/details/product-detail-card";
+import { ProductDetailSkeleton } from "@/features/product/components/details/product-details-skeleton";
 import { getProductUseCase } from "@/features/product/use-cases/product";
-import Link from "next/link";
 
 export default async function ProductDetailPage(
   props: PageProps<"/[locale]/workspace/[organization]/products/[product]">
 ) {
   return (
-    <div className="flex">
-      <AsyncBoundary>
+    <div className="flex w-full justify-center">
+      <AsyncBoundary suspenseFallback={<ProductDetailSkeleton />}>
         <ProductDetailWrapper {...props} />
       </AsyncBoundary>
     </div>
@@ -23,12 +23,8 @@ async function ProductDetailWrapper(
   const product = await getProductUseCase({ slug: params.product });
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex w-full max-w-5xl justify-center">
       <ProductDetailCard product={product} />
-
-      <Link href={`/en/workspace/ecorybd/products/${product.slug}/media`}>
-        Upload image
-      </Link>
     </div>
   );
 }

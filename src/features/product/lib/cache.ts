@@ -26,6 +26,14 @@ export const productCache = {
     list: ({ organizationId }: { organizationId: string }) =>
       `organization:${organizationId}product:list`,
 
+    media: ({
+      productSlug,
+      organizationId,
+    }: {
+      organizationId: string;
+      productSlug: string;
+    }) => `organization:${organizationId}:product:${productSlug}:media`,
+
     variants: ({
       productSlug,
       organizationId,

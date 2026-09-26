@@ -21,7 +21,7 @@ interface DetailCardProps {
 }
 
 export const ProductDetailCard = ({ product }: DetailCardProps) => (
-  <Card className="w-full max-w-5xl">
+  <Card className="w-full">
     <CardHeader className="gap-0">
       <CardTitle>{product.name}</CardTitle>
       <CardDescription>{product.slug}</CardDescription>

@@ -144,6 +144,7 @@ export async function getProductUseCase({ slug }: { slug: string }) {
         productId: data.productId,
       })
     );
+
     return data;
   } catch (error) {
     throw normalizeError(error);

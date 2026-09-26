@@ -14,7 +14,7 @@ import { useState } from "react";
 
 interface MediaPickerClientProps {
   media: MediaWIthRelations[];
-  onConfirm: (mediaId: string) => Promise<void>;
+  onConfirm: (mediaId: string) => Promise<unknown>;
   pages: number;
 }
 
@@ -35,10 +35,6 @@ export const MediaPickerClient = ({
     setIsSaving(true);
 
     try {
-      console.log("selected media", {
-        mediaId: staged.mediaId,
-      });
-
       await onConfirm(staged.mediaId);
       router.back();
       //   router.refresh();

@@ -66,7 +66,7 @@ export async function getProductVariantsUseCase({
         search,
       });
 
-      return { product: existing, rawRows: rows, rowCount: count };
+      return { rawRows: rows, rowCount: count };
     });
 
     return {

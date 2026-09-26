@@ -1,5 +1,5 @@
 import { MediaPickerRoute } from "@/features/media/components/picker/media-picker-route";
-import { ProductMediaPickerClient } from "@/features/media/components/product-media-picker-client";
+import { ProductMediaPickerClient } from "@/features/product/components/product-media/product-media-picker-client";
 
 interface ProductMediaPickerRouteProps {
   modal?: boolean;
