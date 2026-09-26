@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
 import { generateHomeMetadata } from "@/lib/metadata/pages/home";
-import { resolvePublicUrl } from "@/lib/resolve-public-url";
 import { ArrowUpRight } from "lucide-react";
 import { getLocale } from "next-intl/server";
 import Image from "next/image";
+import Link from "next/link";
 
 export async function generateMetadata(_: PageProps<"/[locale]">) {
   const locale = await getLocale();
@@ -13,18 +12,19 @@ export async function generateMetadata(_: PageProps<"/[locale]">) {
 }
 
 export default async function HomePage(_: PageProps<"/[locale]">) {
+  const locale = await getLocale();
   return (
     <div className="grid h-svh w-full place-content-center place-items-center">
       <Image
         alt="logo"
         height={150}
-        src={resolvePublicUrl("/public/images/ecory-logo.png")}
+        src={"/images/ecory-logo.png"}
         width={410}
       />
 
       <Button asChild variant={"link"}>
-        <Link href={"/onboarding"}>
-          Onboarding
+        <Link href={`/${locale}/sign-in`}>
+          Signin
           <ArrowUpRight />
         </Link>
       </Button>
