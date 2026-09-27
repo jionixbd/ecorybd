@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/components/application/theme/theme-provider";
 import { AnalyticsProvider } from "@/features/analytics/components/analytics-provider";
 import { routing } from "@/i18n/routing";
-import { geistMono, geistSans } from "@/lib/fonts";
+import { geistMono, geistSans, hindSans } from "@/lib/fonts";
 import { getBaseUrl } from "@/lib/get-base-url";
 import { DEFAULT_METADATA } from "@/lib/metadata/constants";
 import { generateAlternateLanguages } from "@/lib/metadata/generators";
@@ -34,7 +34,7 @@ export default async function RootLayout({
 
   return (
     <html
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${hindSans.variable} h-full antialiased`}
       lang={locale}
       suppressHydrationWarning
     >
