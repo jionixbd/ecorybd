@@ -1,19 +1,10 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
-import type { NextRequest } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import { intlMiddleware } from "./i18n/middleware";
+import { routing } from "./i18n/routing";
 
-export default clerkMiddleware(
-  async (_auth, req: NextRequest) => {
-    if (
-      req.nextUrl.pathname.startsWith("/api") ||
-      req.nextUrl.pathname.startsWith("/trpc") ||
-      req.nextUrl.pathname.startsWith("/.well-known") ||
-      req.nextUrl.pathname.startsWith("/ingest")
-    ) {
-      return;
-    }
-    return await intlMiddleware(req);
-  },
+const clerkHandler = clerkMiddleware(
+  async (_auth, req: NextRequest) => intlMiddleware(req),
   {
     organizationSyncOptions: {
       organizationPatterns: [
@@ -24,13 +15,52 @@ export default clerkMiddleware(
   }
 );
 
+const PUBLIC_SEGMENTS = new Set(["pricing", "about", "blog", "docs"]);
+
+function isPublicPath(pathname: string): boolean {
+  const [firstSegment, ...remainingSegments] = pathname
+    .split("/")
+    .filter(Boolean);
+
+  if (firstSegment === undefined) {
+    return true;
+  }
+
+  const isLocale = routing.locales.some((locale) => locale === firstSegment);
+
+  if (isLocale) {
+    // biome-ignore lint/style/useDestructuring:ok
+    const pageSegment = remainingSegments[0];
+    return pageSegment === undefined || PUBLIC_SEGMENTS.has(pageSegment);
+  }
+
+  return remainingSegments.length === 0 && PUBLIC_SEGMENTS.has(firstSegment);
+}
+
+export default function proxy(req: NextRequest, event: NextFetchEvent) {
+  const { pathname } = req.nextUrl;
+
+  if (
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/trpc") ||
+    pathname.startsWith("/.well-known") ||
+    pathname.startsWith("/ingest")
+  ) {
+    return;
+  }
+
+  if (isPublicPath(pathname)) {
+    return intlMiddleware(req);
+  }
+
+  return clerkHandler(req, event);
+}
+
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
+    "/",
     "/(api|trpc)(.*)",
-    // Always run for Clerk-specific frontend API routes
     "/__clerk/(.*)",
   ],
 };
