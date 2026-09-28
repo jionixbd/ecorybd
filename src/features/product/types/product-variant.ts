@@ -31,3 +31,26 @@ export interface ProductVariantWithRelations {
   stockQuantity: number;
   updatedAt: Date;
 }
+
+export interface PublicProductVariantWithRelations {
+  isDefault: boolean;
+  media: {
+    name: string;
+    altText: string | null;
+    height: number | null;
+    key: string;
+    mimeType: string;
+    size: number | null;
+    ufsUrl: string;
+    width: number | null;
+  } | null;
+  name: string;
+  price: number;
+  productId: string;
+  productVariantId: string;
+  salePrice: number | null;
+  sku: string;
+  slug: string;
+  status: "draft" | "published" | "archived";
+  stockQuantity: number;
+}

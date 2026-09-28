@@ -18,7 +18,10 @@ export const uploadRouter = {
     }
   )
     .middleware(async ({ files }) => {
+      console.log("running context");
       const context = await requireActiveContext();
+
+      console.log(context);
 
       if (!(context.user && context.organization && context.membership)) {
         throw new UploadThingError("Unauthorized");

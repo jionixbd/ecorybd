@@ -1,3 +1,4 @@
+import { AsyncBoundary } from "@/components/boundaries/async-boundary";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -6,6 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import { CompanyLicenseGallery } from "@/components/web/pages/landing/parts/company-license-gallery";
 import { ProductFeatures } from "@/components/web/pages/landing/parts/product-feaures";
+import { OrderForm } from "@/components/web/pages/landing/sections/order-form";
 import { Container } from "@/components/web/pages/layout/container";
 import { Section } from "@/components/web/pages/layout/section";
 import { H1, H2, H4 } from "@/components/web/pages/layout/typography";
@@ -31,6 +33,9 @@ export default async function HomePage(_: PageProps<"/[locale]">) {
       <CustomerReviewSection />
       <CompanyLicense />
       <DiscountSection />
+      <AsyncBoundary>
+        <OrderForm />
+      </AsyncBoundary>
     </div>
   );
 }

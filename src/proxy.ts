@@ -3,8 +3,26 @@ import type { NextFetchEvent, NextRequest } from "next/server";
 import { intlMiddleware } from "./i18n/middleware";
 import { routing } from "./i18n/routing";
 
+// const clerkHandler = clerkMiddleware(
+//   async (_auth, req: NextRequest) => intlMiddleware(req),
+//   {
+//     organizationSyncOptions: {
+//       organizationPatterns: [
+//         "/:locale/workspace/:slug",
+//         "/:locale/workspace/:slug/(.*)",
+//       ],
+//     },
+//   }
+// );
+
 const clerkHandler = clerkMiddleware(
-  async (_auth, req: NextRequest) => intlMiddleware(req),
+  async (_auth, req: NextRequest) => {
+    if (req.nextUrl.pathname.startsWith("/api/")) {
+      return;
+    }
+
+    return await intlMiddleware(req);
+  },
   {
     organizationSyncOptions: {
       organizationPatterns: [
@@ -40,8 +58,11 @@ function isPublicPath(pathname: string): boolean {
 export default function proxy(req: NextRequest, event: NextFetchEvent) {
   const { pathname } = req.nextUrl;
 
+  const isUploadthingPath =
+    pathname === "/api/uploadthing" || pathname.startsWith("/api/uploadthing/");
+
   if (
-    pathname.startsWith("/api") ||
+    (!isUploadthingPath && pathname.startsWith("/api")) ||
     pathname.startsWith("/trpc") ||
     pathname.startsWith("/.well-known") ||
     pathname.startsWith("/ingest")

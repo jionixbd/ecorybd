@@ -1,5 +1,14 @@
-import type { Organization, ProductVariant, User } from "@/drizzle/schema";
-import type { ProductVariantWithRelations } from "@/features/product/types/product-variant";
+import type {
+  Media,
+  Organization,
+  ProductVariant,
+  ProductVariantMedia,
+  User,
+} from "@/drizzle/schema";
+import type {
+  ProductVariantWithRelations,
+  PublicProductVariantWithRelations,
+} from "@/features/product/types/product-variant";
 
 interface RawRows {
   organizations: Organization;
@@ -45,3 +54,43 @@ export const toProductVariant = ({
   stockQuantity: product_variants.stockQuantity,
   updatedAt: product_variants.updatedAt,
 });
+
+type QueryMedia =
+  | (ProductVariantMedia & {
+      media: Media | null;
+    })
+  | null;
+
+interface QueryRawRows extends ProductVariant {
+  media: QueryMedia;
+}
+
+export const toPublicProductVariants = ({
+  rawRows,
+}: {
+  rawRows: QueryRawRows[];
+}): PublicProductVariantWithRelations[] =>
+  rawRows.map((row) => ({
+    isDefault: row.isDefault,
+    media: row.media?.media
+      ? {
+          altText: row.media.media.altText,
+          height: row.media.media.height,
+          key: row.media.media.key,
+          mimeType: row.media.media.mimeType,
+          name: row.media.media.name,
+          size: row.media.media.size,
+          ufsUrl: row.media.media.ufsUrl,
+          width: row.media.media.width,
+        }
+      : null,
+    name: row.name,
+    price: row.price,
+    productId: row.productId,
+    productVariantId: row.productVariantId,
+    salePrice: row.salePrice,
+    sku: row.sku,
+    slug: row.slug,
+    status: row.status,
+    stockQuantity: row.stockQuantity,
+  }));

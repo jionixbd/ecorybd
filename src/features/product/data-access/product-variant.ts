@@ -218,3 +218,26 @@ export async function updateProductVariant({
 
   return result;
 }
+
+export async function findPublicProductVariants({
+  client,
+  productId,
+  organizationId,
+}: {
+  client: DbClient;
+  productId: string;
+  organizationId: string;
+}) {
+  return await client.query.productVariants.findMany({
+    where: {
+      AND: [{ organizationId }, { productId }, { status: "published" }],
+    },
+    with: {
+      media: {
+        with: {
+          media: true,
+        },
+      },
+    },
+  });
+}

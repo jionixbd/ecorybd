@@ -57,5 +57,6 @@ export const env = createEnv({
     SENTRY_ORG: z.string().min(1).optional(),
     SENTRY_PROJECT: z.string().min(1).optional(),
     SENTRY_PROJECT_ID: z.string().min(1).optional(),
+    ECORYBD_ORGANIZATION_ID:z.string().min(1)
   },
 });

@@ -41,7 +41,7 @@ async function LibraryPageWrapper(
         pages={data.meta.pages}
         toolbar={true}
         upload={
-          <MediaUpload accept="all" fileRouter="mediaUploader" maxSize={2} />
+          <MediaUpload accept="all" fileRouter="mediaUploader" maxSize={1} />
         }
       />
     </div>
