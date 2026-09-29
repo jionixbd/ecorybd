@@ -1,14 +1,28 @@
 "use server";
 
 import { db } from "@/drizzle/db";
+import type { OrderStatus } from "@/drizzle/schema";
+import { buildPaginationMeta } from "@/drizzle/utils/pagination";
 import {
+  countOrders,
+  deleteOrder,
+  existsOrderOrganizationId,
+  findOrder,
   findOrderableVariant,
+  findOrders,
   findOrderShippingMethod,
   insertBillingAddress,
   insertOrder,
   insertOrderItem,
   reserveVariantStock,
+  setOrderStatus,
 } from "@/features/order/data-access/order";
+import {
+  toOrdersWithRelations,
+  toOrderWithRelations,
+} from "@/features/order/dto/order";
+import { orderCache } from "@/features/order/lib/cache";
+import type { OrderSearchParam } from "@/features/order/parsers/order";
 import type { OrderFormInput } from "@/features/order/validation/order";
 import { productCache } from "@/features/product/lib/cache";
 import {
@@ -17,7 +31,7 @@ import {
   NotFoundError,
   ValidationError,
 } from "@/lib/error";
-import { updateTag } from "next/cache";
+import { cacheLife, cacheTag, updateTag } from "next/cache";
 import { randomInt } from "node:crypto";
 
 const ORDER_QUANTITY = 1;
@@ -150,11 +164,143 @@ export async function insertOrderUseCase({
       })
     );
     updateTag(productCache.tags.list({ organizationId }));
+    updateTag(orderCache.tags.list({ organizationId }));
 
     return {
       orderNumber: created.orderNumber,
       total: created.total,
     };
+  } catch (error) {
+    throw normalizeError(error);
+  }
+}
+
+export async function getOrdersUseCase({
+  search,
+  organizationId,
+}: {
+  organizationId: string;
+  search: OrderSearchParam;
+}) {
+  "use cache";
+
+  cacheLife(orderCache.profile.list.life);
+  cacheTag(orderCache.tags.list({ organizationId }));
+
+  try {
+    const { rawRows, rowCount } = await db.transaction(async (trx) => {
+      const rows = await findOrders({ client: trx, organizationId, search });
+      const count = await countOrders({ client: trx, organizationId, search });
+
+      return { rawRows: rows, rowCount: count };
+    });
+
+    return {
+      meta: buildPaginationMeta({
+        page: search.page,
+        perPage: search.perPage,
+        rowCount,
+      }),
+      rows: toOrdersWithRelations({ rawRows }),
+    };
+  } catch (error) {
+    throw normalizeError(error);
+  }
+}
+
+export async function findOrderUseCase({
+  orderId,
+  organizationId,
+}: {
+  orderId: string;
+  organizationId: string;
+}) {
+  "use cache";
+
+  cacheLife(orderCache.profile.list.life);
+  cacheTag(orderCache.tags.detailId({ orderId, organizationId }));
+
+  try {
+    const rawRow = await findOrder({ client: db, orderId, organizationId });
+
+    return {
+      row: toOrderWithRelations({ rawRow }),
+    };
+  } catch (error) {
+    throw normalizeError(error);
+  }
+}
+
+export async function updateOrderStatusUseCase({
+  orderId,
+  organizationId,
+  input,
+}: {
+  orderId: string;
+  organizationId: string;
+  input: {
+    status: OrderStatus;
+  };
+}) {
+  try {
+    const res = await db.transaction(async (trx) => {
+      const order = await existsOrderOrganizationId({
+        client: trx,
+        orderId,
+        organizationId,
+      });
+
+      if (!order) {
+        throw new NotFoundError("Order not found");
+      }
+
+      return await setOrderStatus({
+        client: trx,
+        orderId,
+        organizationId,
+        values: input,
+      });
+    });
+
+    updateTag(orderCache.tags.list({ organizationId }));
+    updateTag(orderCache.tags.detailId({ orderId, organizationId }));
+
+    return res;
+  } catch (error) {
+    throw normalizeError(error);
+  }
+}
+
+export async function deleteOrderUseCase({
+  orderId,
+  organizationId,
+}: {
+  orderId: string;
+  organizationId: string;
+}) {
+  try {
+    const res = await db.transaction(async (trx) => {
+      const order = await existsOrderOrganizationId({
+        client: trx,
+        orderId,
+        organizationId,
+      });
+
+      if (!order) {
+        throw new NotFoundError("Order not found");
+      }
+
+      return await deleteOrder({
+        client: trx,
+        orderId,
+        organizationId,
+      });
+    });
+
+    updateTag(orderCache.tags.list({ organizationId }));
+    updateTag(orderCache.tags.detailId({ orderId, organizationId }));
+
+    return res;
   } catch (error) {
     throw normalizeError(error);
   }

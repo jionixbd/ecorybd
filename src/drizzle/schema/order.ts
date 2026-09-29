@@ -125,3 +125,4 @@ export const orderItems = snakeCase.table(
 
 export type OrderItem = typeof orderItems.$inferSelect;
 export type Order = typeof orders.$inferSelect;
+export type OrderStatus = (typeof orders.status.enumValues)[number];

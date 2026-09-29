@@ -1,14 +1,60 @@
 import type { DbClient } from "@/drizzle/db";
 import {
+  type OrderStatus,
   billingAddress,
   orderItems,
   orders,
+  organizations,
   productShippingMethods,
   productVariants,
   products,
   shippingMethods,
 } from "@/drizzle/schema";
-import { and, eq, gt, sql } from "drizzle-orm";
+import { buildMultiSelectFilter } from "@/drizzle/utils/filters";
+import { buildPagination } from "@/drizzle/utils/pagination";
+import { buildOrderBy } from "@/drizzle/utils/sort";
+import { filterColumns } from "@/features/data-table/lib/filter-columns";
+import type { OrderSearchParam } from "@/features/order/parsers/order";
+import { and, asc, count, eq, gt, sql } from "drizzle-orm";
+
+function buildOrdersWhere({
+  search,
+  organizationId,
+}: {
+  search: OrderSearchParam;
+  organizationId: string;
+}) {
+  return and(
+    // buildTextSearchFilter({ columns: [orders.], value: search.name }),
+    eq(orders.organizationId, organizationId),
+    buildMultiSelectFilter<OrderStatus>({
+      column: orders.status,
+      values: search.status,
+    })
+  );
+}
+
+export async function existsOrderOrganizationId({
+  client,
+  organizationId,
+  orderId,
+}: {
+  client: DbClient;
+  organizationId: string;
+  orderId: string;
+}) {
+  const [result] = await client
+    .select({ orderId: orders.orderId })
+    .from(orders)
+    .where(
+      and(
+        eq(orders.orderId, orderId),
+        eq(orders.organizationId, organizationId)
+      )
+    );
+
+  return result;
+}
 
 export async function findOrderableVariant({
   client,
@@ -140,4 +186,151 @@ export async function insertOrderItem({
 }) {
   const [row] = await client.insert(orderItems).values(values).returning();
   return row;
+}
+
+export async function findOrders({
+  client,
+  search,
+  organizationId,
+}: {
+  client: DbClient;
+  search: OrderSearchParam;
+  organizationId: string;
+}) {
+  const where = search.advanced
+    ? filterColumns({
+        filters: search.filters,
+        joinOperator: search.joinOperator,
+        table: orders,
+      })
+    : buildOrdersWhere({ organizationId, search });
+
+  const orderBy = buildOrderBy({
+    columns: {
+      createdAt: orders.createdAt,
+      status: orders.status,
+    },
+    fallback: asc(orders.createdAt),
+    sort: search.sort,
+  });
+
+  const { limit, offset } = buildPagination({
+    page: search.page,
+    perPage: search.perPage,
+  });
+
+  return await client
+    .select()
+    .from(orders)
+    .innerJoin(
+      organizations,
+      eq(organizations.organizationId, orders.organizationId)
+    )
+    .innerJoin(
+      billingAddress,
+      eq(billingAddress.billingAddressId, orders.billingAddressId)
+    )
+    .innerJoin(orderItems, eq(orderItems.orderId, orders.orderId))
+    .limit(limit)
+    .offset(offset)
+    .where(where)
+    .orderBy(...orderBy);
+}
+
+export async function countOrders({
+  client,
+  search,
+  organizationId,
+}: {
+  client: DbClient;
+  search: OrderSearchParam;
+  organizationId: string;
+}) {
+  const [result] = await client
+    .select({ count: count() })
+    .from(orders)
+    .where(buildOrdersWhere({ organizationId, search }));
+
+  return result?.count ?? 0;
+}
+
+export async function findOrder({
+  client,
+  orderId,
+  organizationId,
+}: {
+  client: DbClient;
+  orderId: string;
+  organizationId: string;
+}) {
+  const [result] = await client
+    .select()
+    .from(orders)
+    .innerJoin(
+      organizations,
+      eq(organizations.organizationId, orders.organizationId)
+    )
+    .innerJoin(
+      billingAddress,
+      eq(billingAddress.billingAddressId, orders.billingAddressId)
+    )
+    .innerJoin(orderItems, eq(orderItems.orderId, orders.orderId))
+
+    .where(
+      and(
+        eq(orders.orderId, orderId),
+        eq(orders.organizationId, organizationId)
+      )
+    );
+
+  return result;
+}
+
+export async function setOrderStatus({
+  client,
+  orderId,
+  organizationId,
+  values,
+}: {
+  client: DbClient;
+  organizationId: string;
+  orderId: string;
+  values: {
+    status: OrderStatus;
+  };
+}) {
+  const [result] = await client
+    .update(orders)
+    .set(values)
+    .where(
+      and(
+        eq(orders.orderId, orderId),
+        eq(orders.organizationId, organizationId)
+      )
+    )
+    .returning();
+
+  return result;
+}
+
+export async function deleteOrder({
+  client,
+  orderId,
+  organizationId,
+}: {
+  client: DbClient;
+  organizationId: string;
+  orderId: string;
+}) {
+  const [result] = await client
+    .delete(orders)
+    .where(
+      and(
+        eq(orders.orderId, orderId),
+        eq(orders.organizationId, organizationId)
+      )
+    )
+    .returning();
+
+  return result;
 }

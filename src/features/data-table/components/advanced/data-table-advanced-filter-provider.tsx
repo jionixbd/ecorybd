@@ -25,7 +25,6 @@ interface AdvancedFilterProviderProps {
   children: React.ReactNode;
 }
 
-// 1. THIS ONLY PROVIDES STATE NOW (NO UI)
 export function DataTableAdvancedFilterProvider({
   children,
 }: AdvancedFilterProviderProps) {

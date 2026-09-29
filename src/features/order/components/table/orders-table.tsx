@@ -9,39 +9,32 @@ import { DataTable } from "@/features/data-table/components/data-table";
 import { DataTableSort } from "@/features/data-table/components/sort/data-table-sort";
 import { useDataTable } from "@/features/data-table/hooks/use-data-table";
 import type { QueryKeys } from "@/features/data-table/types";
-import { ProductVariantsCreate } from "@/features/product/components/product-variants/product-veriants-create";
-import { ProductVariantUpdate } from "@/features/product/components/product-variants/table/product-variants-update";
-import { ProductVariantsTableActionBar } from "@/features/product/components/product-variants/table/products-table-action-bar";
-import { productVariantsTableColumns } from "@/features/product/components/product-variants/table/products-table-columns";
+import { OrdersTableActionBar } from "@/features/order/components/table/orders-table-action-bar";
+import { ordersTableColumns } from "@/features/order/components/table/orders-table-columns";
 import type {
-  ProductVariantsRowAction,
-  ProductVariantWithRelations,
-} from "@/features/product/types/product-variant";
-import type { getProductVariantsUseCase } from "@/features/product/use-cases/product-variant";
+  OrdersTableRowAction,
+  OrderWithRelations,
+} from "@/features/order/types/order";
+import type { getOrdersUseCase } from "@/features/order/use-cases/order";
 import { use, useMemo, useState } from "react";
 
-interface ProductVariantsTableProps {
-  promises: Promise<[Awaited<ReturnType<typeof getProductVariantsUseCase>>]>;
+interface ProductsTableProps {
+  promises: Promise<[Awaited<ReturnType<typeof getOrdersUseCase>>]>;
   queryKeys?: Partial<QueryKeys>;
 }
 
-export function ProductVariantsTable({
-  promises,
-  queryKeys,
-}: ProductVariantsTableProps) {
+export function OrdersTable({ promises, queryKeys }: ProductsTableProps) {
   "use no memo";
 
-  const { enableAdvancedFilter = true } = useDataTableAdvancedFilter();
+  const { enableAdvancedFilter } = useDataTableAdvancedFilter();
   const [data] = use(promises);
 
-  const [rowAction, setRowAction] =
-    useState<ProductVariantsRowAction<ProductVariantWithRelations> | null>(
-      null
-    );
+  const [, setRowAction] =
+    useState<OrdersTableRowAction<OrderWithRelations> | null>(null);
 
   const columns = useMemo(
     () =>
-      productVariantsTableColumns({
+      ordersTableColumns({
         setRowAction,
       }),
     []
@@ -52,7 +45,7 @@ export function ProductVariantsTable({
     columns,
     data: data.rows,
     enableAdvancedFilter,
-    getRowId: (originalRow) => originalRow.productVariantId,
+    getRowId: (originalRow) => originalRow.orderId,
     initialState: {
       columnPinning: { end: ["actions"], start: [] },
       sorting: [{ desc: true, id: "createdAt" }],
@@ -76,25 +69,19 @@ export function ProductVariantsTable({
     </DataTableAdvancedToolbar>
   ) : (
     <DataTableToolbar table={table}>
-      <DataTableSort table={table} />
-      <ProductVariantsCreate />
+      <DataTableSort align="end" table={table} />
     </DataTableToolbar>
   );
 
   return (
-    <div className="grid h-full w-full max-w-5xl rounded-2xl bg-muted/30">
+    <div className="grid h-full w-full bg-muted/30">
       <DataTable
-        actionBar={<ProductVariantsTableActionBar table={table} />}
-        className="w-full p-4"
+        actionBar={<OrdersTableActionBar table={table} />}
+        className="h-[calc(100vh-136px)] w-full p-4"
         table={table}
       >
         {advanceFilter}
       </DataTable>
-      <ProductVariantUpdate
-        onOpenChange={() => setRowAction(null)}
-        open={rowAction?.variant === "update"}
-        variant={rowAction?.row.original ?? null}
-      />
     </div>
   );
 }

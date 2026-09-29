@@ -1,9 +1,15 @@
 "use server";
 
-import { insertOrderUseCase } from "@/features/order/user-case/order";
+import { orders } from "@/drizzle/schema/order";
+import {
+  deleteOrderUseCase,
+  insertOrderUseCase,
+  updateOrderStatusUseCase,
+} from "@/features/order/use-cases/order";
 import { orderFormSchema } from "@/features/order/validation/order";
-import { publicAction } from "@/lib/safe-action";
+import { organizationAction, publicAction } from "@/lib/safe-action";
 import { getStorefrontContext } from "@/lib/storefront/get-storefront-context";
+import z from "zod";
 
 export const insertOrderAction = publicAction
   .metadata({
@@ -18,3 +24,41 @@ export const insertOrderAction = publicAction
       organizationId,
     });
   });
+
+export const updateOrderStatusAction = organizationAction
+  .metadata({
+    actionName: "order:update-status",
+  })
+  .inputSchema(
+    z.object({
+      input: z.object({
+        status: z.enum(orders.status.enumValues),
+      }),
+      orderId: z.uuid(),
+    })
+  )
+  .action(
+    async ({ parsedInput, ctx }) =>
+      await updateOrderStatusUseCase({
+        input: parsedInput.input,
+        orderId: parsedInput.orderId,
+        organizationId: ctx.organization.organizationId,
+      })
+  );
+
+export const deleteOrderAction = organizationAction
+  .metadata({
+    actionName: "order:delete",
+  })
+  .inputSchema(
+    z.object({
+      orderId: z.uuid(),
+    })
+  )
+  .action(
+    async ({ parsedInput, ctx }) =>
+      await deleteOrderUseCase({
+        orderId: parsedInput.orderId,
+        organizationId: ctx.organization.organizationId,
+      })
+  );

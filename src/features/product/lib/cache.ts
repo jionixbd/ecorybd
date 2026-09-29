@@ -13,7 +13,7 @@ export const productCache = {
     }: {
       organizationId: string;
       slug: string;
-    }) => `org:${organizationId}:product:slug:${slug}`,
+    }) => `organization:${organizationId}:product:slug:${slug}`,
 
     detailId: ({
       productId,
@@ -21,10 +21,10 @@ export const productCache = {
     }: {
       organizationId: string;
       productId: string;
-    }) => `org:${organizationId}:product:id:${productId}`,
+    }) => `organization:${organizationId}:product:id:${productId}`,
 
     list: ({ organizationId }: { organizationId: string }) =>
-      `organization:${organizationId}product:list`,
+      `organization:${organizationId}:product:list`,
 
     media: ({
       productSlug,

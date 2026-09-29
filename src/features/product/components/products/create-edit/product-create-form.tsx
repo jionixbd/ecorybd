@@ -30,13 +30,14 @@ import { useDebounceSlug } from "@/hooks/use-debounce-slug";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Archive, ChevronDownIcon, FastForward, Send } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 export const ProductCreateForm = () => {
   const router = useRouter();
+  const params = useParams();
 
   const [continueToProduct, setContinueToProduct] = useState(false);
 
@@ -52,7 +53,7 @@ export const ProductCreateForm = () => {
       const { slug } = data;
 
       if (continueToProduct) {
-        router.replace(`/workspace/ecorybd/products/${slug}`);
+        router.replace(`/workspace/${params.organization}/products/${slug}`);
       }
 
       form.reset({

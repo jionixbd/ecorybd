@@ -14,7 +14,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 
-import { ChevronRight, Leaf } from "lucide-react";
+import { ChevronRight, Leaf, Truck } from "lucide-react";
 import Link from "next/link";
 
 export const AppSidebarProductsMenu = async (
@@ -25,13 +25,39 @@ export const AppSidebarProductsMenu = async (
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
+
       <SidebarMenu>
         <Collapsible asChild className="group/collapsible" defaultOpen={true}>
           <SidebarMenuItem>
             <CollapsibleTrigger asChild>
               <SidebarMenuButton tooltip={"Products"}>
+                <Truck />
+                <span>Order</span>
+                <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarMenuSub>
+                <SidebarMenuSubItem>
+                  <SidebarMenuSubButton asChild>
+                    <Link href={`/workspace/${organization}/orders`}>
+                      <span>Orders</span>
+                    </Link>
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              </SidebarMenuSub>
+            </CollapsibleContent>
+          </SidebarMenuItem>
+        </Collapsible>
+      </SidebarMenu>
+
+      <SidebarMenu>
+        <Collapsible asChild className="group/collapsible" defaultOpen={false}>
+          <SidebarMenuItem>
+            <CollapsibleTrigger asChild>
+              <SidebarMenuButton tooltip={"Products"}>
                 <Leaf />
-                <span>Products</span>
+                <span>Product</span>
                 <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
               </SidebarMenuButton>
             </CollapsibleTrigger>
