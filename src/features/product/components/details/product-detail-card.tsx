@@ -15,6 +15,7 @@ import { ProductDetailStatus } from "@/features/product/components/details/produ
 import { ProductSettings } from "@/features/product/components/details/product-settings";
 import { toProduct } from "@/features/product/dto/product";
 import type { ProductWithRelations } from "@/features/product/types/product";
+import { formatBDT } from "@/lib/format-bdt";
 
 interface DetailCardProps {
   product: ProductWithRelations;
@@ -42,11 +43,16 @@ export const ProductDetailCard = ({ product }: DetailCardProps) => (
         />
         <ProductDetailEntity label={"Badge"} start value={product.badge} />
         <ProductDetailEntity
+          hind
           label={"Short Description"}
           start
           value={product.tempShortDescription}
         />
-        <ProductDetailEntity label={"Price"} mono value={product.price} />
+        <ProductDetailEntity
+          hind
+          label={"Price"}
+          value={formatBDT(product.price)}
+        />
         <ProductDetailEntity
           label={"Sale Price"}
           mono

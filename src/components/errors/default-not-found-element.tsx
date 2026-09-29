@@ -16,7 +16,7 @@ interface DefaultNotFoundElementProps {
 }
 
 export const DefaultNotFoundElement = ({
-  title = "Something went wrong",
+  title = "Not Found",
   desc = "There was an issue loading this section. Refresh to give it another try.",
 }: DefaultNotFoundElementProps) => (
   <Empty className="bg-muted/30 p-4">

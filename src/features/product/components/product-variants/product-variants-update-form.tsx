@@ -25,12 +25,12 @@ import {
   updateProductVariantFormSchema,
   type UpdateProductVariantFromInput,
 } from "@/features/product/validations/product-variant";
-import { useDebounceSlug } from "@/hooks/use-debounce-slug";
+// import { useDebounceSlug } from "@/hooks/use-debounce-slug";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useParams } from "next/navigation";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 interface ProductVariantUpdateFormProps {
   variant: ProductVariantWithRelations | null;
@@ -65,16 +65,16 @@ export const ProductVariantUpdateForm = ({
     resolver: zodResolver(updateProductVariantFormSchema),
   });
 
-  const name = useWatch({
-    control: form.control,
-    name: "name",
-  });
+  // const name = useWatch({
+  //   control: form.control,
+  //   name: "name",
+  // });
 
-  useDebounceSlug({
-    getValues: form.getValues,
-    name,
-    setValue: form.setValue,
-  });
+  // useDebounceSlug({
+  //   getValues: form.getValues,
+  //   name,
+  //   setValue: form.setValue,
+  // });
 
   async function onSubmit(values: UpdateProductVariantFromInput) {
     try {

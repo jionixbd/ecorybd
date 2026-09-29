@@ -28,12 +28,12 @@ import {
   productFormSchema,
   type ProductFormInput,
 } from "@/features/product/validations/product";
-import { useDebounceSlug } from "@/hooks/use-debounce-slug";
+// import { useDebounceSlug } from "@/hooks/use-debounce-slug";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface ProductEditFormProps {
@@ -75,16 +75,16 @@ export const ProductEditForm = ({ product }: ProductEditFormProps) => {
     resolver: zodResolver(productFormSchema),
   });
 
-  const name = useWatch({
-    control: form.control,
-    name: "name",
-  });
+  // const name = useWatch({
+  //   control: form.control,
+  //   name: "name",
+  // });
 
-  useDebounceSlug({
-    getValues: form.getValues,
-    name,
-    setValue: form.setValue,
-  });
+  // useDebounceSlug({
+  //   getValues: form.getValues,
+  //   name,
+  //   setValue: form.setValue,
+  // });
 
   async function onSubmit(values: ProductFormInput) {
     try {

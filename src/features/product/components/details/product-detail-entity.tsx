@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 interface ProductDetailEntityProps {
   bool?: boolean;
+  hind?: boolean;
   label: string;
   mono?: boolean;
   start?: boolean;
@@ -14,6 +15,7 @@ export const ProductDetailEntity = ({
   value,
   mono,
   start,
+  hind,
 }: ProductDetailEntityProps) => (
   <div
     className={cn(
@@ -24,7 +26,7 @@ export const ProductDetailEntity = ({
     )}
   >
     <span className="text-muted-foreground"> {label}</span>
-    <span className={cn(mono && "font-light font-mono")}>
+    <span className={cn(mono && "font-light font-mono", hind && "font-hind")}>
       {typeof value === "boolean" && `${!!value}`}
       {value}
     </span>
