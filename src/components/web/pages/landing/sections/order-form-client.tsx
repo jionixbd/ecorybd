@@ -287,7 +287,7 @@ export function OrderFormClient({
                         <InputGroup className="h-12!">
                           <InputGroupInput
                             aria-invalid={fieldState.invalid}
-                            className="h-12! placeholder:text-[#173c2d]/60"
+                            className="h-12! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#f8f7f1]/30"
                             id={field.name}
                             placeholder="আপনার নাম"
                             {...field}
@@ -314,7 +314,7 @@ export function OrderFormClient({
                         <InputGroup className="h-12!">
                           <InputGroupInput
                             aria-invalid={fieldState.invalid}
-                            className="h-12! placeholder:text-[#173c2d]/60"
+                            className="h-12! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#f8f7f1]/30"
                             id={field.name}
                             placeholder="+৮৮০ ১৭০০ ১২৩ ৪৫৬"
                             {...field}
@@ -341,7 +341,7 @@ export function OrderFormClient({
                         <Textarea
                           {...field}
                           aria-invalid={fieldState.invalid}
-                          className="min-h-16! placeholder:text-[#173c2d]/60"
+                          className="min-h-16! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#f8f7f1]/30"
                           id={`${ORDER_FROM}-product-billing-address`}
                           placeholder="১২৩ রোড, যশোর, বাংলাদেশ"
                         />
