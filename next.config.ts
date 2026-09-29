@@ -22,6 +22,9 @@ const nextConfig: NextConfig = {
       {
         hostname: "lxiscnt9tg.ufs.sh",
       },
+      {
+        hostname: "sfpe34umxg.ufs.sh",
+      },
     ],
   },
   logging: {
