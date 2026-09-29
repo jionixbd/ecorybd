@@ -1,21 +1,20 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const ProductImagesSkeleton = () => {
-  return (
-    <div className="flex w-full max-w-5xl flex-col gap-4">
-      <section className="space-y-3">
-        <Skeleton className="h-6 w-32" />
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {Array.from({ length: 4 }, (_, index) => (
-            <Skeleton className="aspect-square w-full" key={index} />
-          ))}
+export const ProductImagesSkeleton = () => (
+  <div className="flex w-full max-w-5xl flex-col gap-4">
+    <section className="space-y-3">
+      <div className="w-full max-w-5xl space-y-4 rounded-xl border p-6">
+        <div className="flex w-full justify-between">
+          <Skeleton className="h-9 w-40" />
+          <Skeleton className="h-9 w-25" />
         </div>
-      </section>
 
-      {/* <section className="space-y-3">
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-56 w-full" />
-      </section> */}
-    </div>
-  );
-};
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+          <Skeleton className="aspect-square" />
+          <Skeleton className="aspect-square" />
+          <Skeleton className="aspect-square" />
+        </div>
+      </div>
+    </section>
+  </div>
+);

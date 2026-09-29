@@ -147,7 +147,13 @@ export async function getProductUseCase({ slug }: { slug: string }) {
 
     return data;
   } catch (error) {
-    throw normalizeError(error);
+    const appError = normalizeError(error);
+
+    if (appError.code === "NOT_FOUND") {
+      return null;
+    }
+
+    throw appError;
   }
 }
 

@@ -25,8 +25,6 @@ export async function getMediaUseCase({
 }) {
   "use cache";
 
-  // HACK: temporary disable cache.`insertMediaUserCase` updateTag not working, because it invoking from route.
-  // HACK: router.refresh() also not triggering.
   cacheLife(mediaCache.profile.list.life);
   cacheTag(
     mediaCache.tags.list({
@@ -34,33 +32,43 @@ export async function getMediaUseCase({
     })
   );
 
-  const { rawRows, rowCount } = await db.transaction(async (trx) => {
-    const rows = await findMedia({
-      client: trx,
-      organizationId,
-      search,
-    });
+  try {
+    const { rawRows, rowCount } = await db.transaction(async (trx) => {
+      const rows = await findMedia({
+        client: trx,
+        organizationId,
+        search,
+      });
 
-    const count = await countMedia({
-      client: trx,
-      organizationId,
-      search,
+      const count = await countMedia({
+        client: trx,
+        organizationId,
+        search,
+      });
+
+      return {
+        rawRows: rows,
+        rowCount: count,
+      };
     });
 
     return {
-      rawRows: rows,
-      rowCount: count,
+      meta: buildPaginationMeta({
+        page: search.page,
+        perPage: search.perPage,
+        rowCount,
+      }),
+      rows: toMedia({ rawRows }),
     };
-  });
+  } catch (error) {
+    const appError = normalizeError(error);
 
-  return {
-    meta: buildPaginationMeta({
-      page: search.page,
-      perPage: search.perPage,
-      rowCount,
-    }),
-    rows: toMedia({ rawRows }),
-  };
+    if (appError.code === "NOT_FOUND") {
+      return null;
+    }
+
+    throw appError;
+  }
 }
 
 export async function insertMediaUserCase({

@@ -18,6 +18,7 @@ import type {
   ProductVariantWithRelations,
 } from "@/features/product/types/product-variant";
 import type { getProductVariantsUseCase } from "@/features/product/use-cases/product-variant";
+import { notFound } from "next/navigation";
 import { use, useMemo, useState } from "react";
 
 interface ProductVariantsTableProps {
@@ -33,6 +34,10 @@ export function ProductVariantsTable({
 
   const { enableAdvancedFilter = true } = useDataTableAdvancedFilter();
   const [data] = use(promises);
+
+  if (!data) {
+    notFound();
+  }
 
   const [rowAction, setRowAction] =
     useState<ProductVariantsRowAction<ProductVariantWithRelations> | null>(

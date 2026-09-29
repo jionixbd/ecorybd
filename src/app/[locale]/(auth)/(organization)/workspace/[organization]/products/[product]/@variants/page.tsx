@@ -1,21 +1,21 @@
-import { AsyncBoundary } from "@/components/boundaries/async-boundary";
 import { DataTableAdvancedFilterProvider } from "@/features/data-table/components/advanced/data-table-advanced-filter-provider";
 import { ProductVariantsSkeleton } from "@/features/product/components/product-variants/product-variants-skeleton";
 import { ProductVariantsTable } from "@/features/product/components/product-variants/table/product-variants-table";
 import { productVariantSearchParam } from "@/features/product/parsers/product-variant";
 import { getProductVariantsUseCase } from "@/features/product/use-cases/product-variant";
 import { getActiveContext } from "@/lib/auth/get-active-context";
+import { Suspense } from "react";
 
 export default async function ProductVariantsPage(
   props: PageProps<"/[locale]/workspace/[organization]/products/[product]">
 ) {
   return (
     <div className="flex w-full justify-center">
-      <AsyncBoundary suspenseFallback={<ProductVariantsSkeleton />}>
+      <Suspense fallback={<ProductVariantsSkeleton />}>
         <DataTableAdvancedFilterProvider>
           <ProductVariantsPageWrapper {...props} />
         </DataTableAdvancedFilterProvider>
-      </AsyncBoundary>
+      </Suspense>
     </div>
   );
 }

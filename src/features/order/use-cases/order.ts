@@ -223,11 +223,21 @@ export async function findOrderUseCase({
   try {
     const rawRow = await findOrder({ client: db, orderId, organizationId });
 
+    if (!rawRow) {
+      throw new NotFoundError("Order not found");
+    }
+
     return {
       row: toOrderWithRelations({ rawRow }),
     };
   } catch (error) {
-    throw normalizeError(error);
+    const appError = normalizeError(error);
+
+    if (appError.code === "NOT_FOUND") {
+      return null;
+    }
+
+    throw appError;
   }
 }
 

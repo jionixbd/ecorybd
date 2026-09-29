@@ -65,7 +65,13 @@ export async function getProductMediaUseCase({
       rows: toProductMedia({ rawRows }),
     };
   } catch (error) {
-    throw normalizeError(error);
+    const appError = normalizeError(error);
+
+    if (appError.code === "NOT_FOUND") {
+      return null;
+    }
+
+    throw appError;
   }
 }
 
