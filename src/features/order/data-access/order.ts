@@ -334,3 +334,47 @@ export async function deleteOrder({
 
   return result;
 }
+
+export async function findCustomerOrderSummary({
+  client,
+  orderNumber,
+  organizationId,
+}: {
+  client: DbClient;
+  orderNumber: string;
+  organizationId: string;
+}) {
+  const [order] = await client
+    .select({
+      createdAt: orders.createdAt,
+      orderId: orders.orderId,
+      orderNumber: orders.orderNumber,
+      shippingTotal: orders.shippingTotal,
+      status: orders.status,
+      subtotal: orders.subtotal,
+      total: orders.total,
+    })
+    .from(orders)
+    .where(
+      and(
+        eq(orders.orderNumber, orderNumber),
+        eq(orders.organizationId, organizationId)
+      )
+    );
+
+  if (!order) {
+    return null;
+  }
+
+  const items = await client
+    .select({
+      productName: orderItems.productName,
+      subtotal: orderItems.subtotal,
+      unitPrice: orderItems.unitPrice,
+      variantName: orderItems.productVariantName,
+    })
+    .from(orderItems)
+    .where(eq(orderItems.orderId, order.orderId));
+
+  return { ...order, items };
+}

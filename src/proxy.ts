@@ -33,7 +33,13 @@ const clerkHandler = clerkMiddleware(
   }
 );
 
-const PUBLIC_SEGMENTS = new Set(["pricing", "about", "blog", "docs"]);
+const PUBLIC_SEGMENTS = new Set([
+  "pricing",
+  "about",
+  "blog",
+  "docs",
+  "thank-you",
+]);
 
 function isPublicPath(pathname: string): boolean {
   const [firstSegment, ...remainingSegments] = pathname

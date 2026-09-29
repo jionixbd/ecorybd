@@ -4,7 +4,6 @@ import { MediaUpload } from "@/features/media/components/upload/media-upload";
 import { mediaSearchParam } from "@/features/media/parsers/media";
 import { getMediaUseCase } from "@/features/media/use-cases/media";
 import { getActiveContext } from "@/lib/auth/get-active-context";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 export default async function LibraryPage(
@@ -34,10 +33,6 @@ async function LibraryPageWrapper(
     organizationId: context.organization.organizationId,
     search,
   });
-
-  if (!data) {
-    notFound();
-  }
 
   return (
     <div className="">

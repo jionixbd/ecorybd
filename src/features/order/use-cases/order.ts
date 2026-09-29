@@ -7,6 +7,7 @@ import {
   countOrders,
   deleteOrder,
   existsOrderOrganizationId,
+  findCustomerOrderSummary,
   findOrder,
   findOrderableVariant,
   findOrders,
@@ -313,5 +314,35 @@ export async function deleteOrderUseCase({
     return res;
   } catch (error) {
     throw normalizeError(error);
+  }
+}
+
+export async function getCustomerOrderSummaryUseCase({
+  orderNumber,
+  organizationId,
+}: {
+  orderNumber: string;
+  organizationId: string;
+}) {
+  try {
+    const result = await findCustomerOrderSummary({
+      client: db,
+      orderNumber,
+      organizationId,
+    });
+
+    if (!result) {
+      throw new NotFoundError("Order not found");
+    }
+
+    return result;
+  } catch (error) {
+    const appError = normalizeError(error);
+
+    if (appError.code === "NOT_FOUND") {
+      return null;
+    }
+
+    throw appError;
   }
 }

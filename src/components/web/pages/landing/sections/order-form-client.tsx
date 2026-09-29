@@ -31,8 +31,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "cn";
 import { Image as ImageIcon, Truck } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useLocale } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -55,6 +57,9 @@ export function OrderFormClient({
   product: Product;
   variants: PublicProductVariantWithRelations[];
 }) {
+  const router = useRouter();
+  const locale = useLocale();
+
   const { executeAsync: executeInsertOrder, isPending: isSubmittingOrder } =
     useAction(insertOrderAction, {
       onError({ error }) {
@@ -67,6 +72,8 @@ export function OrderFormClient({
         toast.success(
           `আপনার অর্ডার গ্রহণ করা হয়েছে। অর্ডার নম্বর: ${data.orderNumber}`
         );
+
+        router.replace(`/${locale}/thank-you?order=${data.orderNumber}`);
       },
     });
 

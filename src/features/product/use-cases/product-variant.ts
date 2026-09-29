@@ -78,13 +78,7 @@ export async function getProductVariantsUseCase({
       rows: toProductVariants({ rawRows }),
     };
   } catch (error) {
-    const appError = normalizeError(error);
-
-    if (appError.code === "NOT_FOUND") {
-      return null;
-    }
-
-    throw appError;
+    throw normalizeError(error);
   }
 }
 
