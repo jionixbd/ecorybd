@@ -35,6 +35,7 @@ export function ordersTableColumns(
     }),
     buildDataColumn({
       accessorKey: "orderNumber",
+      enableFiltering: true,
       label: "Order Number",
       type: "text",
     }),

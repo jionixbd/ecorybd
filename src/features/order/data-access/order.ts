@@ -10,7 +10,10 @@ import {
   products,
   shippingMethods,
 } from "@/drizzle/schema";
-import { buildMultiSelectFilter } from "@/drizzle/utils/filters";
+import {
+  buildMultiSelectFilter,
+  buildTextSearchFilter,
+} from "@/drizzle/utils/filters";
 import { buildPagination } from "@/drizzle/utils/pagination";
 import { buildOrderBy } from "@/drizzle/utils/sort";
 import { filterColumns } from "@/features/data-table/lib/filter-columns";
@@ -25,7 +28,10 @@ function buildOrdersWhere({
   organizationId: string;
 }) {
   return and(
-    // buildTextSearchFilter({ columns: [orders.], value: search.name }),
+    buildTextSearchFilter({
+      columns: [orders.orderNumber],
+      value: search.orderNumber.toString(),
+    }),
     eq(orders.organizationId, organizationId),
     buildMultiSelectFilter<OrderStatus>({
       column: orders.status,

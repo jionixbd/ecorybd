@@ -16,6 +16,7 @@ export const orderSearchParam = createSearchParamsCache({
   advanced: parseAsBoolean.withDefault(false),
   filters: getFiltersStateParser().withDefault([]),
   joinOperator: parseAsStringEnum(["and", "or"]).withDefault("and"),
+  orderNumber: parseAsString.withDefault(""),
   page: parseAsInteger.withDefault(1),
   perPage: parseAsInteger.withDefault(20),
   search: parseAsString.withDefault(""),

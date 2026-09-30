@@ -68,7 +68,7 @@ export function OrdersTable({ promises, queryKeys }: ProductsTableProps) {
       <DataTableSort align="start" table={table} />
     </DataTableAdvancedToolbar>
   ) : (
-    <DataTableToolbar table={table}>
+    <DataTableToolbar showAdvancedFilterToggle table={table}>
       <DataTableSort align="end" table={table} />
     </DataTableToolbar>
   );
