@@ -1,38 +1,29 @@
 import { ImageResponse } from "next/og";
 import { connection } from "next/server";
 
+// https://sfpe34umxg.ufs.sh/f/jEOIgXkodhwPsdAYcQT8VRj2qtSFg1wl5nbUraxDyXBQ7JCm
 export async function GET() {
   await connection();
   try {
     return new ImageResponse(
-      <div tw="flex w-full h-full bg-slate-300 p-2">
-        <div
-          style={{
-            backgroundImage:
-              "radial-gradient(circle, rgba(248,250,252,0.5) 10%, rgba(248,250,252,0.6) 100%), url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(9 9 11 / .3)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e)",
-          }}
-          tw="w-full h-full p-8 flex flex-col items-start justify-between flex-wrap rounded-lg"
-        >
-          <div tw="flex flex-col items-start justify-start">
-            <div
-              style={{
-                fontFamily: "geist-bold",
-              }}
-              tw="text-9xl tracking-tighter text-slate-800 uppercase"
-            >
-              ECORY BD
-            </div>
-            <div
-              style={{
-                fontFamily: "geist-regular",
-              }}
-              tw="text-2xl tracking-wide text-slate-700 uppercase"
-            >
-              Ecory – Stay Healthy With Nature
-            </div>
+      <div
+        style={{
+          background: "linear-gradient( 135deg, #81FBB8 10%, #28C76F 100%);",
+        }}
+        tw="flex w-full h-full p-2"
+      >
+        <div tw="relative w-full h-full flex flex-col items-center justify-center flex-wrap rounded-lg">
+          <div tw="flex w-full h-full absolute items-center justify-center">
+            {/* biome-ignore lint/performance/noImgElement: OG do no support next Image */}
+            <img
+              alt="Logo"
+              height={630}
+              src="https://sfpe34umxg.ufs.sh/f/jEOIgXkodhwPsdAYcQT8VRj2qtSFg1wl5nbUraxDyXBQ7JCm"
+              width={1200}
+            />
           </div>
 
-          <div tw="flex items-center justify-between ml-1.5">
+          <div tw="flex items-center mt-auto justify-center w-full">
             {/* FACEBOOK */}
             <div tw="flex items-center mr-8">
               <svg
