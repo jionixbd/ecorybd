@@ -3,6 +3,7 @@ export default async function ProductLayout({
   variants,
   modal,
   images,
+  children,
 }: LayoutProps<"/[locale]/workspace/[organization]/products/[product]">) {
   return (
     <>
@@ -12,6 +13,7 @@ export default async function ProductLayout({
         {variants}
       </div>
       {modal}
+      {children}
     </>
   );
 }

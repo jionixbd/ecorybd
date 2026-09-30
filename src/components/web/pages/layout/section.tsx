@@ -15,7 +15,7 @@ export function Section({
   return (
     <section
       aria-labelledby={labelledBy}
-      className={cn("py-16 sm:py-24 lg:py-32", className)}
+      className={cn("py-4 sm:py-6 md:py-8 lg:py-10 xl:py-12", className)}
       id={id}
       {...props}
     >

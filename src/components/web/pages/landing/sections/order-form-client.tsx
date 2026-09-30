@@ -50,6 +50,9 @@ interface ShippingOption {
 
 const ORDER_FROM = "order-submission-form";
 
+// const BG_COLOR = "#f9fafb";
+// const TEXT_COLOR = "#173c2d";
+
 export function OrderFormClient({
   variants,
   product,
@@ -62,9 +65,7 @@ export function OrderFormClient({
 
   const { executeAsync: executeInsertOrder, isPending: isSubmittingOrder } =
     useAction(insertOrderAction, {
-      onError({ error }) {
-        console.log(error);
-
+      onError() {
         toast.error("অর্ডারটি দেওয়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
       },
 
@@ -194,19 +195,17 @@ export function OrderFormClient({
   }
 
   return (
-    <Card className="bg-[#173c2d] p-8 lg:p-16">
-      <CardContent>
+    <Card className="mx-auto max-w-5xl bg-[#f9fafb] py-4 lg:py-16">
+      <CardContent className="px-4">
         <form
           className="mx-auto grid w-full max-w-xl gap-8 lg:max-w-4xl"
           id={ORDER_FROM}
           // onSubmit={form.handleSubmit(onSubmit)}
-          onSubmit={form.handleSubmit(onSubmit, (errors) =>
-            console.error("Form validation errors:", errors)
-          )}
+          onSubmit={form.handleSubmit(onSubmit)}
         >
           {/* PRODUCT VARIANTS */}
           <FieldSet className="grid">
-            <FieldLegend className="font-hind text-[#f8f7f1] text-lg!">
+            <FieldLegend className="font-hind text-[#173c2d] text-xl!">
               যেকোনো একটি প্যাকেজ নির্বাচন করুন
             </FieldLegend>
 
@@ -227,11 +226,11 @@ export function OrderFormClient({
 
                       return (
                         <FieldLabel
-                          className="w-full rounded-2xl border bg-[#f8f7f1] p-2 has-data-checked:border-[#e87541] has-data-checked:bg-[#e87541]"
+                          className="w-full rounded-2xl border border-[#173c2d]/10! bg-[#f8f7f1]/60 p-2 has-data-checked:border-[#173c2d] has-data-checked:bg-[#173c2d]/10"
                           htmlFor={`${ORDER_FROM}-product-${variant.productVariantId}`}
                           key={variant.productVariantId}
                         >
-                          <FieldContent className="grid grid-cols-[100px_1fr] items-center gap-4">
+                          <FieldContent className="grid grid-cols-[80px_1fr] items-center gap-4">
                             <div>
                               {variant.media ? (
                                 <Image
@@ -271,11 +270,11 @@ export function OrderFormClient({
             </FieldGroup>
           </FieldSet>
 
-          <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-20">
+          <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2 lg:gap-20">
             <div className="grid grid-cols-1 gap-8">
               {/* BILLING ADDRESS */}
               <FieldSet className="grid">
-                <FieldLegend className="font-hind text-[#f8f7f1] text-lg!">
+                <FieldLegend className="font-hind text-[#173c2d] text-lg!">
                   বিলিং বিবরণ
                 </FieldLegend>
 
@@ -286,15 +285,15 @@ export function OrderFormClient({
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel
-                          className="font-light text-[#f8f7f1]/70 text-xs"
+                          className="font-hind font-light text-[#173c2d]/70"
                           htmlFor={field.name}
                         >
                           আপনার সম্পূর্ণ নাম লিখুন
                         </FieldLabel>
-                        <InputGroup className="h-12!">
+                        <InputGroup className="h-12! bg-[#eef0f2]!">
                           <InputGroupInput
                             aria-invalid={fieldState.invalid}
-                            className="h-12! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#f8f7f1]/30"
+                            className="h-12! font-hind placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
                             id={field.name}
                             placeholder="আপনার নাম"
                             {...field}
@@ -313,15 +312,15 @@ export function OrderFormClient({
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel
-                          className="font-light text-[#f8f7f1]/70 text-xs"
+                          className="font-hind font-light text-[#173c2d]/70"
                           htmlFor={field.name}
                         >
                           আপনার ফোন নাম্বার
                         </FieldLabel>
-                        <InputGroup className="h-12!">
+                        <InputGroup className="h-12! bg-[#eef0f2]!">
                           <InputGroupInput
                             aria-invalid={fieldState.invalid}
-                            className="h-12! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#f8f7f1]/30"
+                            className="h-12! font-hind placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
                             id={field.name}
                             placeholder="+৮৮০ ১৭০০ ১২৩ ৪৫৬"
                             {...field}
@@ -340,7 +339,7 @@ export function OrderFormClient({
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel
-                          className="font-light text-[#f8f7f1]/70 text-xs"
+                          className="font-hind font-light text-[#173c2d]/70"
                           htmlFor={`${ORDER_FROM}-product-billing-address`}
                         >
                           সম্পূর্ণ ঠিকানা পুরন করুন
@@ -348,7 +347,7 @@ export function OrderFormClient({
                         <Textarea
                           {...field}
                           aria-invalid={fieldState.invalid}
-                          className="min-h-16! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#f8f7f1]/30"
+                          className="min-h-16! bg-[#eef0f2]! font-hind placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
                           id={`${ORDER_FROM}-product-billing-address`}
                           placeholder="১২৩ রোড, যশোর, বাংলাদেশ"
                         />
@@ -363,7 +362,7 @@ export function OrderFormClient({
 
               {/* SHIPPING METHOD  */}
               <FieldSet className="grid">
-                <FieldLegend className="font-hind text-[#f8f7f1] text-lg!">
+                <FieldLegend className="font-hind text-[#173c2d] text-lg!">
                   শিপিং চার্জ
                 </FieldLegend>
 
@@ -414,7 +413,7 @@ export function OrderFormClient({
                                   }}
                                 >
                                   <FieldLabel
-                                    className="w-full rounded-2xl bg-[#f8f7f1]! px-4"
+                                    className="w-full rounded-2xl border border-[#173c2d]/10! bg-[#f8f7f1]! px-4 has-data-checked:border-[#173c2d] has-data-checked:bg-[#173c2d]/10!"
                                     htmlFor={`${ORDER_FROM}-product-shipping-${option.shippingMethodId}`}
                                   >
                                     <RadioGroupItem
@@ -444,7 +443,7 @@ export function OrderFormClient({
             <div>
               {/* ORDER DETAILS */}
               <FieldSet className="grid">
-                <FieldLegend className="font-hind text-[#f8f7f1] text-lg!">
+                <FieldLegend className="font-hind text-[#173c2d] text-lg!">
                   আপনার অর্ডারের বিবরণ
                 </FieldLegend>
 
@@ -466,7 +465,7 @@ export function OrderFormClient({
                       )}
                     </div>
                     <div className="flex flex-col items-end">
-                      <FieldTitle className="font-hind text-[#f8f7f1] text-base">
+                      <FieldTitle className="font-hind text-[#173c2d] text-base">
                         {product.name}
                       </FieldTitle>
                       <FieldDescription className="font-hind">
@@ -474,27 +473,27 @@ export function OrderFormClient({
                       </FieldDescription>
                     </div>
                   </div>
-                  <Separator className="border border-[#f8f7f1]/50 border-dashed bg-transparent" />
+                  <Separator className="border border-[#173c2d]/50 border-dashed bg-transparent" />
                   <OrderEntity label="Price" value={formatBDT(unitPrice)} />
                   <OrderEntity label="Subtotal" value={formatBDT(subtotal)} />
                   <OrderEntity label="Shipping" value={formatBDT(delivery)} />
-                  <Separator className="bg-[#f8f7f1]/50" />
+                  <Separator className="bg-[#173c2d]/50" />
                   <OrderEntity bold label="Total" value={formatBDT(total)} />
                   <div className="grid grid-cols-[56px_1fr] items-center gap-2">
-                    <div className="flex size-14 items-center justify-center rounded-2xl bg-[#7d918b]">
-                      <Truck className="text-[#f8f7f1]/70" />
+                    <div className="flex size-14 items-center justify-center rounded-2xl bg-[#173c2d]/10">
+                      <Truck className="text-[#173c2d]/70" />
                     </div>
                     <div>
-                      <div className="font-hind text-[#f8f7f1] text-lg!">
+                      <div className="font-hind text-[#173c2d] text-lg!">
                         ক্যাশঅন ডেলিভারি
                       </div>
-                      <p className="font-hind text-[#f8f7f1]">
+                      <p className="font-hind text-[#173c2d]">
                         পন্য হাতে পেয়ে মূল্য পরিশোধ করবেন
                       </p>
                     </div>
                   </div>
                   <Button
-                    className="min-h-12 w-full bg-[#e87541] font-hind text-lg"
+                    className="min-h-12 w-full bg-[#e87541] font-hind text-[#f8f7f1]! text-lg hover:bg-[#173c2d]"
                     disabled={
                       form.formState.isSubmitting ||
                       !variant ||
@@ -526,9 +525,9 @@ const OrderEntity = ({
   bold?: boolean;
 }) => (
   <div className="grid grid-cols-2 items-center gap-2">
-    <span className="font-hind text-[#f8f7f1]/70"> {label}</span>
+    <span className="font-hind text-[#173c2d]/70"> {label}</span>
     <span
-      className={cn("text-end font-base text-[#f8f7f1]", bold && "font-bold")}
+      className={cn("text-end font-base text-[#173c2d]", bold && "font-bold")}
     >
       {value}
     </span>

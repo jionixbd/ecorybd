@@ -130,6 +130,7 @@
     "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^1.0.0-rc.4",
+    "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "flags": "^4.3.1",
     "fumadocs-core": "^16.15.11",

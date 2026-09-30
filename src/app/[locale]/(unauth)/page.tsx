@@ -14,8 +14,11 @@ import { H1, H2, H4 } from "@/components/web/pages/layout/typography";
 import { generateHomeMetadata } from "@/lib/metadata/pages/home";
 import { YouTubeEmbed } from "@next/third-parties/google";
 
+import { ReviewCarousel } from "@/components/web/pages/landing/parts/review-carousel";
 import { getLocale } from "next-intl/server";
 import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
 
 export async function generateMetadata(_: PageProps<"/[locale]">) {
   const locale = await getLocale();
@@ -72,8 +75,11 @@ export const CTASection = () => (
         তালিকায় ১৪ তম স্থানে আছে গ্যাস্ট্রিক থেকে হওয়া ক্যান্সার রোগী
       </H2>
 
-      <Button className="max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg">
-        👉 এখনই অর্ডার করুন
+      <Button
+        asChild
+        className="max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg"
+      >
+        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
       </Button>
     </Container>
   </Section>
@@ -87,15 +93,21 @@ export const ProductFeaturesSection = () => (
           কেন আপনি <span className="text-[#e87541]">মেথি মিক্স</span>
           <br /> পাউডারটি কিনবেন?
         </H2>
-        <Button className="hidden max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg xl:flex">
-          👉 এখনই অর্ডার করুন
+        <Button
+          asChild
+          className="max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg"
+        >
+          <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
         </Button>
       </div>
 
       <ProductFeatures />
 
-      <Button className="mx-auto max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg xl:hidden">
-        👉 এখনই অর্ডার করুন
+      <Button
+        asChild
+        className="mx-auto max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg xl:hidden"
+      >
+        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
       </Button>
     </Container>
   </Section>
@@ -150,45 +162,15 @@ export const DoctorsConsultationSection = () => (
         </CarouselContent>
       </Carousel>
 
-      <Button className="max-w-max bg-[#e87541] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#f0b273] sm:px-6 lg:px-10 lg:text-lg">
-        👉 এখনই অর্ডার করুন
+      <Button
+        asChild
+        className="max-w-max bg-[#e87541] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#f0b273] sm:px-6 lg:px-10 lg:text-lg"
+      >
+        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
       </Button>
     </Container>
   </Section>
 );
-
-const reviews = [
-  {
-    height: 540,
-    url: "/images/rocky-khan-opt.webp",
-    width: 540,
-  },
-  {
-    height: 540,
-    url: "/images/abdullah-rana-opt.webp",
-    width: 540,
-  },
-  {
-    height: 540,
-    url: "/images/banty-review-opt.webp",
-    width: 540,
-  },
-  {
-    height: 540,
-    url: "/images/basahr-review-opt.webp",
-    width: 540,
-  },
-  {
-    height: 540,
-    url: "/images/farauk-review-opt.webp",
-    width: 540,
-  },
-  {
-    height: 540,
-    url: "/images/afjal-review-opt.webp",
-    width: 540,
-  },
-];
 
 export const CustomerReviewSection = () => (
   <Section className="bg-[#edf1e8]" id="customer-reviews">
@@ -198,30 +180,15 @@ export const CustomerReviewSection = () => (
         <br /> বেশি মানুষ ব্যবহার করে উপকার পেয়েছেন
       </H2>
 
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-      >
-        <CarouselContent className="ml-0">
-          {reviews.map((review, idx) => (
-            <CarouselItem
-              className="flex basis-5/5 overflow-hidden pl-0 sm:basis-2/3 md:basis-1/3 lg:basis-1/4"
-              key={idx}
-            >
-              <Image
-                alt="image"
-                height={review.height}
-                src={review.url}
-                width={review.width}
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
+      <Suspense>
+        <ReviewCarousel />
+      </Suspense>
 
-      <Button className="mx-auto max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg">
-        👉 এখনই অর্ডার করুন
+      <Button
+        asChild
+        className="mx-auto max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg"
+      >
+        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
       </Button>
     </Container>
   </Section>
@@ -236,15 +203,21 @@ export const CompanyLicense = () => (
           ব্যবহার করুন!
         </H2>
 
-        <Button className="hidden max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:flex lg:px-10 lg:text-lg">
-          👉 এখনই অর্ডার করুন
+        <Button
+          asChild
+          className="hidden max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:flex lg:px-10 lg:text-lg"
+        >
+          <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
         </Button>
       </div>
 
       <CompanyLicenseGallery />
 
-      <Button className="mx-auto max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:hidden lg:px-10 lg:text-lg">
-        👉 এখনই অর্ডার করুন
+      <Button
+        asChild
+        className="mx-auto max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:hidden lg:px-10 lg:text-lg"
+      >
+        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
       </Button>
     </Container>
   </Section>
@@ -262,8 +235,11 @@ export const DiscountSection = () => (
         (এখন অর্ডার করলে ফ্রি হোম ডেলিভারি!!)
       </H4>
 
-      <Button className="max-w-max bg-[#e87541] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#f0b273] sm:px-6 lg:px-10 lg:text-lg">
-        👉 এখনই অর্ডার করুন
+      <Button
+        asChild
+        className="max-w-max bg-[#e87541] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#f0b273] sm:px-6 lg:px-10 lg:text-lg"
+      >
+        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
       </Button>
     </Container>
   </Section>

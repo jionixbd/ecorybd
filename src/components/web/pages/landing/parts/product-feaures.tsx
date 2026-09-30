@@ -73,9 +73,9 @@ const ProductFeaturesCard = ({
   iconColor,
   description,
 }: ProductFeature) => (
-  <div className="flex aspect-video max-w-auto flex-col gap-4 rounded-2xl bg-[#fff] p-4 sm:aspect-square">
+  <div className="flex aspect-auto max-w-auto flex-row gap-4 rounded-2xl bg-[#fff] p-4 lg:aspect-square lg:flex-col">
     <div
-      className="flex aspect-square w-11 items-center justify-center rounded-xl"
+      className="flex aspect-square h-11 w-11 shrink-0 items-center justify-center rounded-xl"
       style={{
         background: iconBg,
       }}
