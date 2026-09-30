@@ -6,7 +6,7 @@ export const routing = defineRouting({
   localeCookie: {
     maxAge: 60 * 60 * 24 * 365,
   },
-  localePrefix: "always",
+  localePrefix: "as-needed",
   locales: ["en", "fr"],
   pathnames: {
     "/": "/",

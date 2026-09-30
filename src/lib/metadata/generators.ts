@@ -18,11 +18,9 @@ export function generatePageUrl(
   locale: Locale = routing.defaultLocale
 ): string {
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  const localePrefix = locale === routing.defaultLocale ? "" : `/${locale}`;
 
-  return new URL(
-    `/${locale}${cleanPath === "/" ? "/" : cleanPath}`,
-    SITE_CONFIG.url
-  ).toString();
+  return new URL(`${localePrefix}${cleanPath}`, SITE_CONFIG.url).toString();
 }
 
 export function generateAlternateLanguages(path: string) {

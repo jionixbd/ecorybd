@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { SignIn } from "@/features/auth/components/sign-in";
 import { Link } from "@/i18n/navigation";
-import { env } from "@/lib/env";
+import { getClerkUrl } from "@/lib/clerk/get-clerk-url";
 import { Undo2 } from "lucide-react";
 import { getLocale } from "next-intl/server";
 import { Suspense } from "react";
@@ -10,6 +10,7 @@ export const instant = false;
 
 export default async function SignInPage(_: PageProps<"/[locale]">) {
   const locale = await getLocale();
+  const url = getClerkUrl(locale);
 
   return (
     <div className="flex h-full w-full flex-col items-center gap-10">
@@ -23,8 +24,8 @@ export default async function SignInPage(_: PageProps<"/[locale]">) {
       <div className="container grid place-content-center items-center justify-self-center">
         <Suspense fallback={null}>
           <SignIn
-            forceRedirectUrl={`/${locale}${env.NEXT_PUBLIC_CLERK_FALLBACK_REDIRECT_URL}`}
-            path={`/${locale}${env.NEXT_PUBLIC_CLERK_SIGN_IN_URL}`}
+            forceRedirectUrl={url.fallbackRedirectUrl}
+            path={url.signInUrl}
           />
         </Suspense>
       </div>

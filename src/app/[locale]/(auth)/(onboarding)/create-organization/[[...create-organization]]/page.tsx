@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { getOrganizationUrl } from "@/lib/clerk/get-clerk-url";
 import { OrganizationList } from "@clerk/nextjs";
 import { Undo2 } from "lucide-react";
 import { getLocale } from "next-intl/server";
@@ -11,6 +12,7 @@ export default async function OnboardingPage(
   _: PageProps<"/[locale]/create-organization/[[...create-organization]]">
 ) {
   const locale = await getLocale();
+  const organizationUrl = getOrganizationUrl(locale);
 
   return (
     <div className="flex h-full w-full flex-col items-center gap-10">
@@ -24,8 +26,8 @@ export default async function OnboardingPage(
       <div className="container grid place-content-center items-center justify-self-center">
         <Suspense fallback={null}>
           <OrganizationList
-            afterCreateOrganizationUrl={`/${locale}/workspace/:slug`}
-            afterSelectOrganizationUrl={`/${locale}/workspace/:slug`}
+            afterCreateOrganizationUrl={organizationUrl}
+            afterSelectOrganizationUrl={organizationUrl}
             hidePersonal
           />
         </Suspense>

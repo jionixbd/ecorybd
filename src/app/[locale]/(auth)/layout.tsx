@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getClerkLocalization } from "@/features/auth/lib/get-clerk-localization";
 import { AuthProvider } from "@/features/auth/providers/auth-provider";
-import { env } from "@/lib/env";
+import { getClerkUrl } from "@/lib/clerk/get-clerk-url";
 import { getLocale } from "next-intl/server";
 import { cookies } from "next/headers";
 
@@ -11,16 +11,17 @@ export default async function AuthLayout({
   const locale = await getLocale();
   const localization = await getClerkLocalization(locale);
   const cookie = await cookies();
+  const url = getClerkUrl(locale);
 
   const isSidebarOpen = cookie.get("sidebar:state")?.value === "true";
   return (
     <AuthProvider
-      afterSignOutUrl={`${env.NEXT_PUBLIC_CLERK_SIGN_OUT_URL}${locale}`}
+      afterSignOutUrl={url.afterSignOutUrl}
       localization={localization}
-      signInFallbackRedirectUrl={`/${locale}${env.NEXT_PUBLIC_CLERK_FALLBACK_REDIRECT_URL}`}
-      signInUrl={`/${locale}${env.NEXT_PUBLIC_CLERK_SIGN_IN_URL}`}
-      signUpFallbackRedirectUrl={`/${locale}${env.NEXT_PUBLIC_CLERK_FALLBACK_REDIRECT_URL}`}
-      signUpUrl={`/${locale}${env.NEXT_PUBLIC_CLERK_SIGN_UP_URL}`}
+      signInFallbackRedirectUrl={url.fallbackRedirectUrl}
+      signInUrl={url.signInUrl}
+      signUpFallbackRedirectUrl={url.fallbackRedirectUrl}
+      signUpUrl={url.signUpUrl}
     >
       <SidebarProvider defaultOpen={isSidebarOpen}> {children}</SidebarProvider>
     </AuthProvider>

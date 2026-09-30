@@ -26,6 +26,8 @@ const clerkHandler = clerkMiddleware(
   {
     organizationSyncOptions: {
       organizationPatterns: [
+        "/workspace/:slug",
+        "/workspace/:slug/(.*)",
         "/:locale/workspace/:slug",
         "/:locale/workspace/:slug/(.*)",
       ],
