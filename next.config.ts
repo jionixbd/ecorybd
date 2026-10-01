@@ -8,7 +8,7 @@ import "./src/lib/env";
 const withNextIntlConfig = withNextIntl("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["192.168.0.10"],
+  allowedDevOrigins: ["192.168.0.10", "delicate-stallion-prime.ngrok-free.app"],
   cacheComponents: true,
   images: {
     dangerouslyAllowLocalIP: true,

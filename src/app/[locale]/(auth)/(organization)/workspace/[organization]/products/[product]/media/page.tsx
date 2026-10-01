@@ -6,7 +6,7 @@ export default function MediaPage(
 ) {
   return (
     <Suspense fallback={null}>
-      <ProductMediaPickerRoute {...props} />
+      <ProductMediaPickerRoute {...props} modal />
     </Suspense>
   );
 }

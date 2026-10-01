@@ -73,7 +73,9 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
     (!isUploadthingPath && pathname.startsWith("/api")) ||
     pathname.startsWith("/trpc") ||
     pathname.startsWith("/.well-known") ||
-    pathname.startsWith("/ingest")
+    pathname.startsWith("/ingest") ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml"
   ) {
     return;
   }

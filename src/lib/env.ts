@@ -9,6 +9,10 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().min(1),
     NEXT_PUBLIC_CLERK_SIGN_OUT_URL: z.string().min(1),
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().min(1),
+    NEXT_PUBLIC_GTM_ENABLED: z
+      .enum(["true", "false"])
+      .transform((value) => value === "true"),
+    NEXT_PUBLIC_GTM_ID: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_ENABLED: z
       .enum(["true", "false"])
       .transform((v) => v === "true"),
@@ -31,6 +35,8 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
     NEXT_PUBLIC_CLERK_SIGN_OUT_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_OUT_URL,
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
+    NEXT_PUBLIC_GTM_ENABLED: process.env.NEXT_PUBLIC_GTM_ENABLED,
+    NEXT_PUBLIC_GTM_ID: process.env.NEXT_PUBLIC_GTM_ID,
     NEXT_PUBLIC_POSTHOG_ENABLED: process.env.NEXT_PUBLIC_POSTHOG_ENABLED,
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN:
@@ -43,6 +49,7 @@ export const env = createEnv({
     CLERK_SECRET_KEY: z.string().min(1),
     CLERK_WEBHOOK_SIGNING_SECRET: z.string().min(1).optional(),
     DATABASE_URL: z.string().min(1),
+    ECORYBD_ORGANIZATION_ID: z.string().min(1),
     NEWSLETTER_SUBSCRIPTION_TOKEN_SECRET: z.string().min(1).optional(),
     PGDATABASE: z.string().min(1).optional(),
     PGHOST: z.string().min(1).optional(),
@@ -57,6 +64,5 @@ export const env = createEnv({
     SENTRY_ORG: z.string().min(1).optional(),
     SENTRY_PROJECT: z.string().min(1).optional(),
     SENTRY_PROJECT_ID: z.string().min(1).optional(),
-    ECORYBD_ORGANIZATION_ID:z.string().min(1)
   },
 });
