@@ -19,6 +19,10 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import type { Product } from "@/drizzle/schema";
+import {
+  toTrackBeginCheckout,
+  toTrackOrderPurchase,
+} from "@/features/analytics/track/order";
 import { insertOrderAction } from "@/features/order/actions/order";
 import {
   type OrderFormInput,
@@ -35,7 +39,7 @@ import { useLocale } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -62,6 +66,7 @@ export function OrderFormClient({
 }) {
   const router = useRouter();
   const locale = useLocale();
+  const hasTrackedBeginCheckout = useRef(false);
 
   const { executeAsync: executeInsertOrder, isPending: isSubmittingOrder } =
     useAction(insertOrderAction, {
@@ -70,9 +75,22 @@ export function OrderFormClient({
       },
 
       onSuccess({ data }) {
+        toTrackOrderPurchase(data);
+
         toast.success(
           `আপনার অর্ডার গ্রহণ করা হয়েছে। অর্ডার নম্বর: ${data.orderNumber}`
         );
+
+        form.reset({
+          address: "",
+          name: "",
+          phone: "",
+          productVariantId:
+            variants.find((v) => v.isDefault)?.productVariantId ??
+            variants[0]?.productVariantId ??
+            "",
+          shippingMethodId: "",
+        });
 
         router.replace(`/${locale}/thank-you?order=${data.orderNumber}`);
       },
@@ -120,22 +138,6 @@ export function OrderFormClient({
   const delivery = shipping?.charge ?? 0;
   const total = subtotal + delivery;
 
-  const shippingView = (() => {
-    if (isLoadingShipping) {
-      return "loading";
-    }
-    if (shippingError) {
-      return "error";
-    }
-    if (shippingOptions.length > 0) {
-      return "options";
-    }
-    if (productVariantId) {
-      return "empty";
-    }
-    return "idle";
-  })();
-
   useEffect(() => {
     if (!productVariantId) {
       setShippingOptions([]);
@@ -176,6 +178,31 @@ export function OrderFormClient({
     };
   }, [executeAsync, form, productVariantId]);
 
+  useEffect(() => {
+    if (
+      !variant ||
+      variant.stockQuantity < 1 ||
+      hasTrackedBeginCheckout.current
+    ) {
+      return;
+    }
+
+    hasTrackedBeginCheckout.current = true;
+
+    toTrackBeginCheckout({
+      items: [
+        {
+          productName: product.name,
+          quantity,
+          sku: variant.sku,
+          unitPrice,
+          variantName: variant.name,
+        },
+      ],
+      value: subtotal,
+    });
+  }, [product.name, subtotal, unitPrice, variant]);
+
   async function onSubmit(values: OrderFormInput) {
     const selected = variants.find(
       (item) => item.productVariantId === values.productVariantId
@@ -193,6 +220,22 @@ export function OrderFormClient({
       shippingMethodId: values.shippingMethodId,
     });
   }
+
+  const shippingView = (() => {
+    if (isLoadingShipping) {
+      return "loading";
+    }
+    if (shippingError) {
+      return "error";
+    }
+    if (shippingOptions.length > 0) {
+      return "options";
+    }
+    if (productVariantId) {
+      return "empty";
+    }
+    return "idle";
+  })();
 
   return (
     <Card className="mx-auto max-w-5xl bg-[#f9fafb] py-4 lg:py-16">
@@ -293,7 +336,7 @@ export function OrderFormClient({
                         <InputGroup className="h-12! bg-[#eef0f2]!">
                           <InputGroupInput
                             aria-invalid={fieldState.invalid}
-                            className="h-12! font-hind placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
+                            className="h-12! font-hind text-[#173c2d]! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
                             id={field.name}
                             placeholder="আপনার নাম"
                             {...field}
@@ -320,7 +363,7 @@ export function OrderFormClient({
                         <InputGroup className="h-12! bg-[#eef0f2]!">
                           <InputGroupInput
                             aria-invalid={fieldState.invalid}
-                            className="h-12! font-hind placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
+                            className="h-12! font-hind text-[#173c2d]! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
                             id={field.name}
                             placeholder="+৮৮০ ১৭০০ ১২৩ ৪৫৬"
                             {...field}
@@ -347,7 +390,7 @@ export function OrderFormClient({
                         <Textarea
                           {...field}
                           aria-invalid={fieldState.invalid}
-                          className="min-h-16! bg-[#eef0f2]! font-hind placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
+                          className="min-h-16! bg-[#eef0f2]! font-hind text-[#173c2d]! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
                           id={`${ORDER_FROM}-product-billing-address`}
                           placeholder="১২৩ রোড, যশোর, বাংলাদেশ"
                         />

@@ -139,9 +139,20 @@ export async function insertOrderUseCase({
       });
 
       return {
+        items: [
+          {
+            productName: variant.productName,
+            quantity: ORDER_QUANTITY,
+            sku: variant.sku,
+            unitPrice,
+            variantName: variant.variantName,
+          },
+        ],
         orderNumber: order.orderNumber,
         productId: variant.productId,
         productSlug: variant.productSlug,
+        shippingTotal,
+        subtotal,
         total,
       };
     });
@@ -168,7 +179,10 @@ export async function insertOrderUseCase({
     updateTag(orderCache.tags.list({ organizationId }));
 
     return {
+      items: created.items,
       orderNumber: created.orderNumber,
+      shippingTotal: created.shippingTotal,
+      subtotal: created.subtotal,
       total: created.total,
     };
   } catch (error) {

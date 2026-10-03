@@ -1,3 +1,4 @@
+import { normalizeBanglaPhone } from "@/lib/normalize-bd-phone";
 import { z } from "zod";
 
 const BD_MOBILE_REGEX = /^(?:\+?8801|01)[3-9]\d{8}$/;
@@ -8,6 +9,7 @@ export const orderFormSchema = z.object({
   phone: z
     .string()
     .trim()
+    .transform(normalizeBanglaPhone)
     .refine((val) => BD_MOBILE_REGEX.test(val), {
       message: "সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন",
     }),
