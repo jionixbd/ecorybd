@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 import { connection } from "next/server";
 
-// https://sfpe34umxg.ufs.sh/f/jEOIgXkodhwPsdAYcQT8VRj2qtSFg1wl5nbUraxDyXBQ7JCm
 export async function GET() {
   await connection();
   try {
@@ -18,7 +17,7 @@ export async function GET() {
             <img
               alt="Logo"
               height={630}
-              src="https://sfpe34umxg.ufs.sh/f/jEOIgXkodhwPsdAYcQT8VRj2qtSFg1wl5nbUraxDyXBQ7JCm"
+              src="https://9j8ejyon3m.ufs.sh/f/a4HrWz6dhG9blAz6zvovVjUhGB6A1ZL7Rat8CfSYklbiuMX2"
               width={1200}
             />
           </div>
