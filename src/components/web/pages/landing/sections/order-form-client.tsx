@@ -17,6 +17,7 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import type { Product } from "@/drizzle/schema";
 import {
@@ -38,7 +39,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useLocale } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -54,9 +55,6 @@ interface ShippingOption {
 
 const ORDER_FROM = "order-submission-form";
 
-// const BG_COLOR = "#f9fafb";
-// const TEXT_COLOR = "#173c2d";
-
 export function OrderFormClient({
   variants,
   product,
@@ -66,35 +64,42 @@ export function OrderFormClient({
 }) {
   const router = useRouter();
   const locale = useLocale();
+  const pathname = usePathname();
   const hasTrackedBeginCheckout = useRef(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  const { executeAsync: executeInsertOrder, isPending: isSubmittingOrder } =
-    useAction(insertOrderAction, {
-      onError() {
-        toast.error("অর্ডারটি দেওয়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
-      },
+  const {
+    executeAsync: executeInsertOrder,
+    isPending: isSubmittingOrder,
+    reset: resetInsertOrder,
+  } = useAction(insertOrderAction, {
+    onError() {
+      toast.error("অর্ডারটি দেওয়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।");
+    },
 
-      onSuccess({ data }) {
-        toTrackOrderPurchase(data);
+    onSuccess({ data }) {
+      toTrackOrderPurchase(data);
 
-        toast.success(
-          `আপনার অর্ডার গ্রহণ করা হয়েছে। অর্ডার নম্বর: ${data.orderNumber}`
-        );
+      toast.success(`আপনার অর্ডার গ্রহণ করা হয়েছে। অর্ডার নম্বর: ${data.orderNumber}`);
 
-        form.reset({
-          address: "",
-          name: "",
-          phone: "",
-          productVariantId:
-            variants.find((v) => v.isDefault)?.productVariantId ??
-            variants[0]?.productVariantId ??
-            "",
-          shippingMethodId: "",
-        });
+      form.reset({
+        address: "",
+        name: "",
+        phone: "",
+        productVariantId:
+          variants.find((v) => v.isDefault)?.productVariantId ??
+          variants[0]?.productVariantId ??
+          "",
+        shippingMethodId: "",
+      });
+      setIsNavigating(true);
+      resetInsertOrder();
 
-        router.replace(`/${locale}/thank-you?order=${data.orderNumber}`);
-      },
-    });
+      window.setTimeout(() => {
+        router.push(`/${locale}/thank-you?order=${data.orderNumber}`);
+      }, 600);
+    },
+  });
 
   const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
   const [shippingError, setShippingError] = useState("");
@@ -137,6 +142,11 @@ export function OrderFormClient({
   const subtotal = unitPrice * quantity;
   const delivery = shipping?.charge ?? 0;
   const total = subtotal + delivery;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Ok
+  useEffect(() => {
+    setIsNavigating(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (!productVariantId) {
@@ -236,6 +246,13 @@ export function OrderFormClient({
     }
     return "idle";
   })();
+
+  const orderDisabled =
+    form.formState.isSubmitting ||
+    !variant ||
+    variant.stockQuantity < 1 ||
+    isSubmittingOrder ||
+    isNavigating;
 
   return (
     <Card className="mx-auto max-w-5xl bg-[#f9fafb] py-4 lg:py-16">
@@ -536,17 +553,24 @@ export function OrderFormClient({
                     </div>
                   </div>
                   <Button
-                    className="min-h-12 w-full bg-[#e87541] font-hind text-[#f8f7f1]! text-lg hover:bg-[#173c2d]"
-                    disabled={
-                      form.formState.isSubmitting ||
-                      !variant ||
-                      variant.stockQuantity < 1 ||
-                      isSubmittingOrder
-                    }
+                    className="min-h-12 w-full bg-[#e87541] font-hind text-[#f8f7f1]! text-lg hover:bg-[#173c2d] disabled:opacity-90"
+                    disabled={orderDisabled}
                     form={ORDER_FROM}
                     type="submit"
                   >
-                    অর্ডার করুন
+                    {!!(isSubmittingOrder || isNavigating) && <Spinner />}
+
+                    {(() => {
+                      if (isSubmittingOrder) {
+                        return "অর্ডারটি নিশ্চিত করা হচ্ছে...";
+                      }
+
+                      if (isNavigating) {
+                        return "অর্ডার সম্পন্ন হয়েছে";
+                      }
+
+                      return "অর্ডার করুন";
+                    })()}
                   </Button>
                 </FieldGroup>
               </FieldSet>
