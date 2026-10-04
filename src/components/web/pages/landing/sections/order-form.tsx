@@ -15,7 +15,9 @@ export async function OrderForm() {
   return (
     <Section className="bg-[#edf1e8]" id="order-form">
       <Container>
-        <OrderFormClient product={rows.product} variants={rows.variants} />
+        {!!rows?.product && !!rows.variants && (
+          <OrderFormClient product={rows.product} variants={rows.variants} />
+        )}
       </Container>
     </Section>
   );

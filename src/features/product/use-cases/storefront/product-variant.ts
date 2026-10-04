@@ -48,6 +48,12 @@ export async function getProductVariantsUseCase({
       variants: toPublicProductVariants({ rawRows: rawRows.variants }),
     };
   } catch (error) {
-    throw normalizeError(error);
+    const appError = normalizeError(error);
+
+    if (appError.code === "NOT_FOUND") {
+      return null;
+    }
+
+    throw appError;
   }
 }
