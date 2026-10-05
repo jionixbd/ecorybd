@@ -1,5 +1,4 @@
 import { AsyncBoundary } from "@/components/boundaries/async-boundary";
-import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -10,14 +9,14 @@ import { ProductFeatures } from "@/components/web/pages/landing/parts/product-fe
 import { OrderForm } from "@/components/web/pages/landing/sections/order-form";
 import { Container } from "@/components/web/pages/layout/container";
 import { Section } from "@/components/web/pages/layout/section";
-import { H1, H2, H4 } from "@/components/web/pages/layout/typography";
+import { H1, H2, H3 } from "@/components/web/pages/layout/typography";
 import { generateHomeMetadata } from "@/lib/metadata/pages/home";
 import { YouTubeEmbed } from "@next/third-parties/google";
 
 import { ReviewCarousel } from "@/components/web/pages/landing/parts/review-carousel";
+import { CTAButton } from "@/components/web/pages/layout/cta-button";
 import { getLocale } from "next-intl/server";
 import Image from "next/image";
-import Link from "next/link";
 import { Suspense } from "react";
 
 export async function generateMetadata(_: PageProps<"/[locale]">) {
@@ -75,12 +74,7 @@ export const CTASection = () => (
         তালিকায় ১৪ তম স্থানে আছে গ্যাস্ট্রিক থেকে হওয়া ক্যান্সার রোগী
       </H2>
 
-      <Button
-        asChild
-        className="max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg"
-      >
-        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
-      </Button>
+      <CTAButton label="👉 এখনই অর্ডার করুন" />
     </Container>
   </Section>
 );
@@ -93,22 +87,13 @@ export const ProductFeaturesSection = () => (
           কেন আপনি <span className="text-[#e87541]">মেথি মিক্স</span>
           <br /> পাউডারটি কিনবেন?
         </H2>
-        <Button
-          asChild
-          className="max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg"
-        >
-          <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
-        </Button>
+
+        <CTAButton className="hidden xl:flex" label="👉 এখনই অর্ডার করুন" />
       </div>
 
       <ProductFeatures />
 
-      <Button
-        asChild
-        className="mx-auto max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg xl:hidden"
-      >
-        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
-      </Button>
+      <CTAButton className="xl:hidden" label="👉 এখনই অর্ডার করুন" />
     </Container>
   </Section>
 );
@@ -162,12 +147,7 @@ export const DoctorsConsultationSection = () => (
         </CarouselContent>
       </Carousel>
 
-      <Button
-        asChild
-        className="max-w-max bg-[#e87541] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#f0b273] sm:px-6 lg:px-10 lg:text-lg"
-      >
-        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
-      </Button>
+      <CTAButton label="👉 এখনই অর্ডার করুন" secondary />
     </Container>
   </Section>
 );
@@ -184,12 +164,7 @@ export const CustomerReviewSection = () => (
         <ReviewCarousel />
       </Suspense>
 
-      <Button
-        asChild
-        className="mx-auto max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg"
-      >
-        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
-      </Button>
+      <CTAButton label="👉 এখনই অর্ডার করুন" />
     </Container>
   </Section>
 );
@@ -203,22 +178,12 @@ export const CompanyLicense = () => (
           ব্যবহার করুন!
         </H2>
 
-        <Button
-          asChild
-          className="hidden max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:flex lg:px-10 lg:text-lg"
-        >
-          <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
-        </Button>
+        <CTAButton className="hidden lg:flex" label="👉 এখনই অর্ডার করুন" />
       </div>
 
       <CompanyLicenseGallery />
 
-      <Button
-        asChild
-        className="mx-auto max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:hidden lg:px-10 lg:text-lg"
-      >
-        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
-      </Button>
+      <CTAButton className="mx-auto lg:hidden" label="👉 এখনই অর্ডার করুন" />
     </Container>
   </Section>
 );
@@ -231,16 +196,11 @@ export const DiscountSection = () => (
         টাকা অফার মূল্য- <span className="text-[#e87541]"> ৯৯০ টাকা </span>
       </H2>
 
-      <H4 className="font-normal text-[#a8c2af]">
+      <H3 className="font-normal text-[#a8c2af]">
         (এখন অর্ডার করলে ফ্রি হোম ডেলিভারি!!)
-      </H4>
+      </H3>
 
-      <Button
-        asChild
-        className="max-w-max bg-[#e87541] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#f0b273] sm:px-6 lg:px-10 lg:text-lg"
-      >
-        <Link href="#order-form">👉 এখনই অর্ডার করুন</Link>
-      </Button>
+      <CTAButton label="👉 এখনই অর্ডার করুন" secondary />
     </Container>
   </Section>
 );
