@@ -41,6 +41,7 @@ const PUBLIC_SEGMENTS = new Set([
   "blog",
   "docs",
   "thank-you",
+  "methimix",
 ]);
 
 function isPublicPath(pathname: string): boolean {

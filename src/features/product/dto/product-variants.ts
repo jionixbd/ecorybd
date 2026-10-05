@@ -28,6 +28,7 @@ export const toProductVariant = ({
 }: {
   rawRow: RawRows;
 }): ProductVariantWithRelations => ({
+  badge: product_variants.badge,
   createdAt: product_variants.createdAt,
   createdBy: product_variants.createdBy
     ? {
@@ -38,6 +39,7 @@ export const toProductVariant = ({
     : null,
   isDefault: product_variants.isDefault,
   name: product_variants.name,
+  offerNote: product_variants.offerNote,
   organization: {
     logo: organizations.logo,
     name: organizations.name,
@@ -71,6 +73,7 @@ export const toPublicProductVariants = ({
   rawRows: QueryRawRows[];
 }): PublicProductVariantWithRelations[] =>
   rawRows.map((row) => ({
+    badge: row.badge,
     isDefault: row.isDefault,
     media: row.media?.media
       ? {
@@ -85,6 +88,7 @@ export const toPublicProductVariants = ({
         }
       : null,
     name: row.name,
+    offerNote: row.offerNote,
     price: row.price,
     productId: row.productId,
     productVariantId: row.productVariantId,

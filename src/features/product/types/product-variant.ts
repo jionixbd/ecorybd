@@ -7,6 +7,7 @@ export interface ProductVariantsRowAction<TData extends RowData> {
 }
 
 export interface ProductVariantWithRelations {
+  badge: string | null;
   createdAt: Date;
   createdBy: {
     avatar: string | null;
@@ -15,6 +16,7 @@ export interface ProductVariantWithRelations {
   } | null;
   isDefault: boolean;
   name: string;
+  offerNote: string | null;
   organization: {
     logo: string | null;
     name: string;
@@ -33,6 +35,7 @@ export interface ProductVariantWithRelations {
 }
 
 export interface PublicProductVariantWithRelations {
+  badge: string | null;
   isDefault: boolean;
   media: {
     name: string;
@@ -45,6 +48,7 @@ export interface PublicProductVariantWithRelations {
     width: number | null;
   } | null;
   name: string;
+  offerNote: string | null;
   price: number;
   productId: string;
   productVariantId: string;

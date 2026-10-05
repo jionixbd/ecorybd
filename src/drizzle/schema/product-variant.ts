@@ -28,6 +28,7 @@ const productStatusEnum = pgEnum("product_status", [
 export const productVariants = snakeCase.table(
   "product_variants",
   {
+    badge: varchar({ length: 128 }),
     createdAt: timestamp({
       withTimezone: true,
     })
@@ -38,6 +39,7 @@ export const productVariants = snakeCase.table(
     }),
     isDefault: boolean().default(true).notNull(),
     name: varchar({ length: 255 }).notNull(),
+    offerNote: varchar({ length: 255 }),
     organizationId: uuid()
       .notNull()
       .references(() => organizations.organizationId, {

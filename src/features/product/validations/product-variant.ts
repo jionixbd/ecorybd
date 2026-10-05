@@ -4,8 +4,18 @@ import z from "zod";
 const TWO_DECIMAL_PLACES_REGEX = /^\d+(\.\d{1,2})?$/;
 
 export const insertProductVariantSchema = z.object({
+  badge: z
+    .string()
+    .max(128)
+    .nullish()
+    .transform((v) => (v === "" ? null : v)),
   isDefault: z.boolean().default(true),
   name: z.string().min(5).max(255).default("Default"),
+  offerNote: z
+    .string()
+    .max(255)
+    .nullish()
+    .transform((v) => (v === "" ? null : v)),
   price: z.coerce
     .number()
     .min(0)
@@ -33,7 +43,9 @@ export const updateProductVariantSchema = insertProductVariantSchema
   .partial();
 
 export const productVariantFormSchema = z.object({
+  badge: z.string().max(128).optional(),
   name: z.string().min(5).max(255),
+  offerNote: z.string().max(255).optional(),
   price: z
     .number()
     .min(0)
@@ -56,8 +68,8 @@ export const updateProductVariantFormSchema = productVariantFormSchema;
 export type UpdateProductVariantFromInput = z.infer<
   typeof updateProductVariantFormSchema
 >;
-
 export type ProductVariantFromInput = z.infer<typeof productVariantFormSchema>;
+
 export type InsertProductVariantInput = z.infer<
   typeof insertProductVariantSchema
 >;

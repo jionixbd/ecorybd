@@ -49,7 +49,9 @@ export const ProductVariantsCreateForm = () => {
 
   const form = useForm<ProductVariantFromInput>({
     defaultValues: {
+      badge: "",
       name: "",
+      offerNote: "",
       price: undefined,
       salePrice: undefined,
       sku: "",
@@ -325,6 +327,60 @@ export const ProductVariantsCreateForm = () => {
                             );
                           }}
                           value={field.value ?? ""}
+                        />
+                      </InputGroup>
+                      {!!fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                {/* Badge */}
+                <Controller
+                  control={form.control}
+                  name="badge"
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        className="font-light text-muted-foreground text-xs"
+                        htmlFor={field.name}
+                      >
+                        Badge
+                      </FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          aria-invalid={fieldState.invalid}
+                          id={field.name}
+                          placeholder="Badge"
+                          {...field}
+                        />
+                      </InputGroup>
+                      {!!fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                {/* Offer Note */}
+                <Controller
+                  control={form.control}
+                  name="offerNote"
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        className="font-light text-muted-foreground text-xs"
+                        htmlFor={field.name}
+                      >
+                        Offer Note
+                      </FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          aria-invalid={fieldState.invalid}
+                          id={field.name}
+                          placeholder="offerNote"
+                          {...field}
                         />
                       </InputGroup>
                       {!!fieldState.invalid && (
