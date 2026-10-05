@@ -5,8 +5,10 @@ export const generateDefaultVariant = ({
 }: {
   productId: string;
 }): InsertProductVariantInput => ({
+  badge: null,
   isDefault: true,
   name: "Default",
+  offerNote: null,
   price: 0,
   salePrice: null,
   sku: `default-${productId}`,
