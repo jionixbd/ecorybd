@@ -14,17 +14,17 @@ import { ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { Controller, type Control } from "react-hook-form";
 
-interface AdditionalProductProps {
+interface OrderFormAddonProps {
   control: Control<OrderFormInput>;
   orderFormId: string;
   variant: PublicProductVariantWithRelations;
 }
 
-export const AdditionalProduct = ({
+export const OrderFormAddon = ({
   control,
   variant,
   orderFormId,
-}: AdditionalProductProps) => {
+}: OrderFormAddonProps) => {
   const price = variant.salePrice ?? variant.price;
   const inputId = `${orderFormId}-product-${variant.productVariantId}`;
 

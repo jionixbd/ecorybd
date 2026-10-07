@@ -1,10 +1,10 @@
 "use client";
 
 import { RadioGroup } from "@/components/ui/radio-group";
-import { ProductVariantCard } from "@/components/web/order-form/product-variant-card";
+import { OrderFormVariantCard } from "@/components/web/order-form/order-form-variant-card";
 import type { PublicProductVariantWithRelations } from "@/features/product/types/product-variant";
 
-interface ProductVariantGridProps {
+interface OrderFormVariantGridProps {
   name: string;
   onChange: (value: string) => void;
   orderFormId: string;
@@ -12,13 +12,13 @@ interface ProductVariantGridProps {
   variants: PublicProductVariantWithRelations[];
 }
 
-export const ProductVariantGrid = ({
+export const OrderFormVariantGrid = ({
   orderFormId,
   name,
   value,
   variants,
   onChange,
-}: ProductVariantGridProps) => (
+}: OrderFormVariantGridProps) => (
   <RadioGroup
     className="grid grid-cols-1 lg:grid-cols-2"
     name={name}
@@ -26,7 +26,7 @@ export const ProductVariantGrid = ({
     value={value}
   >
     {variants.map((variant) => (
-      <ProductVariantCard
+      <OrderFormVariantCard
         key={variant.productVariantId}
         orderFormId={orderFormId}
         variant={variant}

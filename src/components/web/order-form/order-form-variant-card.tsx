@@ -13,15 +13,15 @@ import { formatBDT } from "@/lib/format-bdt";
 import { Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 
-interface ProductVariantCardProps {
+interface OrderFormVariantCardProps {
   orderFormId: string;
   variant: PublicProductVariantWithRelations;
 }
 
-export const ProductVariantCard = ({
+export const OrderFormVariantCard = ({
   orderFormId,
   variant,
-}: ProductVariantCardProps) => {
+}: OrderFormVariantCardProps) => {
   const price = variant.salePrice ?? variant.price;
   const inputId = `${orderFormId}-product-${variant.productVariantId}`;
 

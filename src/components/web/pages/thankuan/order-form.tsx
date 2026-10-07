@@ -1,6 +1,6 @@
+import { OrderFormClient } from "@/components/web/order-form/order-form-client";
 import { Container } from "@/components/web/pages/layout/container";
 import { Section } from "@/components/web/pages/layout/section";
-import { OrderFormClient } from "@/components/web/pages/thankuan/order-form-client";
 import {
   getProductVariantsUseCase,
   getProductVariantUseCase,

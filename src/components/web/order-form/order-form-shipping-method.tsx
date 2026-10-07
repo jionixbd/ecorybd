@@ -24,7 +24,7 @@ export interface ShippingOption {
 
 export type ShippingView = "loading" | "error" | "options" | "empty" | "idle";
 
-interface ShippingMethodFieldsProps {
+interface OrderFormShippingMethodProps {
   invalid?: boolean;
   onChange: (value: string) => void;
   orderFormId: string;
@@ -35,7 +35,7 @@ interface ShippingMethodFieldsProps {
   value: string;
 }
 
-export const ShippingMethodFields = ({
+export const OrderFormShippingMethod = ({
   orderFormId,
   productVariantId,
   shippingView,
@@ -44,7 +44,7 @@ export const ShippingMethodFields = ({
   value,
   invalid,
   onChange,
-}: ShippingMethodFieldsProps) => (
+}: OrderFormShippingMethodProps) => (
   <Field data-invalid={invalid}>
     <AnimatePresence initial={false} mode="wait">
       <motion.div

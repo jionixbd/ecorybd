@@ -1,4 +1,4 @@
-import { OrderFormClient } from "@/components/web/pages/landing/sections/order-form-client";
+import { OrderFormClient } from "@/components/web/order-form/order-form-client";
 import { Container } from "@/components/web/pages/layout/container";
 import { Section } from "@/components/web/pages/layout/section";
 import { getProductVariantsUseCase } from "@/features/product/use-cases/storefront/product-variant";

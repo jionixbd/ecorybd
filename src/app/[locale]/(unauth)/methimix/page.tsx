@@ -1,7 +1,6 @@
 import { AsyncBoundary } from "@/components/boundaries/async-boundary";
 import { features, reviews } from "@/components/web/data/methimix";
 import { doctors, licenses } from "@/components/web/data/shared";
-import { OrderForm } from "@/components/web/pages/landing/sections/order-form";
 import { Container } from "@/components/web/pages/layout/container";
 import { CTAButton } from "@/components/web/pages/layout/cta-button";
 import { FeatureCard } from "@/components/web/pages/layout/feature-card";
@@ -9,6 +8,7 @@ import { ImageCarousel } from "@/components/web/pages/layout/image-carousel";
 import { ImageGallery } from "@/components/web/pages/layout/image-gallery";
 import { Section } from "@/components/web/pages/layout/section";
 import { H1, H2, H3 } from "@/components/web/pages/layout/typography";
+import { OrderForm } from "@/components/web/pages/methimix/order-form";
 import { generateMethimixMetadata } from "@/lib/metadata/pages/methimix";
 import { YouTubeEmbed } from "@next/third-parties/google";
 import { getLocale } from "next-intl/server";

@@ -15,7 +15,7 @@ import { cn } from "cn";
 import { Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 
-interface OrderDetailsProps {
+interface OrderFormDetailProps {
   additional?: {
     product: Product;
     variant: PublicProductVariantWithRelations;
@@ -28,7 +28,7 @@ interface OrderDetailsProps {
   variant: PublicProductVariantWithRelations | undefined;
 }
 
-export const OrderDetails = ({
+export const OrderFormDetail = ({
   product,
   variant,
   unitPrice,
@@ -36,7 +36,7 @@ export const OrderDetails = ({
   delivery,
   total,
   additional,
-}: OrderDetailsProps) => (
+}: OrderFormDetailProps) => (
   <FieldSet className="grid">
     <FieldLegend className="font-hind text-[#173c2d] text-lg!">
       আপনার অর্ডারের বিবরণ
@@ -44,14 +44,14 @@ export const OrderDetails = ({
 
     <FieldGroup>
       <div className="flex flex-col">
-        <OrderDetailsItem
+        <OrderFormDetailItem
           product={product}
           unitPrice={unitPrice}
           variant={variant}
         />
 
         {additional ? (
-          <OrderDetailsItem
+          <OrderFormDetailItem
             product={additional.product}
             unitPrice={additional.variant.salePrice ?? additional.variant.price}
             variant={additional.variant}
@@ -67,7 +67,7 @@ export const OrderDetails = ({
   </FieldSet>
 );
 
-function OrderEntity({
+const OrderEntity = ({
   label,
   value,
   bold,
@@ -75,20 +75,18 @@ function OrderEntity({
   label: string;
   value: string;
   bold?: boolean;
-}) {
-  return (
-    <div className="grid grid-cols-2 items-center gap-2">
-      <span className="font-hind text-[#173c2d]/70">{label}</span>
-      <span
-        className={cn("text-end font-base text-[#173c2d]", bold && "font-bold")}
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
+}) => (
+  <div className="grid grid-cols-2 items-center gap-2">
+    <span className="font-hind text-[#173c2d]/70">{label}</span>
+    <span
+      className={cn("text-end font-base text-[#173c2d]", bold && "font-bold")}
+    >
+      {value}
+    </span>
+  </div>
+);
 
-const OrderDetailsItem = ({
+const OrderFormDetailItem = ({
   variant,
   product,
   unitPrice,

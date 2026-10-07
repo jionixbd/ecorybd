@@ -11,15 +11,15 @@ import { Textarea } from "@/components/ui/textarea";
 import type { OrderFormInput } from "@/features/order/validation/order";
 import { Controller, type Control } from "react-hook-form";
 
-interface ShippingAddressFieldsProps {
+interface OrderFormShippingProps {
   control: Control<OrderFormInput>;
   orderFormId: string;
 }
 
-export const ShippingAddressFields = ({
+export const OrderFormShipping = ({
   control,
   orderFormId,
-}: ShippingAddressFieldsProps) => (
+}: OrderFormShippingProps) => (
   <FieldGroup className="gap-4">
     <Controller
       control={control}
