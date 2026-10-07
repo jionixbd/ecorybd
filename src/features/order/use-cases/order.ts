@@ -19,13 +19,14 @@ import {
   setOrderStatus,
 } from "@/features/order/data-access/order";
 import {
+  toOrderDetailsWithRelations,
   toOrdersWithRelations,
-  toOrderWithRelations,
 } from "@/features/order/dto/order";
 import { orderCache } from "@/features/order/lib/cache";
 import type { OrderSearchParam } from "@/features/order/parsers/order";
 import type { OrderFormInput } from "@/features/order/validation/order";
 import { productCache } from "@/features/product/lib/cache";
+import type { OrderableProductVariant } from "@/features/product/types/order";
 import {
   ConflictError,
   normalizeError,
@@ -53,6 +54,7 @@ export async function insertOrderUseCase({
   input: OrderFormInput;
 }) {
   try {
+    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity:OK
     const created = await db.transaction(async (trx) => {
       const variant = await findOrderableVariant({
         client: trx,
@@ -66,6 +68,28 @@ export async function insertOrderUseCase({
 
       if (variant.stockQuantity < ORDER_QUANTITY) {
         throw new ConflictError("This product option is out of stock.");
+      }
+
+      let additional: OrderableProductVariant | undefined;
+
+      if (input.additionalProductVariantId) {
+        const result = await findOrderableVariant({
+          client: trx,
+          organizationId,
+          productVariantId: input.additionalProductVariantId,
+        });
+
+        if (!result) {
+          throw new NotFoundError(
+            "This product option is no longer available."
+          );
+        }
+
+        if (result.stockQuantity < ORDER_QUANTITY) {
+          throw new ConflictError("This product option is out of stock.");
+        }
+
+        additional = result;
       }
 
       const shipping = await findOrderShippingMethod({
@@ -82,11 +106,24 @@ export async function insertOrderUseCase({
       }
 
       const unitPrice = variant.salePrice ?? variant.price;
-      const subtotalCents = toCents(unitPrice) * ORDER_QUANTITY;
+      const additionalPrice = additional
+        ? (additional.salePrice ?? additional.price)
+        : 0;
+
+      const itemSubtotalCents = toCents(unitPrice) * ORDER_QUANTITY;
+      const additionalSubtotalCents = additional
+        ? toCents(additionalPrice) * ORDER_QUANTITY
+        : 0;
       const shippingCents = toCents(shipping.charge);
+
+      const subtotalCents = itemSubtotalCents + additionalSubtotalCents;
+      const totalCents = subtotalCents + shippingCents;
+
+      const itemSubtotal = itemSubtotalCents / 100;
+      const additionalSubtotal = additionalSubtotalCents / 100;
       const subtotal = subtotalCents / 100;
       const shippingTotal = shippingCents / 100;
-      const total = (subtotalCents + shippingCents) / 100;
+      const total = totalCents / 100;
 
       const reserved = await reserveVariantStock({
         client: trx,
@@ -95,6 +132,17 @@ export async function insertOrderUseCase({
 
       if (!reserved) {
         throw new ConflictError("This product option is out of stock.");
+      }
+
+      if (additional) {
+        const reservedAdditional = await reserveVariantStock({
+          client: trx,
+          productVariantId: additional.productVariantId,
+        });
+
+        if (!reservedAdditional) {
+          throw new ConflictError("This product option is out of stock.");
+        }
       }
 
       const address = await insertBillingAddress({
@@ -131,12 +179,31 @@ export async function insertOrderUseCase({
           productVariantName: variant.variantName,
           quantity: ORDER_QUANTITY,
           sku: variant.sku,
-          subtotal,
-          total: subtotal,
+          subtotal: itemSubtotal,
+          total: itemSubtotal,
           unitPrice,
           variantName: variant.variantName,
         },
       });
+
+      if (additional) {
+        await insertOrderItem({
+          client: trx,
+          values: {
+            orderId: order.orderId,
+            productId: additional.productId,
+            productName: additional.productName,
+            productVariantId: additional.productVariantId,
+            productVariantName: additional.variantName,
+            quantity: ORDER_QUANTITY,
+            sku: additional.sku,
+            subtotal: additionalSubtotal,
+            total: additionalSubtotal,
+            unitPrice: additionalPrice,
+            variantName: additional.variantName,
+          },
+        });
+      }
 
       return {
         items: [
@@ -147,6 +214,17 @@ export async function insertOrderUseCase({
             unitPrice,
             variantName: variant.variantName,
           },
+          ...(additional
+            ? [
+                {
+                  productName: additional.productName,
+                  quantity: ORDER_QUANTITY,
+                  sku: additional.sku,
+                  unitPrice: additionalPrice,
+                  variantName: additional.variantName,
+                },
+              ]
+            : []),
         ],
         orderNumber: order.orderNumber,
         productId: variant.productId,
@@ -177,6 +255,8 @@ export async function insertOrderUseCase({
     );
     updateTag(productCache.tags.list({ organizationId }));
     updateTag(orderCache.tags.list({ organizationId }));
+
+    // TODO: also update all tag for additional product
 
     return {
       items: created.items,
@@ -243,7 +323,7 @@ export async function findOrderUseCase({
     }
 
     return {
-      row: toOrderWithRelations({ rawRow }),
+      row: toOrderDetailsWithRelations({ rawRow }),
     };
   } catch (error) {
     const appError = normalizeError(error);

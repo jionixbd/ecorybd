@@ -4,6 +4,7 @@ import {
   Field,
   FieldContent,
   FieldDescription,
+  FieldError,
   FieldLabel,
   FieldTitle,
 } from "@/components/ui/field";
@@ -85,21 +86,22 @@ export const ShippingMethodFields = ({
                 }}
               >
                 <FieldLabel
-                  className="w-full rounded-2xl border border-[#173c2d]/10! bg-[#f8f7f1]! px-4 has-data-checked:border-[#173c2d] has-data-checked:bg-[#173c2d]/10!"
+                  className="w-full rounded-2xl border border-web-card-foreground/10! bg-web-card px-4 has-data-checked:border-web-card-foreground has-data-checked:bg-web-inverse-muted/40"
                   htmlFor={`${orderFormId}-product-shipping-${option.shippingMethodId}`}
                 >
+                  <FieldContent className="flex min-h-12 flex-row items-center justify-between">
+                    <FieldTitle className="font-hind text-base text-web-card-foreground">
+                      {option.name}
+                    </FieldTitle>
+                    <FieldDescription className="font-hind text-web-card-foreground">
+                      {formatBDT(option.charge)}
+                    </FieldDescription>
+                  </FieldContent>
+
                   <RadioGroupItem
                     id={`${orderFormId}-product-shipping-${option.shippingMethodId}`}
                     value={option.shippingMethodId}
                   />
-                  <FieldContent className="flex min-h-12 flex-row items-center justify-between">
-                    <FieldTitle className="font-hind text-[#173c2d] text-base">
-                      {option.name}
-                    </FieldTitle>
-                    <FieldDescription className="font-hind">
-                      {formatBDT(option.charge)}
-                    </FieldDescription>
-                  </FieldContent>
                 </FieldLabel>
               </motion.div>
             ))}
@@ -107,5 +109,6 @@ export const ShippingMethodFields = ({
         )}
       </motion.div>
     </AnimatePresence>
+    {!!invalid && <FieldError>একটি শিপিং পদ্ধতি নির্বাচন করুন</FieldError>}
   </Field>
 );

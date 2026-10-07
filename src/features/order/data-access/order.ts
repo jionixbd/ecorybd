@@ -1,5 +1,6 @@
 import type { DbClient } from "@/drizzle/db";
 import {
+  type OrderItem,
   type OrderStatus,
   billingAddress,
   orderItems,
@@ -82,6 +83,7 @@ export async function findOrderableVariant({
       sku: productVariants.sku,
       stockQuantity: productVariants.stockQuantity,
       variantName: productVariants.name,
+      variantSlug: productVariants.slug,
     })
     .from(productVariants)
     .innerJoin(products, eq(products.productId, productVariants.productId))
@@ -236,7 +238,7 @@ export async function findOrders({
       billingAddress,
       eq(billingAddress.billingAddressId, orders.billingAddressId)
     )
-    .innerJoin(orderItems, eq(orderItems.orderId, orders.orderId))
+    // .innerJoin(orderItems, eq(orderItems.orderId, orders.orderId))
     .limit(limit)
     .offset(offset)
     .where(where)
@@ -270,7 +272,32 @@ export async function findOrder({
   organizationId: string;
 }) {
   const [result] = await client
-    .select()
+    .select({
+      billing_address: billingAddress,
+      order_items: sql<OrderItem[]>`
+        coalesce(
+          json_agg(
+            json_build_object(
+              'orderItemId', ${orderItems.orderItemId},
+              'orderId', ${orderItems.orderId},
+              'productId', ${orderItems.productId},
+              'productName', ${orderItems.productName},
+              'productVariantId', ${orderItems.productVariantId},
+              'productVariantName', ${orderItems.productVariantName},
+              'quantity', ${orderItems.quantity},
+              'sku', ${orderItems.sku},
+              'subtotal', ${orderItems.subtotal},
+              'total', ${orderItems.total},
+              'unitPrice', ${orderItems.unitPrice},
+              'variantName', ${orderItems.variantName}
+            )
+          ) filter (where ${orderItems.orderItemId} is not null),
+          '[]'::json
+        )
+      `,
+      orders,
+      organizations,
+    })
     .from(orders)
     .innerJoin(
       organizations,
@@ -280,13 +307,17 @@ export async function findOrder({
       billingAddress,
       eq(billingAddress.billingAddressId, orders.billingAddressId)
     )
-    .innerJoin(orderItems, eq(orderItems.orderId, orders.orderId))
-
+    .leftJoin(orderItems, eq(orderItems.orderId, orders.orderId))
     .where(
       and(
         eq(orders.orderId, orderId),
         eq(orders.organizationId, organizationId)
       )
+    )
+    .groupBy(
+      orders.orderId,
+      organizations.organizationId,
+      billingAddress.billingAddressId
     );
 
   return result;

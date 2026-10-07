@@ -4,6 +4,7 @@ import { z } from "zod";
 const BD_MOBILE_REGEX = /^(?:\+?8801|01)[3-9]\d{8}$/;
 
 export const orderFormSchema = z.object({
+  additionalProductVariantId: z.uuid().optional(),
   address: z.string().trim().min(8, "সম্পূর্ণ ঠিকানা পুরন করুন").max(2000),
   name: z.string().trim().min(2, "আপনার সম্পূর্ণ নাম লিখুন").max(255),
   phone: z
@@ -13,8 +14,8 @@ export const orderFormSchema = z.object({
     .refine((val) => BD_MOBILE_REGEX.test(val), {
       message: "সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন",
     }),
-  productVariantId: z.uuid("Choose a product option."),
-  shippingMethodId: z.uuid(),
+  productVariantId: z.uuid("একটি পণ্যের বিকল্প বেছে নিন।"),
+  shippingMethodId: z.uuid("একটি শিপিং পদ্ধতি নির্বাচন করুন"),
 });
 
 export type OrderFormInput = z.infer<typeof orderFormSchema>;

@@ -72,29 +72,35 @@ export const toPublicProductVariants = ({
 }: {
   rawRows: QueryRawRows[];
 }): PublicProductVariantWithRelations[] =>
-  rawRows.map((row) => ({
-    badge: row.badge,
-    isDefault: row.isDefault,
-    media: row.media?.media
-      ? {
-          altText: row.media.media.altText,
-          height: row.media.media.height,
-          key: row.media.media.key,
-          mimeType: row.media.media.mimeType,
-          name: row.media.media.name,
-          size: row.media.media.size,
-          ufsUrl: row.media.media.ufsUrl,
-          width: row.media.media.width,
-        }
-      : null,
-    name: row.name,
-    offerNote: row.offerNote,
-    price: row.price,
-    productId: row.productId,
-    productVariantId: row.productVariantId,
-    salePrice: row.salePrice,
-    sku: row.sku,
-    slug: row.slug,
-    status: row.status,
-    stockQuantity: row.stockQuantity,
-  }));
+  rawRows.map((rawRow) => toPublicProductVariant({ rawRow }));
+
+export const toPublicProductVariant = ({
+  rawRow,
+}: {
+  rawRow: QueryRawRows;
+}): PublicProductVariantWithRelations => ({
+  badge: rawRow.badge,
+  isDefault: rawRow.isDefault,
+  media: rawRow.media?.media
+    ? {
+        altText: rawRow.media.media.altText,
+        height: rawRow.media.media.height,
+        key: rawRow.media.media.key,
+        mimeType: rawRow.media.media.mimeType,
+        name: rawRow.media.media.name,
+        size: rawRow.media.media.size,
+        ufsUrl: rawRow.media.media.ufsUrl,
+        width: rawRow.media.media.width,
+      }
+    : null,
+  name: rawRow.name,
+  offerNote: rawRow.offerNote,
+  price: rawRow.price,
+  productId: rawRow.productId,
+  productVariantId: rawRow.productVariantId,
+  salePrice: rawRow.salePrice,
+  sku: rawRow.sku,
+  slug: rawRow.slug,
+  status: rawRow.status,
+  stockQuantity: rawRow.stockQuantity,
+});

@@ -27,10 +27,10 @@ export const ProductVariantCard = ({
 
   return (
     <FieldLabel
-      className="relative w-full rounded-2xl border border-[#173c2d]/10! bg-[#f8f7f1]/60 p-2 has-data-checked:border-[#173c2d] has-data-checked:bg-[#173c2d]/10"
+      className="relative w-full rounded-2xl border border-web-border bg-web-card p-2 has-data-checked:border-web-border has-data-checked:bg-web-inverse-muted/40"
       htmlFor={inputId}
     >
-      <FieldContent className="grid grid-cols-[80px_1fr] items-center gap-4">
+      <FieldContent className="grid grid-cols-[64px_1fr] items-center gap-4 md:grid-cols-[80px_1fr]">
         <div>
           {variant.media ? (
             <Image
@@ -48,24 +48,24 @@ export const ProductVariantCard = ({
         </div>
 
         <div>
-          <FieldTitle className="font-hind text-[#173c2d]! text-base">
+          <FieldTitle className="font-hind text-base text-web-card-foreground">
             {variant.name}
           </FieldTitle>
 
           {!!variant.badge && (
-            <Badge className="absolute top-1 right-1 bg-[#e87541] px-3! font-hind text-[#f8f7f1]!">
+            <Badge className="absolute top-1 right-1 bg-web-accent px-3! font-hind text-web-accent-foreground">
               {variant.badge}
             </Badge>
           )}
 
           {!!variant.offerNote && (
-            <FieldDescription className="font-hind text-[#173c2d]/60!">
+            <FieldDescription className="font-hind text-web-card-foreground/60!">
               {variant.offerNote}
             </FieldDescription>
           )}
 
-          <FieldDescription className="flex gap-2 font-hind text-[#173c2d]">
-            <span className="text-[#173c2d]/60! line-through">
+          <FieldDescription className="flex gap-2 font-hind text-web-card-foreground">
+            <span className="text-web-card-foreground/60! line-through">
               {formatBDT(variant.price)}
             </span>
             {formatBDT(price)}

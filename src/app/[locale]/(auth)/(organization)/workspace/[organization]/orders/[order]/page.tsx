@@ -38,6 +38,9 @@ async function OrderDetailWrapper(
 
   return (
     <div className="flex w-full max-w-5xl justify-center">
+      {/* <pre>
+        <code>{JSON.stringify(order, null, 2)}</code>
+      </pre> */}
       <OderDetailCard order={order.row} />
     </div>
   );

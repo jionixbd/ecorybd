@@ -1,3 +1,4 @@
+import { AsyncBoundary } from "@/components/boundaries/async-boundary";
 import { doctors, licenses } from "@/components/web/data/shared";
 import { features, reviews, videos } from "@/components/web/data/thankuan";
 import { Container } from "@/components/web/pages/layout/container";
@@ -8,6 +9,7 @@ import { ImageGallery } from "@/components/web/pages/layout/image-gallery";
 import { Section } from "@/components/web/pages/layout/section";
 import { H1, H2, H3, Lead } from "@/components/web/pages/layout/typography";
 import { VideoCarousel } from "@/components/web/pages/layout/video-carousel";
+import { OrderForm } from "@/components/web/pages/thankuan/order-form";
 import { generateThankuanMetadata } from "@/lib/metadata/pages/thankuan";
 import { YouTubeEmbed } from "@next/third-parties/google";
 import { TriangleAlert } from "lucide-react";
@@ -29,6 +31,9 @@ export default async function HomePage(_: PageProps<"/[locale]/thankuan">) {
       <CustomerReview />
       <CompanyLicense />
       <Discount />
+      <AsyncBoundary>
+        <OrderForm />
+      </AsyncBoundary>
     </div>
   );
 }

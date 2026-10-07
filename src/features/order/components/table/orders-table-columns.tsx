@@ -51,18 +51,18 @@ export function ordersTableColumns(
       label: "Phone",
       type: "phone",
     }),
-    buildDataColumn<OrderWithRelations, unknown>({
-      accessorFn: (row) => row.item.productName ?? "N/A",
-      id: "productName",
-      label: "Product",
-      type: "text",
-    }),
-    buildDataColumn<OrderWithRelations, unknown>({
-      accessorFn: (row) => row.item.variantName ?? "N/A",
-      id: "variantName",
-      label: "Variant",
-      type: "text",
-    }),
+    // buildDataColumn<OrderWithRelations, unknown>({
+    //   accessorFn: (row) => row.item.productName ?? "N/A",
+    //   id: "productName",
+    //   label: "Product",
+    //   type: "text",
+    // }),
+    // buildDataColumn<OrderWithRelations, unknown>({
+    //   accessorFn: (row) => row.item.variantName ?? "N/A",
+    //   id: "variantName",
+    //   label: "Variant",
+    //   type: "text",
+    // }),
     buildDataColumn({
       accessorKey: "total",
       label: "Order Total",

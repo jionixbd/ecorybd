@@ -27,15 +27,15 @@ export const ShippingAddressFields = ({
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           <FieldLabel
-            className="font-hind font-light text-[#173c2d]/70"
+            className="font-hind font-light text-web-card-foreground"
             htmlFor={field.name}
           >
             আপনার সম্পূর্ণ নাম লিখুন
           </FieldLabel>
-          <InputGroup className="h-12! bg-[#eef0f2]!">
+          <InputGroup className="h-12! bg-web-surface">
             <InputGroupInput
               aria-invalid={fieldState.invalid}
-              className="h-12! font-hind text-[#173c2d]! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
+              className="h-12! font-hind text-web-card-foreground placeholder:text-web-muted-foreground"
               id={field.name}
               placeholder="আপনার নাম"
               {...field}
@@ -52,15 +52,15 @@ export const ShippingAddressFields = ({
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           <FieldLabel
-            className="font-hind font-light text-[#173c2d]/70"
+            className="font-hind font-light text-web-card-foreground"
             htmlFor={field.name}
           >
             আপনার ফোন নাম্বার
           </FieldLabel>
-          <InputGroup className="h-12! bg-[#eef0f2]!">
+          <InputGroup className="h-12! bg-web-surface">
             <InputGroupInput
               aria-invalid={fieldState.invalid}
-              className="h-12! font-hind text-[#173c2d]! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
+              className="h-12! font-hind text-web-card-foreground placeholder:text-web-muted-foreground"
               id={field.name}
               placeholder="+৮৮০ ১৭০০ ১২৩ ৪৫৬"
               {...field}
@@ -77,7 +77,7 @@ export const ShippingAddressFields = ({
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           <FieldLabel
-            className="font-hind font-light text-[#173c2d]/70"
+            className="font-hind font-light text-web-card-foreground"
             htmlFor={`${orderFormId}-product-billing-address`}
           >
             সম্পূর্ণ ঠিকানা পুরন করুন
@@ -85,7 +85,7 @@ export const ShippingAddressFields = ({
           <Textarea
             {...field}
             aria-invalid={fieldState.invalid}
-            className="min-h-16! bg-[#eef0f2]! font-hind text-[#173c2d]! placeholder:text-[#173c2d]/60 dark:placeholder:text-[#173c2d]/30"
+            className="min-h-16! bg-web-surface font-hind text-web-card-foreground placeholder:text-web-muted-foreground"
             id={`${orderFormId}-product-billing-address`}
             placeholder="১২৩ রোড, যশোর, বাংলাদেশ"
           />

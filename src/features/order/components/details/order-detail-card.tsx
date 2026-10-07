@@ -17,13 +17,16 @@ import { Separator } from "@/components/ui/separator";
 import { formatDate } from "@/features/data-table/lib/format-date";
 import { OrderDetailEntity } from "@/features/order/components/details/order-detail-entity";
 import { OrderDetailStatus } from "@/features/order/components/details/order-detail-status";
-import type { OrderWithRelations } from "@/features/order/types/order";
+import type {
+  OrderDetailsWithRelations,
+  OrderWithRelations,
+} from "@/features/order/types/order";
 import { formatBDT } from "@/lib/format-bdt";
 import { PhoneForwarded } from "lucide-react";
 import Link from "next/link";
 
 interface OderDetailCardProps {
-  order: OrderWithRelations;
+  order: OrderDetailsWithRelations;
 }
 
 export const OderDetailCard = ({ order }: OderDetailCardProps) => (
@@ -44,14 +47,16 @@ export const OderDetailCard = ({ order }: OderDetailCardProps) => (
       </CardHeader>
 
       <CardContent>
-        <OrderItem {...order.item} />
+        {order.items.map((item) => (
+          <OrderItem {...item} key={item.productVariantId} />
+        ))}
 
         <Separator />
 
         <OrderDetailEntity
           hind
           label="Item Subtotal"
-          value={formatBDT(order.item.subtotal)}
+          value={formatBDT(order.subtotal)}
         />
 
         <OrderDetailEntity
@@ -86,7 +91,7 @@ const OrderItem = ({
   unitPrice,
   quantity,
   subtotal,
-}: OrderWithRelations["item"]) => (
+}: OrderDetailsWithRelations["items"][number]) => (
   <Item className="w-full px-0" size={"sm"}>
     <ItemMedia className="size-15! bg-muted" variant="image" />
     <ItemContent className="grid w-full grid-cols-3">

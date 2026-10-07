@@ -6,6 +6,7 @@ import type { Product } from "@/drizzle/schema";
 import {
   toTrackBeginCheckout,
   toTrackOrderPurchase,
+  toTrackPaymentInfo,
 } from "@/features/analytics/track/order";
 import { insertOrderAction } from "@/features/order/actions/order";
 import {
@@ -22,9 +23,9 @@ import { useEffect, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { AdditionalProduct } from "@/components/web/order-form/additional-product";
 import { OrderDetails } from "@/components/web/order-form/order-details";
+import { OrderFormSubmit } from "@/components/web/order-form/order-form-submit";
 import { ProductVariantGrid } from "@/components/web/order-form/product-variant-grid";
 import { ShippingAddressFields } from "@/components/web/order-form/shipping-address-fields";
 import {
@@ -32,13 +33,19 @@ import {
   type ShippingView,
   ShippingMethodFields,
 } from "@/components/web/order-form/shipping-method-fields";
+import { Truck } from "lucide-react";
 
 const ORDER_FROM = "order-submission-form";
 
 export function OrderFormClient({
   variants,
   product,
+  additional,
 }: {
+  additional?: {
+    product: Product;
+    variant: PublicProductVariantWithRelations;
+  } | null;
   product: Product;
   variants: PublicProductVariantWithRelations[];
 }) {
@@ -61,6 +68,7 @@ export function OrderFormClient({
       toast.success(`আপনার অর্ডার গ্রহণ করা হয়েছে। অর্ডার নম্বর: ${data.orderNumber}`);
 
       form.reset({
+        additionalProductVariantId: undefined,
         address: "",
         name: "",
         phone: "",
@@ -84,6 +92,7 @@ export function OrderFormClient({
 
   const form = useForm<OrderFormInput>({
     defaultValues: {
+      additionalProductVariantId: undefined,
       address: "",
       name: "",
       phone: "",
@@ -108,16 +117,30 @@ export function OrderFormClient({
     control: form.control,
     name: "productVariantId",
   });
+  const additionalProductVariantId = useWatch({
+    control: form.control,
+    name: "additionalProductVariantId",
+  });
 
   const quantity = 1;
   const variant = variants.find(
     (item) => item.productVariantId === productVariantId
   );
+  const selectedAdditional =
+    additional &&
+    additional.variant.productVariantId === additionalProductVariantId
+      ? additional
+      : undefined;
+  const additionalPrice = selectedAdditional
+    ? (selectedAdditional.variant.salePrice ?? selectedAdditional.variant.price)
+    : 0;
+
   const shipping = shippingOptions.find(
     (item) => item.shippingMethodId === shippingMethodId
   );
+
   const unitPrice = variant ? (variant.salePrice ?? variant.price) : 0;
-  const subtotal = unitPrice * quantity;
+  const subtotal = unitPrice * quantity + additionalPrice;
   const delivery = shipping?.charge ?? 0;
   const total = subtotal + delivery;
 
@@ -195,7 +218,32 @@ export function OrderFormClient({
       return;
     }
 
+    toTrackPaymentInfo({
+      items: [
+        {
+          productName: product.name,
+          quantity,
+          sku: selected?.sku,
+          unitPrice,
+          variantName: selected.name,
+        },
+        ...(selectedAdditional
+          ? [
+              {
+                productName: selectedAdditional.product.name,
+                quantity,
+                sku: selectedAdditional.variant.sku,
+                unitPrice: additionalPrice,
+                variantName: selectedAdditional.variant.name,
+              },
+            ]
+          : []),
+      ],
+      subtotal,
+    });
+
     await executeInsertOrder({
+      additionalProductVariantId: values.additionalProductVariantId,
       address: values.address,
       name: values.name,
       phone: values.phone,
@@ -228,7 +276,7 @@ export function OrderFormClient({
     isNavigating;
 
   return (
-    <Card className="mx-auto max-w-5xl bg-[#f9fafb] py-4 lg:py-16">
+    <Card className="mx-auto max-w-5xl bg-[#ffffff] py-4 lg:py-16">
       <CardContent className="px-4">
         <form
           className="mx-auto grid w-full max-w-xl gap-8 lg:max-w-4xl"
@@ -237,7 +285,7 @@ export function OrderFormClient({
         >
           {/* PRODUCT VARIANTS */}
           <FieldSet className="grid">
-            <FieldLegend className="font-hind text-[#173c2d] text-xl!">
+            <FieldLegend className="font-hind text-web-foreground text-xl!">
               যেকোনো একটি প্যাকেজ নির্বাচন করুন
             </FieldLegend>
 
@@ -262,7 +310,7 @@ export function OrderFormClient({
             <div className="grid grid-cols-1 gap-8">
               {/* BILLING ADDRESS */}
               <FieldSet className="grid">
-                <FieldLegend className="font-hind text-[#173c2d] text-lg!">
+                <FieldLegend className="font-hind text-lg! text-web-foreground">
                   বিলিং বিবরণ
                 </FieldLegend>
 
@@ -274,7 +322,7 @@ export function OrderFormClient({
 
               {/* SHIPPING METHOD */}
               <FieldSet className="grid">
-                <FieldLegend className="font-hind text-[#173c2d] text-lg!">
+                <FieldLegend className="font-hind text-lg! text-web-foreground">
                   শিপিং চার্জ
                 </FieldLegend>
 
@@ -297,37 +345,48 @@ export function OrderFormClient({
               </FieldSet>
             </div>
 
-            <div>
+            <div className="space-y-4">
               <OrderDetails
+                additional={selectedAdditional}
                 delivery={delivery}
-                disabled={orderDisabled}
-                isNavigating={isNavigating}
-                isSubmitting={isSubmittingOrder}
-                orderFormId={ORDER_FROM}
                 product={product}
                 subtotal={subtotal}
                 total={total}
                 unitPrice={unitPrice}
                 variant={variant}
               />
+
+              {!!additional && (
+                <AdditionalProduct
+                  control={form.control}
+                  orderFormId={ORDER_FROM}
+                  variant={additional.variant}
+                />
+              )}
+
+              <div className="flex flex-col gap-4 rounded-2xl border border-web-border p-4">
+                <div className="grid grid-cols-[56px_1fr] items-center gap-2 rounded-2xl">
+                  <div className="flex size-14 items-center justify-center rounded-2xl bg-web-muted">
+                    <Truck className="text-web-foreground" />
+                  </div>
+                  <div>
+                    <div className="font-hind text-lg! text-web-foreground">
+                      ক্যাশঅন ডেলিভারি
+                    </div>
+                    <p className="font-hind text-web-foreground/60">
+                      পন্য হাতে পেয়ে মূল্য পরিশোধ করবেন
+                    </p>
+                  </div>
+                </div>
+
+                <OrderFormSubmit
+                  disabled={orderDisabled}
+                  form={ORDER_FROM}
+                  isNavigating={isNavigating}
+                  isSubmittingOrder={isSubmittingOrder}
+                />
+              </div>
             </div>
-            <Button
-              className="min-h-12 w-full bg-[#e87541] font-hind text-[#f8f7f1]! text-lg hover:bg-[#e87541]/80! disabled:opacity-70!"
-              disabled={orderDisabled}
-              form={ORDER_FROM}
-              type="submit"
-            >
-              {!!(isSubmittingOrder || isNavigating) && <Spinner />}
-              {(() => {
-                if (isSubmittingOrder) {
-                  return "অর্ডারটি নিশ্চিত করা হচ্ছে...";
-                }
-                if (isNavigating) {
-                  return "অর্ডার সম্পন্ন হয়েছে";
-                }
-                return "অর্ডার করুন";
-              })()}
-            </Button>
           </div>
         </form>
       </CardContent>

@@ -40,6 +40,27 @@ export function toTrackOrderPurchase({
   });
 }
 
+export function toTrackPaymentInfo({
+  items,
+  subtotal,
+}: Omit<OrderPurchaseInput, "orderNumber" | "shippingTotal">) {
+  sendGTMEvent({ ecommerce: null });
+  sendGTMEvent({
+    ecommerce: {
+      currency: "BDT",
+      items: items.map((item) => ({
+        item_id: item.sku,
+        item_name: item.productName,
+        item_variant: item.variantName,
+        price: item.unitPrice,
+        quantity: item.quantity,
+      })),
+      value: subtotal,
+    },
+    event: "add_payment_info",
+  });
+}
+
 export function toTrackBeginCheckout({
   items,
   value,
