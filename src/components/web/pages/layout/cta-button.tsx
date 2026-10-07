@@ -37,8 +37,8 @@ export const CTAButton = ({
       {...rest}
       asChild
       className={cn(
-        "max-w-max bg-[#173c2d] px-6 py-6 font-hind text-[#f8f7f1] text-base hover:bg-[#e87541] sm:px-6 lg:px-10 lg:text-lg",
-        secondary && "bg-[#e87541] hover:bg-[#f0b273]",
+        "max-w-max bg-web-primary px-6 py-6 font-hind text-base text-web-primary-foreground hover:bg-web-accent hover:text-accent-foreground sm:px-6 lg:px-10 lg:text-lg",
+        secondary && "bg-web-secondary text-web-secondary-foreground",
         className
       )}
     >

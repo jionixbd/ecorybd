@@ -52,7 +52,7 @@ export function Lead({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       className={cn(
-        "text-pretty font-hind text-base text-muted-foreground sm:text-lg",
+        "text-pretty font-hind text-base text-web-primary-foreground sm:text-lg",
         className
       )}
       {...props}
@@ -64,7 +64,7 @@ export function Text({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       className={cn(
-        "text-pretty font-hind text-base text-muted-foreground leading-relaxed",
+        "text-pretty font-hind text-base text-web-primary-foreground leading-relaxed",
         className
       )}
       {...props}

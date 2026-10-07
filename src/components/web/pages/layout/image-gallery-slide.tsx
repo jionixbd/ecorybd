@@ -7,7 +7,11 @@ import {
   type RenderSlideProps,
 } from "yet-another-react-lightbox";
 
-export function NextJsImage({ slide, offset, rect }: RenderSlideProps) {
+export const ImageGallerySlide = ({
+  slide,
+  offset,
+  rect,
+}: RenderSlideProps) => {
   const {
     on: { click },
     carousel: { imageFit },
@@ -39,7 +43,7 @@ export function NextJsImage({ slide, offset, rect }: RenderSlideProps) {
         alt={slide.alt ?? ""}
         draggable={false}
         fill
-        loading="eager"
+        loading="lazy"
         onClick={
           offset === 0 ? () => click?.({ index: currentIndex }) : undefined
         }
@@ -52,4 +56,4 @@ export function NextJsImage({ slide, offset, rect }: RenderSlideProps) {
       />
     </div>
   );
-}
+};

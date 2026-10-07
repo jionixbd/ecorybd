@@ -1,25 +1,18 @@
-import { Lead, Text } from "@/components/web/pages/layout/typography";
+import type { FeaturesCardProps } from "@/components/web/pages/layout/feature-card";
+import type { ImageCarouselItem } from "@/components/web/pages/layout/image-carousel";
+import type { VideoCarouselSlide } from "@/components/web/pages/layout/video-carousel-slide";
 import {
   Award,
   FlaskConical,
   HandCoins,
   HeartPulse,
-  type LucideIcon,
   ShieldCheck,
 } from "lucide-react";
 
-interface ProductFeature {
-  description: string;
-  icon: LucideIcon;
-  iconBg: string;
-  iconColor: string;
-  title: string;
-}
-
-const features: ProductFeature[] = [
+export const features: FeaturesCardProps[] = [
   {
     description:
-      "মেথি মিক্স সেবনে পেটের গ্যাস, পেটে-বুকে-পিঠে ব্যথা, টক ঢেকুর, বমি ভাব, ক্ষুধামন্দা, বদহজম ও দুর্বলতা দূর হবে।",
+      "উদ্বেগ ও বিষন্নতা সহ IBS এর সকল সমস্যায় হবে, পেট ফুলে যাওয়া, পেট বা বুকে ব্যাথা, ক্লান্তি দূর হবে, মিউকাস সমস্যা, ওজন কমে যাওয়া সাথে শারীরিক ও মানসিক দূর্বলতা দূর হবে।",
     icon: HeartPulse,
     iconBg: "#dfeee0",
     iconColor: "#45845a",
@@ -58,37 +51,49 @@ const features: ProductFeature[] = [
   },
 ];
 
-export const ProductFeatures = () => (
-  <div className="mx-auto grid max-w-3xl grid-cols-1 justify-center gap-2 sm:grid-cols-2 md:grid-cols-3">
-    {features.map((feature, idx) => (
-      <ProductFeaturesCard {...feature} key={idx} />
-    ))}
-  </div>
-);
+export const reviews: ImageCarouselItem[] = [
+  {
+    height: 500,
+    url: "/images/review-tk-shahin.jpg",
+    width: 500,
+  },
+  {
+    height: 500,
+    url: "/images/review-tk-shofikul-islam.jpg",
+    width: 500,
+  },
+  {
+    height: 500,
+    url: "/images/review-tk-azaj.jpg",
+    width: 500,
+  },
+  {
+    height: 500,
+    url: "/images/review-tk-hafizur-rahman.jpg",
+    width: 500,
+  },
+];
 
-const ProductFeaturesCard = ({
-  icon: Icon,
-  title,
-  iconBg,
-  iconColor,
-  description,
-}: ProductFeature) => (
-  <div className="flex aspect-auto max-w-auto flex-row gap-4 rounded-2xl bg-[#fff] p-4 lg:aspect-square lg:flex-col">
-    <div
-      className="flex aspect-square h-11 w-11 shrink-0 items-center justify-center rounded-xl"
-      style={{
-        background: iconBg,
-      }}
-    >
-      <Icon
-        style={{
-          color: iconColor,
-        }}
-      />
-    </div>
-    <div>
-      <Lead className="text-[#244737]">{title}</Lead>
-      <Text className="text-[#7b8d84] text-sm">{description}</Text>
-    </div>
-  </div>
-);
+export const videos: VideoCarouselSlide[] = [
+  {
+    alt: "Video 1",
+    height: 720,
+    poster: "/images/nbpwtPly0eE-HD.jpg",
+    width: 1280,
+    youtubeId: "nbpwtPly0eE",
+  },
+  {
+    alt: "Video 2",
+    height: 720,
+    poster: "/images/04k2V5EFLII-HD.jpg",
+    width: 1280,
+    youtubeId: "04k2V5EFLII",
+  },
+  {
+    alt: "Video 2",
+    height: 720,
+    poster: "/images/arYfr9fK3jQ-HD.jpg",
+    width: 1280,
+    youtubeId: "arYfr9fK3jQ",
+  },
+];
