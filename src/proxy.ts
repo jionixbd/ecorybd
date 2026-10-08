@@ -1,19 +1,7 @@
+import { intlMiddleware } from "@/i18n/middleware";
+import { routing } from "@/i18n/routing";
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import type { NextFetchEvent, NextRequest } from "next/server";
-import { intlMiddleware } from "./i18n/middleware";
-import { routing } from "./i18n/routing";
-
-// const clerkHandler = clerkMiddleware(
-//   async (_auth, req: NextRequest) => intlMiddleware(req),
-//   {
-//     organizationSyncOptions: {
-//       organizationPatterns: [
-//         "/:locale/workspace/:slug",
-//         "/:locale/workspace/:slug/(.*)",
-//       ],
-//     },
-//   }
-// );
 
 const clerkHandler = clerkMiddleware(
   async (_auth, req: NextRequest) => {
@@ -42,6 +30,8 @@ const PUBLIC_SEGMENTS = new Set([
   "docs",
   "thank-you",
   "methimix",
+  "thankuan",
+  "kostocare",
 ]);
 
 function isPublicPath(pathname: string): boolean {
