@@ -74,6 +74,7 @@ export const OrderFormVariantCard = ({
       </FieldContent>
 
       <RadioGroupItem
+        data-sku={variant.sku}
         disabled={variant.stockQuantity < 1}
         id={inputId}
         value={variant.productVariantId}
