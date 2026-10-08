@@ -246,7 +246,8 @@ export function OrderFormClient({
             ]
           : []),
       ],
-      subtotal,
+      // subtotal,
+      total,
     });
 
     await executeInsertOrder({

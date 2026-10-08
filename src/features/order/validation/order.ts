@@ -1,7 +1,8 @@
 import { normalizeBanglaPhone } from "@/lib/normalize-bd-phone";
 import { z } from "zod";
 
-const BD_MOBILE_REGEX = /^(?:\+?8801|01)[3-9]\d{8}$/;
+// const BD_MOBILE_REGEX = /^(?:\+?8801|01)[3-9]\d{8}$/;
+const BD_MOBILE_REGEX = /^01[3-9]\d{8}$/;
 
 export const orderFormSchema = z.object({
   additionalProductVariantId: z.uuid().optional(),

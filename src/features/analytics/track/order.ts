@@ -17,7 +17,8 @@ interface OrderPurchaseInput {
   }[];
   orderNumber: string;
   shippingTotal: number;
-  subtotal: number;
+  // subtotal: number;
+  total: number;
 }
 
 type CheckoutItem = OrderPurchaseInput["items"][number];
@@ -26,7 +27,8 @@ export function toTrackOrderPurchase({
   items,
   orderNumber,
   shippingTotal,
-  subtotal,
+  // subtotal,
+  total,
   customer,
 }: OrderPurchaseInput) {
   sendGTMEvent({ ecommerce: null });
@@ -43,7 +45,8 @@ export function toTrackOrderPurchase({
       })),
       shipping: shippingTotal,
       transaction_id: orderNumber,
-      value: subtotal,
+      // value: subtotal,
+      value: total,
     },
     event: "purchase",
   });
@@ -51,7 +54,8 @@ export function toTrackOrderPurchase({
 
 export function toTrackPaymentInfo({
   items,
-  subtotal,
+  // subtotal,
+  total,
   customer,
 }: Omit<OrderPurchaseInput, "orderNumber" | "shippingTotal">) {
   sendGTMEvent({ ecommerce: null });
@@ -66,7 +70,8 @@ export function toTrackPaymentInfo({
         price: item.unitPrice,
         quantity: item.quantity,
       })),
-      value: subtotal,
+      // value: subtotal,
+      value: total,
     },
     event: "add_payment_info",
   });

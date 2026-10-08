@@ -1,3 +1,5 @@
+const COUNTRY_REGEX = /^\+?880/;
+
 export const normalizeBanglaPhone = (phone: string) => {
   const banglaToEnglishMap: Record<string, string> = {
     "০": "0",
@@ -12,5 +14,7 @@ export const normalizeBanglaPhone = (phone: string) => {
     "৯": "9",
   };
 
-  return phone.replace(/[০-৯]/g, (match) => banglaToEnglishMap[match]);
+  return phone
+    .replace(/[০-৯]/g, (match) => banglaToEnglishMap[match])
+    .replace(COUNTRY_REGEX, "0");
 };
