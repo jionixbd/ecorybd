@@ -57,6 +57,13 @@ const ProductList = async () => {
         থানকুয়ান (Thankuan)
         <Leaf className="size-5" />
       </Link>
+      <Link
+        className="flex gap-2 font-hind text-[#173c2d] hover:underline"
+        href={`/${locale}/kostocare`}
+      >
+        কোষ্টকেয়ার (kostocare)
+        <Leaf className="size-5" />
+      </Link>
     </div>
   );
 };
