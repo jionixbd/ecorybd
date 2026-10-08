@@ -219,6 +219,13 @@ export function OrderFormClient({
     }
 
     toTrackPaymentInfo({
+      customer: {
+        billing_address: values.address,
+        billing_name: values.name,
+        billing_phone: values.phone,
+        order_count: selectedAdditional ? 2 : 1,
+        total_spent: total,
+      },
       items: [
         {
           productName: product.name,

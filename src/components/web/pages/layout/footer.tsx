@@ -60,7 +60,7 @@ const FooterMenuDeveloper = () => (
   </div>
 );
 
-const FooterMenuCompany = ({ locale }: { locale: Locale }) => {
+const FooterMenuCompany = (_: { locale: Locale }) => {
   const { company } = navigation;
 
   return (
@@ -68,14 +68,14 @@ const FooterMenuCompany = ({ locale }: { locale: Locale }) => {
       <h3 className="font-base font-hind text-base text-zinc-50">Company</h3>
 
       <div className="flex flex-col items-start justify-start gap-3 md:items-end">
-        {company?.map((item) => (
-          <Link
+        {company.map((item) => (
+          <span
             className="pointer-events-none font-hind font-light text-xs text-zinc-50 hover:underline"
-            href={`/${locale}${item.href}`}
+            // href={`/${locale}${item.href}`}
             key={item.id}
           >
             {item.title}
-          </Link>
+          </span>
         ))}
       </div>
     </div>
@@ -90,7 +90,7 @@ const FooterMenuProducts = ({ locale }: { locale: Locale }) => {
       <h3 className="font-base font-hind text-base text-zinc-50">Products</h3>
 
       <div className="flex flex-col items-start justify-start gap-3 md:items-end">
-        {products?.map((item) => (
+        {products.map((item) => (
           <Link
             className="font-hind font-light text-xs text-zinc-50 hover:underline"
             href={`/${locale}${item.href}`}

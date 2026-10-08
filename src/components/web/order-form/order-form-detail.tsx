@@ -95,7 +95,7 @@ const OrderFormDetailItem = ({
   product: Product;
   unitPrice: number;
 }) => (
-  <div className="grid grid-cols-[56px_1fr_1fr] items-center gap-2 py-2">
+  <div className="grid grid-cols-[56px_1fr_80px] items-center gap-2 py-2">
     <div>
       {variant?.media ? (
         <Image

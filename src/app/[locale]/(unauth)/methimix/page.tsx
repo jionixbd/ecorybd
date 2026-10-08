@@ -42,8 +42,8 @@ export const Hero = () => (
     <Container className="flex flex-col">
       <H1 className="flex w-full flex-col text-center text-web-foreground">
         <span>
-          মাত্র <span className="text-web-accent">৭ দিন নিয়মিত</span> ব্যবহার করুন
-          <br />— স্বস্তি অনুভব না করলে
+          মাত্র <span className="text-web-accent">৭ দিন নিয়মিত</span> ব্যবহার
+          <br /> করুন — স্বস্তি অনুভব না করলে
         </span>
         <span>
           <em className="text-web-accent">১০০%</em> টাকা ফেরত গ্যারান্টি!
@@ -92,7 +92,7 @@ export const ProductFeatures = () => (
         ))}
       </div>
 
-      <CTAButton className="xl:hidden" label="👉 এখনই অর্ডার করুন" />
+      <CTAButton className="mx-auto xl:hidden" label="👉 এখনই অর্ডার করুন" />
     </Container>
   </Section>
 );

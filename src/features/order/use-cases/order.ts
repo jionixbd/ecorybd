@@ -206,6 +206,13 @@ export async function insertOrderUseCase({
       }
 
       return {
+        customer: {
+          billing_address: address.address,
+          billing_name: address.name,
+          billing_phone: address.phone,
+          order_count: additional ? 2 : 1,
+          total_spent: total,
+        },
         items: [
           {
             productName: variant.productName,
@@ -259,6 +266,7 @@ export async function insertOrderUseCase({
     // TODO: also update all tag for additional product
 
     return {
+      customer: created.customer,
       items: created.items,
       orderNumber: created.orderNumber,
       shippingTotal: created.shippingTotal,

@@ -30,7 +30,7 @@ export const searchParamsCache = createSearchParamsCache({
 
 export default function ThankYouPage(props: PageProps<"/[locale]/thank-you">) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f8f7f1]! px-4 text-[#173c2d]">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-web-background px-4 text-web-foreground">
       <Suspense fallback={<ThankYouSkeleton />}>
         <ThankYouPageWrapper {...props} />
       </Suspense>
@@ -69,8 +69,8 @@ async function ThankYouPageWrapper(props: PageProps<"/[locale]/thank-you">) {
   return (
     <div className="flex w-full max-w-md flex-col gap-8 text-center">
       <div className="flex justify-center">
-        <div className="rounded-full bg-[#173c2d]/10 p-2">
-          <CheckCircle2 className="h-8 w-8 text-[#173c2d]" />
+        <div className="rounded-full bg-web-foreground/10 p-2">
+          <CheckCircle2 className="h-8 w-8 text-web-foreground" />
         </div>
       </div>
 
@@ -78,19 +78,19 @@ async function ThankYouPageWrapper(props: PageProps<"/[locale]/thank-you">) {
         <h1 className="font-bold font-hind text-3xl tracking-tight">
           আপনার অর্ডারের জন্য ধন্যবাদ!
         </h1>
-        <p className="font-hind text-[#173c2d]/70 text-sm">
+        <p className="font-hind text-sm text-web-foreground/70">
           আমরা আপনার অর্ডারটি পেয়েছি এবং তা সরবরাহের জন্য প্রস্তুত করছি। আপনার ইনবক্সে একটি
           নিশ্চিতকরণ ইমেল পাঠানো হয়েছে।
         </p>
       </div>
 
-      <Card className="bg-[#fff]">
+      <Card className="bg-[#ffffff]">
         <CardHeader>
-          <CardTitle className="text-start text-[#173c2d]">
+          <CardTitle className="text-start text-web-card-foreground">
             Order Number
           </CardTitle>
 
-          <CardAction className="text-end text-[#173c2d]">
+          <CardAction className="text-end text-web-card-foreground">
             #{data.orderNumber}
           </CardAction>
         </CardHeader>
@@ -99,19 +99,20 @@ async function ThankYouPageWrapper(props: PageProps<"/[locale]/thank-you">) {
           {data.items.map((item) => (
             <Item className="px-0" key={item.productName} size={"xs"}>
               <ItemContent>
-                <ItemTitle className="font-hind text-[#173c2d]">
+                <ItemTitle className="font-hind text-web-card-foreground">
                   {item.productName}
                 </ItemTitle>
                 <ItemDescription>{item.variantName}</ItemDescription>
               </ItemContent>
               <ItemContent>
-                <ItemTitle className="font-hind text-[#173c2d]">
-                  {formatBDT(item.unitPrice)}
+                <ItemTitle className="font-hind text-web-card-foreground">
+                  {formatBDT(item.unitPrice)}{" "}
+                  <span className="font-mono">১ x</span>
                 </ItemTitle>
               </ItemContent>
 
               <ItemActions>
-                <ItemTitle className="font-hind text-[#173c2d]">
+                <ItemTitle className="font-hind text-web-card-foreground">
                   {formatBDT(item.subtotal)}
                 </ItemTitle>
               </ItemActions>
@@ -122,11 +123,13 @@ async function ThankYouPageWrapper(props: PageProps<"/[locale]/thank-you">) {
           <div>
             <Item className="px-0" size={"xs"}>
               <ItemContent>
-                <ItemTitle className="text-[#173c2d]">Shipping</ItemTitle>
+                <ItemTitle className="text-web-card-foreground">
+                  Shipping
+                </ItemTitle>
               </ItemContent>
 
               <ItemActions>
-                <ItemTitle className="font-hind text-[#173c2d]">
+                <ItemTitle className="font-hind text-web-card-foreground">
                   {formatBDT(data.shippingTotal)}
                 </ItemTitle>
               </ItemActions>
@@ -134,11 +137,13 @@ async function ThankYouPageWrapper(props: PageProps<"/[locale]/thank-you">) {
 
             <Item className="px-0" size={"xs"}>
               <ItemContent>
-                <ItemTitle className="text-[#173c2d]">Total</ItemTitle>
+                <ItemTitle className="text-web-card-foreground">
+                  Total
+                </ItemTitle>
               </ItemContent>
 
               <ItemActions>
-                <ItemTitle className="font-hind text-[#173c2d] text-base">
+                <ItemTitle className="font-hind text-base text-web-card-foreground">
                   {formatBDT(data.total)}
                 </ItemTitle>
               </ItemActions>
@@ -151,7 +156,7 @@ async function ThankYouPageWrapper(props: PageProps<"/[locale]/thank-you">) {
             asChild
             className="ml-auto w-full max-w-max bg-[#173c2d] text-[#f8f7f1] hover:bg-[#173c2d]/90"
           >
-            <Link href="/">
+            <Link href="#">
               Continue Shopping <ArrowRight />
             </Link>
           </Button>
@@ -171,7 +176,9 @@ const Heading = ({
   <div className="w-full max-w-md space-y-4 text-center">
     <div className="flex flex-col gap-2">
       <h1 className="font-bold font-hind text-3xl tracking-tight">{title}</h1>
-      <p className="font-hind text-[#173c2d]/70 text-sm">{description}</p>
+      <p className="font-hind text-sm text-web-card-foreground/70">
+        {description}
+      </p>
     </div>
     <Button
       asChild

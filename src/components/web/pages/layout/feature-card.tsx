@@ -1,4 +1,4 @@
-import { Lead, Text } from "@/components/web/pages/layout/typography";
+import { Lead } from "@/components/web/pages/layout/typography";
 import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
 
@@ -13,7 +13,6 @@ export interface FeaturesCardProps {
 
 export const FeatureCard = ({
   icon: Icon,
-  title,
   iconBg,
   iconColor,
   description,
@@ -38,10 +37,14 @@ export const FeatureCard = ({
       />
     </div>
     <div>
-      <Lead className="text-web-card-foreground">{title}</Lead>
-      <Text className="7b8d84] text-sm text-web-card-foreground/70">
+      {/* <Lead className="text-web-card-foreground">{title}</Lead> */}
+      {/* <Text className="7b8d84] text-sm text-web-card-foreground/70">
         {description}
-      </Text>
+      </Text> */}
+
+      <Lead className="text-web-card-foreground/80 leading-6">
+        {description}
+      </Lead>
     </div>
   </div>
 );

@@ -1,6 +1,13 @@
 import { sendGTMEvent } from "@next/third-parties/google";
 
 interface OrderPurchaseInput {
+  customer: {
+    billing_name: string;
+    billing_address: string;
+    billing_phone: string;
+    order_count: number;
+    total_spent: number;
+  };
   items: {
     productName: string;
     quantity: number;
@@ -20,11 +27,13 @@ export function toTrackOrderPurchase({
   orderNumber,
   shippingTotal,
   subtotal,
+  customer,
 }: OrderPurchaseInput) {
   sendGTMEvent({ ecommerce: null });
   sendGTMEvent({
     ecommerce: {
       currency: "BDT",
+      customer,
       items: items.map((item) => ({
         item_id: item.sku,
         item_name: item.productName,
@@ -43,11 +52,13 @@ export function toTrackOrderPurchase({
 export function toTrackPaymentInfo({
   items,
   subtotal,
+  customer,
 }: Omit<OrderPurchaseInput, "orderNumber" | "shippingTotal">) {
   sendGTMEvent({ ecommerce: null });
   sendGTMEvent({
     ecommerce: {
       currency: "BDT",
+      customer,
       items: items.map((item) => ({
         item_id: item.sku,
         item_name: item.productName,
