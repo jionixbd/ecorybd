@@ -1,5 +1,6 @@
 "use client";
 
+import { TableRefresh } from "@/features/data-table/components/common/data-table-refresh";
 import { DataTableViewOptions } from "@/features/data-table/components/common/data-table-view-options";
 import type { DataTableFeatures } from "@/features/data-table/lib/table-features";
 import type { RowData, Table } from "@tanstack/react-table";
@@ -28,6 +29,7 @@ export function DataTableAdvancedToolbar<TData extends RowData>({
     >
       <div className="flex flex-1 flex-wrap items-center gap-2">{children}</div>
       <div className="flex items-center gap-2">
+        <TableRefresh />
         <DataTableViewOptions align="end" table={table} />
       </div>
     </div>

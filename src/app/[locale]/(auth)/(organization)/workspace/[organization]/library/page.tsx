@@ -21,9 +21,11 @@ export default async function LibraryPage(
 async function LibraryPageWrapper(
   props: PageProps<"/[locale]/workspace/[organization]/library">
 ) {
-  const searchParams = await props.searchParams;
+  const [searchParams, context] = await Promise.all([
+    props.searchParams,
+    getActiveContext(),
+  ]);
   const search = mediaSearchParam.parse(searchParams);
-  const context = await getActiveContext();
 
   if (!context.organization) {
     return null;

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { IconPlaceholder } from "@/components/ui/icon-placeholder";
 import { DataTableAdvancedFilterToggle } from "@/features/data-table/components/advanced/data-table-advanced-filter-toggle";
 import { DataTableFilter } from "@/features/data-table/components/base/filter/data-table-filter";
+import { TableRefresh } from "@/features/data-table/components/common/data-table-refresh";
 import { DataTableViewOptions } from "@/features/data-table/components/common/data-table-view-options";
 import type { DataTableFeatures } from "@/features/data-table/lib/table-features";
 import type { RowData, Table } from "@tanstack/react-table";
@@ -68,6 +69,7 @@ export function DataTableToolbar<TData extends RowData>({
         )}
       </div>
       <div className="flex items-center gap-2">
+        <TableRefresh />
         <DataTableViewOptions align="end" table={table} />
         {children}
       </div>
