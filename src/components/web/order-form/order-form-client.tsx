@@ -170,9 +170,12 @@ export function OrderFormClient({
           setShippingError("Could not load delivery methods.");
           return;
         }
-        setShippingOptions(result.data);
-        if (result.data.length === 1) {
-          form.setValue("shippingMethodId", result.data[0].shippingMethodId);
+        setShippingOptions(result.data.result);
+        if (result.data.result.length === 1) {
+          form.setValue(
+            "shippingMethodId",
+            result.data.result[0].shippingMethodId
+          );
         }
       })
       .catch(() => {

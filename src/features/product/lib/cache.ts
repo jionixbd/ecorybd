@@ -45,6 +45,9 @@ export const productCache = {
     }) =>
       `organization:${organizationId}:product:${productSlug}:variants:${productVariantSlug}`,
 
+    variantShipping: ({ productVariantId }: { productVariantId: string }) =>
+      `storefront:product-variant:${productVariantId}:available-shipping`,
+
     variants: ({
       productSlug,
       organizationId,
