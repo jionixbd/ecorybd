@@ -10,6 +10,7 @@ const withNextIntlConfig = withNextIntl("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.0.10", "delicate-stallion-prime.ngrok-free.app"],
   cacheComponents: true,
+  partialPrefetching: true,
   images: {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [

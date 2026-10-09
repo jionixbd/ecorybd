@@ -18,6 +18,6 @@ export default defineConfig({
   dialect: "postgresql",
   out: "./src/drizzle/migrations",
   schema: "./src/drizzle/schema/index.ts",
-  strict: true,
+  // strict: true,
   verbose: true,
 } satisfies Config);
