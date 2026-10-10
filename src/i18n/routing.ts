@@ -10,17 +10,23 @@ export const routing = defineRouting({
   locales: ["en", "fr"],
   pathnames: {
     "/": "/",
+    "/kostocare": "/kostocare",
+    "/methimix": "/methimix",
     "/onboarding": "/onboarding",
     "/organization/create": "/organization/create",
     "/sign-in": "/sign-in",
     "/sign-up": "/sign-up",
+    "/thankuan": "/thankuan",
     "/workspace/[organization]": "/workspace/[organization]",
     "/workspace/[organization]/library": "/workspace/[organization]/library",
+    "/workspace/[organization]/orders": "/workspace/[organization]/orders",
+    "/workspace/[organization]/orders/[order]":
+      "/workspace/[organization]/orders/[order]",
     "/workspace/[organization]/products": "/workspace/[organization]/products",
     "/workspace/[organization]/products/[product]":
       "/workspace/[organization]/products/[product]",
-    "/workspace/[organization]/products/new":
-      "/workspace/[organization]/products/new",
+    "/workspace/[organization]/products/create":
+      "/workspace/[organization]/products/create",
   },
 });
 
