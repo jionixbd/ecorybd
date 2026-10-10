@@ -2,8 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { orders } from "@/drizzle/schema";
+import { DataTablePriceCell } from "@/features/data-table/components/cells/data-table-price-cell";
+import { DataTableColumnHeader } from "@/features/data-table/components/common/data-table-column-header";
 import { buildDataColumn } from "@/features/data-table/lib/build-data-column";
 import type { DataTableFeatures } from "@/features/data-table/lib/table-features";
+import { OrderTableStatusCell } from "@/features/order/components/table/cell/order-table-cell-status";
 import type {
   OrdersTableRowAction,
   OrderWithRelations,
@@ -22,6 +25,11 @@ interface OrdersTableColumnsProps {
 export function ordersTableColumns(
   _: OrdersTableColumnsProps
 ): ColumnDef<DataTableFeatures, OrderWithRelations>[] {
+  const statusOptions = orders.status.enumValues.map((status) => ({
+    label: status.charAt(0).toUpperCase() + status.slice(1),
+    value: status,
+  }));
+
   return [
     buildDataColumn({
       id: "select",
@@ -51,34 +59,51 @@ export function ordersTableColumns(
       label: "Phone",
       type: "phone",
     }),
-    // buildDataColumn<OrderWithRelations, unknown>({
-    //   accessorFn: (row) => row.item.productName ?? "N/A",
-    //   id: "productName",
-    //   label: "Product",
-    //   type: "text",
-    // }),
-    // buildDataColumn<OrderWithRelations, unknown>({
-    //   accessorFn: (row) => row.item.variantName ?? "N/A",
-    //   id: "variantName",
-    //   label: "Variant",
-    //   type: "text",
-    // }),
-    buildDataColumn({
+    {
+      accessorKey: "subtotal",
+      cell: ({ getValue }) => (
+        <DataTablePriceCell currency="BDT" locale="bn-BD" value={getValue()} />
+      ),
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label="Subtotal" />
+      ),
+    },
+    {
+      accessorKey: "shippingTotal",
+      cell: ({ getValue }) => (
+        <DataTablePriceCell currency="BDT" locale="bn-BD" value={getValue()} />
+      ),
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label="Shipping" />
+      ),
+    },
+    {
       accessorKey: "total",
-      label: "Order Total",
-      type: "price",
-    }),
-    buildDataColumn({
+      cell: ({ getValue }) => (
+        <DataTablePriceCell currency="BDT" locale="bn-BD" value={getValue()} />
+      ),
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label="Order Total" />
+      ),
+    },
+    {
       accessorKey: "status",
-      enableFiltering: true,
-      icon: CircleDashed,
-      label: "Status",
-      options: orders.status.enumValues.map((status) => ({
-        label: status.charAt(0).toUpperCase() + status.slice(1),
-        value: status,
-      })),
-      type: "enum",
-    }),
+      cell: ({ getValue }) => (
+        <OrderTableStatusCell options={statusOptions} value={getValue()} />
+      ),
+      enableColumnFilter: true,
+      enableSorting: true,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label="Status" />
+      ),
+      meta: {
+        icon: CircleDashed,
+        label: "Status",
+        options: statusOptions,
+        placeholder: "Search status...",
+        variant: "multiSelect",
+      },
+    },
     {
       cell({ row }) {
         return (
