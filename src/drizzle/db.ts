@@ -1,7 +1,6 @@
 import { attachDatabasePool } from "@vercel/functions";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-
 import { relations } from "./relations";
 
 type AppDatabase = NodePgDatabase<typeof relations>;
@@ -29,16 +28,29 @@ function getConnectionString(): string {
 }
 
 function createPool(): Pool {
+  // const pool = new Pool({
+  //   connectionString: getConnectionString(),
+  //   connectionTimeoutMillis: 10_000,
+  //   idleTimeoutMillis: 5000,
+  //   keepAlive: true,
+  //   max: 5,
+  // });
+
   const pool = new Pool({
     connectionString: getConnectionString(),
     connectionTimeoutMillis: 10_000,
     idleTimeoutMillis: 5000,
     keepAlive: true,
+    keepAliveInitialDelayMillis: 10_000,
     max: 5,
+    query_timeout: 25_000,
+    statement_timeout: 20_000,
   });
 
-  pool.on("error", (error) => {
-    console.warn("[database] Idle PostgreSQL client error:", error.message);
+  pool.on("connect", (client) => {
+    client.on("error", (error) => {
+      console.warn("[database] client error:", error.message);
+    });
   });
 
   if (process.env.VERCEL) {
