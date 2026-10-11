@@ -15,6 +15,9 @@ import {
   insertBillingAddress,
   insertOrder,
   insertOrderItem,
+  orderCreationStatistics,
+  orderMonetaryStatistics,
+  orderStatusCountStatistics,
   reserveVariantStock,
   setOrderStatus,
 } from "@/features/order/data-access/order";
@@ -33,7 +36,7 @@ import {
   NotFoundError,
   ValidationError,
 } from "@/lib/error";
-import { cacheLife, cacheTag, updateTag } from "next/cache";
+import { cacheLife, cacheTag, revalidateTag, updateTag } from "next/cache";
 import { randomInt } from "node:crypto";
 
 const ORDER_QUANTITY = 1;
@@ -262,6 +265,7 @@ export async function insertOrderUseCase({
     );
     updateTag(productCache.tags.list({ organizationId }));
     updateTag(orderCache.tags.list({ organizationId }));
+    revalidateTag(orderCache.tags.statistics({ organizationId }), "max");
 
     // TODO: also update all tag for additional product
 
@@ -377,6 +381,7 @@ export async function updateOrderStatusUseCase({
 
     updateTag(orderCache.tags.list({ organizationId }));
     updateTag(orderCache.tags.detailId({ orderId, organizationId }));
+    revalidateTag(orderCache.tags.statistics({ organizationId }), "max");
 
     return res;
   } catch (error) {
@@ -412,6 +417,7 @@ export async function deleteOrderUseCase({
 
     updateTag(orderCache.tags.list({ organizationId }));
     updateTag(orderCache.tags.detailId({ orderId, organizationId }));
+    revalidateTag(orderCache.tags.statistics({ organizationId }), "max");
 
     return res;
   } catch (error) {
@@ -446,5 +452,47 @@ export async function getCustomerOrderSummaryUseCase({
     }
 
     throw appError;
+  }
+}
+
+export async function orderStatisticsUseCase({
+  organizationId,
+}: {
+  organizationId: string;
+}) {
+  "use cache";
+
+  cacheLife(orderCache.profile.list.life);
+  cacheTag(orderCache.tags.statistics({ organizationId }));
+
+  try {
+    const rows = await db.transaction(async (trx) => {
+      const status = await orderStatusCountStatistics({
+        client: trx,
+        organizationId,
+      });
+      const created = await orderCreationStatistics({
+        client: trx,
+        organizationId,
+      });
+      const monetary = await orderMonetaryStatistics({
+        client: trx,
+        organizationId,
+      });
+
+      return { created, monetary, status };
+    });
+
+    return {
+      amountByStatus: rows.monetary.filter((m) =>
+        ["pending", "confirmed", "cancelled"].includes(m.status)
+      ),
+      countByStatus: rows.status.filter((s) =>
+        ["pending", "confirmed", "cancelled"].includes(s.status)
+      ),
+      createdByDay: rows.created,
+    };
+  } catch (error) {
+    throw normalizeError(error);
   }
 }

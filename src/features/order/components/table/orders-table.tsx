@@ -75,7 +75,7 @@ export function OrdersTable({ promises, queryKeys }: ProductsTableProps) {
   );
 
   return (
-    <div className="grid h-full w-full bg-muted/30">
+    <div className="grid h-full w-full rounded-2xl bg-muted/30">
       <DataTable
         actionBar={<OrdersTableActionBar table={table} />}
         className="h-[calc(100vh-136px)] w-full p-4"

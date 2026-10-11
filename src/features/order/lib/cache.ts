@@ -17,5 +17,7 @@ export const orderCache = {
 
     list: ({ organizationId }: { organizationId: string }) =>
       `organization:${organizationId}:order:list`,
+    statistics: ({ organizationId }: { organizationId: string }) =>
+      `organization:${organizationId}:order:statistics`,
   },
 };

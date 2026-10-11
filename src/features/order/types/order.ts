@@ -107,3 +107,32 @@ export interface OrderDetailsWithRelations {
   total: number;
   updatedAt: Date;
 }
+
+export interface OrderStatistics {
+  amountByStatus: {
+    status:
+      | "pending"
+      | "confirmed"
+      | "fulfilled"
+      | "cancelled"
+      | "shipped"
+      | "delivered"
+      | "refunded";
+    sum: number;
+  }[];
+  countByStatus: {
+    status:
+      | "pending"
+      | "confirmed"
+      | "fulfilled"
+      | "cancelled"
+      | "shipped"
+      | "delivered"
+      | "refunded";
+    count: number;
+  }[];
+  createdByDay: {
+    count: number;
+    created: string;
+  }[];
+}

@@ -415,3 +415,75 @@ export async function findCustomerOrderSummary({
 
   return { ...order, items };
 }
+
+export async function orderStatusCountStatistics({
+  client,
+  organizationId,
+}: {
+  client: DbClient;
+  organizationId: string;
+}) {
+  const result = await client
+    .select({
+      count: sql<number>`COUNT(orders.status)`,
+      status: orders.status,
+    })
+    .from(orders)
+    .where(
+      and(
+        eq(orders.organizationId, organizationId),
+        sql`${orders.createdAt} >= NOW() - INTERVAL '1 month'`
+      )
+    )
+    .groupBy(orders.status);
+
+  return result;
+}
+
+export async function orderCreationStatistics({
+  client,
+  organizationId,
+}: {
+  client: DbClient;
+  organizationId: string;
+}) {
+  const result = await client
+    .select({
+      count: sql<number>`COUNT(*)`,
+      created: sql<string>`DATE(${orders.createdAt})`,
+    })
+    .from(orders)
+    .where(
+      and(
+        eq(orders.organizationId, organizationId),
+        sql`${orders.createdAt} >= NOW() - INTERVAL '1 month'`
+      )
+    )
+    .groupBy(sql`DATE(${orders.createdAt})`);
+
+  return result;
+}
+
+export async function orderMonetaryStatistics({
+  client,
+  organizationId,
+}: {
+  client: DbClient;
+  organizationId: string;
+}) {
+  const result = await client
+    .select({
+      status: orders.status,
+      sum: sql<number>`CAST(SUM(${orders.total}) as INT)`,
+    })
+    .from(orders)
+    .where(
+      and(
+        eq(orders.organizationId, organizationId),
+        sql`${orders.createdAt} >= NOW() - INTERVAL '1 month'`
+      )
+    )
+    .groupBy(orders.status);
+
+  return result;
+}
