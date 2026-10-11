@@ -6,7 +6,9 @@ import { buildPaginationMeta } from "@/drizzle/utils/pagination";
 import {
   countOrders,
   deleteOrder,
+  deleteOrdersBulk,
   existsOrderOrganizationId,
+  existsOrdersOrganizationId,
   findCustomerOrderSummary,
   findOrder,
   findOrderableVariant,
@@ -20,6 +22,7 @@ import {
   orderStatusCountStatistics,
   reserveVariantStock,
   setOrderStatus,
+  setOrderStatusBulk,
 } from "@/features/order/data-access/order";
 import {
   toOrderDetailsWithRelations,
@@ -389,6 +392,48 @@ export async function updateOrderStatusUseCase({
   }
 }
 
+export async function updateOrderStatusBulkUseCase({
+  orderIds,
+  organizationId,
+  input,
+}: {
+  orderIds: string[];
+  organizationId: string;
+  input: {
+    status: OrderStatus;
+  };
+}) {
+  try {
+    const orders = await existsOrdersOrganizationId({
+      client: db,
+      orderIds,
+      organizationId,
+    });
+
+    const updatableIds = orders.map((o) => o.orderId);
+
+    const res = await db.transaction(
+      async (trx) =>
+        await setOrderStatusBulk({
+          client: trx,
+          orderIds: updatableIds,
+          organizationId,
+          values: input,
+        })
+    );
+
+    updateTag(orderCache.tags.list({ organizationId }));
+    for (const orderId of updatableIds) {
+      updateTag(orderCache.tags.detailId({ orderId, organizationId }));
+    }
+    revalidateTag(orderCache.tags.statistics({ organizationId }), "max");
+
+    return res;
+  } catch (error) {
+    throw normalizeError(error);
+  }
+}
+
 export async function deleteOrderUseCase({
   orderId,
   organizationId,
@@ -417,6 +462,43 @@ export async function deleteOrderUseCase({
 
     updateTag(orderCache.tags.list({ organizationId }));
     updateTag(orderCache.tags.detailId({ orderId, organizationId }));
+    revalidateTag(orderCache.tags.statistics({ organizationId }), "max");
+
+    return res;
+  } catch (error) {
+    throw normalizeError(error);
+  }
+}
+
+export async function deleteOrdersBulkUseCase({
+  orderIds,
+  organizationId,
+}: {
+  orderIds: string[];
+  organizationId: string;
+}) {
+  try {
+    const orders = await existsOrdersOrganizationId({
+      client: db,
+      orderIds,
+      organizationId,
+    });
+
+    const deletableIds = orders.map((o) => o.orderId);
+
+    const res = await db.transaction(
+      async (trx) =>
+        await deleteOrdersBulk({
+          client: trx,
+          orderIds: deletableIds,
+          organizationId,
+        })
+    );
+
+    updateTag(orderCache.tags.list({ organizationId }));
+    for (const orderId of deletableIds) {
+      updateTag(orderCache.tags.detailId({ orderId, organizationId }));
+    }
     revalidateTag(orderCache.tags.statistics({ organizationId }), "max");
 
     return res;

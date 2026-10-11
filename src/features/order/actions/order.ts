@@ -2,8 +2,10 @@
 
 import { orders } from "@/drizzle/schema/order";
 import {
+  deleteOrdersBulkUseCase,
   deleteOrderUseCase,
   insertOrderUseCase,
+  updateOrderStatusBulkUseCase,
   updateOrderStatusUseCase,
 } from "@/features/order/use-cases/order";
 import { orderFormSchema } from "@/features/order/validation/order";
@@ -45,6 +47,26 @@ export const updateOrderStatusAction = organizationAction
         organizationId: ctx.organization.organizationId,
       })
   );
+export const updateOrderStatusBulkAction = organizationAction
+  .metadata({
+    actionName: "order:update-status:bulk",
+  })
+  .inputSchema(
+    z.object({
+      input: z.object({
+        status: z.enum(orders.status.enumValues),
+      }),
+      orderIds: z.uuid().array(),
+    })
+  )
+  .action(
+    async ({ parsedInput, ctx }) =>
+      await updateOrderStatusBulkUseCase({
+        input: parsedInput.input,
+        orderIds: parsedInput.orderIds,
+        organizationId: ctx.organization.organizationId,
+      })
+  );
 
 export const deleteOrderAction = organizationAction
   .metadata({
@@ -59,6 +81,23 @@ export const deleteOrderAction = organizationAction
     async ({ parsedInput, ctx }) =>
       await deleteOrderUseCase({
         orderId: parsedInput.orderId,
+        organizationId: ctx.organization.organizationId,
+      })
+  );
+
+export const deleteOrdersBulkAction = organizationAction
+  .metadata({
+    actionName: "order:delete:bulk",
+  })
+  .inputSchema(
+    z.object({
+      orderIds: z.uuid().array(),
+    })
+  )
+  .action(
+    async ({ parsedInput, ctx }) =>
+      await deleteOrdersBulkUseCase({
+        orderIds: parsedInput.orderIds,
         organizationId: ctx.organization.organizationId,
       })
   );

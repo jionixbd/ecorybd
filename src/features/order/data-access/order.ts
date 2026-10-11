@@ -19,7 +19,7 @@ import { buildPagination } from "@/drizzle/utils/pagination";
 import { buildOrderBy } from "@/drizzle/utils/sort";
 import { filterColumns } from "@/features/data-table/lib/filter-columns";
 import type { OrderSearchParam } from "@/features/order/parsers/order";
-import { and, asc, count, eq, gt, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gt, inArray, sql } from "drizzle-orm";
 
 function buildOrdersWhere({
   search,
@@ -56,6 +56,28 @@ export async function existsOrderOrganizationId({
     .where(
       and(
         eq(orders.orderId, orderId),
+        eq(orders.organizationId, organizationId)
+      )
+    );
+
+  return result;
+}
+
+export async function existsOrdersOrganizationId({
+  client,
+  organizationId,
+  orderIds,
+}: {
+  client: DbClient;
+  organizationId: string;
+  orderIds: string[];
+}) {
+  const result = await client
+    .select({ orderId: orders.orderId })
+    .from(orders)
+    .where(
+      and(
+        inArray(orders.orderId, orderIds),
         eq(orders.organizationId, organizationId)
       )
     );
@@ -350,6 +372,33 @@ export async function setOrderStatus({
   return result;
 }
 
+export async function setOrderStatusBulk({
+  client,
+  orderIds,
+  organizationId,
+  values,
+}: {
+  client: DbClient;
+  organizationId: string;
+  orderIds: string[];
+  values: {
+    status: OrderStatus;
+  };
+}) {
+  const result = await client
+    .update(orders)
+    .set(values)
+    .where(
+      and(
+        inArray(orders.orderId, orderIds),
+        eq(orders.organizationId, organizationId)
+      )
+    )
+    .returning();
+
+  return result;
+}
+
 export async function deleteOrder({
   client,
   orderId,
@@ -364,6 +413,28 @@ export async function deleteOrder({
     .where(
       and(
         eq(orders.orderId, orderId),
+        eq(orders.organizationId, organizationId)
+      )
+    )
+    .returning();
+
+  return result;
+}
+
+export async function deleteOrdersBulk({
+  client,
+  orderIds,
+  organizationId,
+}: {
+  client: DbClient;
+  organizationId: string;
+  orderIds: string[];
+}) {
+  const result = await client
+    .delete(orders)
+    .where(
+      and(
+        inArray(orders.orderId, orderIds),
         eq(orders.organizationId, organizationId)
       )
     )
@@ -459,7 +530,8 @@ export async function orderCreationStatistics({
         sql`${orders.createdAt} >= NOW() - INTERVAL '1 month'`
       )
     )
-    .groupBy(sql`DATE(${orders.createdAt})`);
+    .groupBy(sql`DATE(${orders.createdAt})`)
+    .orderBy(desc(sql`DATE(${orders.createdAt})`));
 
   return result;
 }
