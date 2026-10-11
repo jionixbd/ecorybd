@@ -107,11 +107,14 @@ export async function attachProductMedia({
     isFeatured: boolean;
   };
 }) {
-  const [result] = await client.insert(productMedia).values({
-    ...values,
-    mediaId,
-    productId,
-  });
+  const [result] = await client
+    .insert(productMedia)
+    .values({
+      ...values,
+      mediaId,
+      productId,
+    })
+    .returning();
 
   return result;
 }

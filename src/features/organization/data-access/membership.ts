@@ -95,7 +95,8 @@ export async function deleteMembershipClerk({
 }) {
   const [result] = await client
     .delete(memberships)
-    .where(eq(memberships.clerkMembershipId, clerkMembershipId));
+    .where(eq(memberships.clerkMembershipId, clerkMembershipId))
+    .returning();
 
   return result;
 }
