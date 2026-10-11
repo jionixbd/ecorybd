@@ -1,38 +1,66 @@
-import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { attachDatabasePool } from "@vercel/functions";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 
 import { relations } from "./relations";
 
-declare global {
-  var database: PostgresJsDatabase<typeof relations> | undefined;
+type AppDatabase = NodePgDatabase<typeof relations>;
+
+type DatabaseGlobals = typeof globalThis & {
+  __ecorybdPgPool?: Pool;
+  __ecorybdDrizzle?: AppDatabase;
+};
+
+const globalForDatabase = globalThis as DatabaseGlobals;
+
+function getConnectionString(): string {
+  if (process.env.VERCEL && !process.env.DATABASE_URL_POOLER) {
+    throw new Error("DATABASE_URL_POOLER must be set on Vercel.");
+  }
+
+  const connectionString =
+    process.env.DATABASE_URL_POOLER ?? process.env.DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error("DATABASE_URL or DATABASE_URL_POOLER must be set.");
+  }
+
+  return connectionString;
 }
 
-let db: PostgresJsDatabase<typeof relations>;
-let pg: ReturnType<typeof postgres>;
+function createPool(): Pool {
+  const pool = new Pool({
+    connectionString: getConnectionString(),
+    connectionTimeoutMillis: 10_000,
+    idleTimeoutMillis: 5000,
+    keepAlive: true,
+    max: 5,
+  });
 
-if (process.env.NODE_ENV === "production") {
-  pg = postgres(process.env.DATABASE_URL as string);
-  db = drizzle({
-    client: pg,
-    jit: true,
+  pool.on("error", (error) => {
+    console.warn("[database] Idle PostgreSQL client error:", error.message);
+  });
+
+  if (process.env.VERCEL) {
+    attachDatabasePool(pool);
+  }
+
+  return pool;
+}
+
+export const pool = globalForDatabase.__ecorybdPgPool ?? createPool();
+globalForDatabase.__ecorybdPgPool = pool;
+
+export const db =
+  globalForDatabase.__ecorybdDrizzle ??
+  drizzle({
+    client: pool,
     logger: false,
     relations,
   });
-} else {
-  if (!global.database) {
-    pg = postgres(process.env.DATABASE_URL as string);
-    global.database = drizzle({
-      client: pg,
-      jit: true,
-      logger: false,
-      relations,
-    });
-  }
-  db = global.database;
-}
+
+globalForDatabase.__ecorybdDrizzle = db;
 
 export type Database = typeof db;
 export type Transaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
 export type DbClient = Database | Transaction;
-
-export { db, pg };

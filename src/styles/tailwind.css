@@ -215,9 +215,9 @@
   textarea:-webkit-autofill:hover,
   textarea:-webkit-autofill:focus {
     font-family: var(--font-hind);
-    -webkit-text-fill-color: var(--web-foreground) !important;
+    -webkit-text-fill-color: var(--foreground) !important;
     border-radius: var(--radius-2xl);
-    -webkit-box-shadow: 0 0 px 1000px var(--web-surface) inset !important;
+    -webkit-box-shadow: 0px 0px 0px 1000px rgba(31, 61, 42, 0.6) inset !important;
     transition: background-color 5000s ease-in-out 0s;
   }
 }
