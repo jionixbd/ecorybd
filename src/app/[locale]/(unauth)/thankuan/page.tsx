@@ -3,6 +3,7 @@ import { doctors, licenses } from "@/components/web/data/shared";
 import { features, reviews, videos } from "@/components/web/data/thankuan";
 import { Container } from "@/components/web/pages/layout/container";
 import { CTAButton } from "@/components/web/pages/layout/cta-button";
+import { Dock } from "@/components/web/pages/layout/dock";
 import { FeatureCard } from "@/components/web/pages/layout/feature-card";
 import { ImageCarousel } from "@/components/web/pages/layout/image-carousel";
 import { ImageGallery } from "@/components/web/pages/layout/image-gallery";
@@ -34,6 +35,7 @@ export default async function HomePage(_: PageProps<"/[locale]/thankuan">) {
       <AsyncBoundary>
         <OrderForm />
       </AsyncBoundary>
+      <Dock />
     </div>
   );
 }
@@ -77,23 +79,25 @@ export const Hero = () => (
 
 export const ProductFeatures = () => (
   <Section className="bg-web-secondary" id="product-features">
-    <Container className="grid grid-cols-1 items-center justify-center xl:grid-cols-[1fr_720px]">
-      <div className="flex flex-col items-center justify-center gap-4 xl:items-start">
-        <H2 className="text-balance text-center text-web-foreground xl:text-start">
-          কেন আপনি <span className="text-web-accent">থানকুয়ান</span>
-          <br /> পাউডারটি খাবেন?
-        </H2>
+    <Container className="grid grid-cols-1 items-center justify-center">
+      <div className="mx-auto flex w-full max-w-4xl flex-col justify-center overflow-hidden rounded-2xl">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <H2 className="w-full text-balance bg-web-inverse p-4 text-center text-web-inverse-foreground">
+            কেন আপনি <span className="text-web-accent">থানকুয়ান</span>
+            <br /> পাউডারটি খাবেন?
+          </H2>
+        </div>
 
-        <CTAButton className="hidden xl:flex" label="👉 এখনই অর্ডার করুন" />
+        <div className="flex flex-col gap-4 rounded-b-2xl border border-web-primary p-2 md:p-4">
+          <div className="mx-auto grid grid-cols-1 justify-center gap-2">
+            {features.map((feature, idx) => (
+              <FeatureCard {...feature} className="bg-stone-50" key={idx} />
+            ))}
+          </div>
+
+          <CTAButton className="mx-auto" label="👉 এখনই অর্ডার করুন" />
+        </div>
       </div>
-
-      <div className="mx-auto grid max-w-3xl grid-cols-1 justify-center gap-2 sm:grid-cols-2 md:grid-cols-3">
-        {features.map((feature, idx) => (
-          <FeatureCard {...feature} key={idx} />
-        ))}
-      </div>
-
-      <CTAButton className="mx-auto xl:hidden" label="👉 এখনই অর্ডার করুন" />
     </Container>
   </Section>
 );

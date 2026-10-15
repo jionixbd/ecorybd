@@ -3,14 +3,16 @@ import { features, reviews } from "@/components/web/data/methimix";
 import { doctors, licenses } from "@/components/web/data/shared";
 import { Container } from "@/components/web/pages/layout/container";
 import { CTAButton } from "@/components/web/pages/layout/cta-button";
+import { Dock } from "@/components/web/pages/layout/dock";
 import { FeatureCard } from "@/components/web/pages/layout/feature-card";
 import { ImageCarousel } from "@/components/web/pages/layout/image-carousel";
 import { ImageGallery } from "@/components/web/pages/layout/image-gallery";
 import { Section } from "@/components/web/pages/layout/section";
-import { H1, H2, H3 } from "@/components/web/pages/layout/typography";
+import { H1, H2, H3, Lead } from "@/components/web/pages/layout/typography";
 import { OrderForm } from "@/components/web/pages/methimix/order-form";
 import { generateMethimixMetadata } from "@/lib/metadata/pages/methimix";
 import { YouTubeEmbed } from "@next/third-parties/google";
+import { TriangleAlert } from "lucide-react";
 import { getLocale } from "next-intl/server";
 import { Suspense } from "react";
 
@@ -24,7 +26,6 @@ export default async function HomePage(_: PageProps<"/[locale]">) {
   return (
     <div className="grid">
       <Hero />
-      <CTA />
       <ProductFeatures />
       <DoctorsConsultation />
       <CustomerReview />
@@ -33,21 +34,19 @@ export default async function HomePage(_: PageProps<"/[locale]">) {
       <AsyncBoundary>
         <OrderForm />
       </AsyncBoundary>
+      <Dock />
     </div>
   );
 }
 
 export const Hero = () => (
   <Section className="bg-web-background" id="hero" labelledBy="hero">
-    <Container className="flex flex-col">
-      <H1 className="flex w-full flex-col text-center text-web-foreground">
-        <span>
-          মাত্র <span className="text-web-accent">৭ দিন নিয়মিত</span> ব্যবহার
-          <br /> করুন — স্বস্তি অনুভব না করলে
-        </span>
-        <span>
-          <em className="text-web-accent">১০০%</em> টাকা ফেরত গ্যারান্টি!
-        </span>
+    <Container className="flex flex-col items-center justify-center">
+      <H1 className="w-full max-w-4xl text-pretty text-center text-web-foreground">
+        মাত্র <span className="text-web-accent">৭ দিন নিয়মিত</span> ব্যবহার করুন —
+        স্বস্তি অনুভব না করলে
+        <br />
+        <em className="text-web-accent">১০০%</em> টাকা ফেরত গ্যারান্টি!
       </H1>
 
       <div className="w-full">
@@ -57,17 +56,17 @@ export const Hero = () => (
           videoid="nb4apIM9nHo"
         />
       </div>
-    </Container>
-  </Section>
-);
 
-export const CTA = () => (
-  <Section className="bg-web-secondary" id="cta">
-    <Container className="flex flex-col items-center">
-      <H2 className="text-balance text-center text-web-secondary-foreground">
-        <span className="text-web-accent">আপনি জানেন কি ?</span> বর্তমানে ক্যান্সার এর
-        তালিকায় ১৪ তম স্থানে আছে গ্যাস্ট্রিক থেকে হওয়া ক্যান্সার রোগী
-      </H2>
+      <div className="grid max-w-180 grid-cols-1 items-center justify-items-center gap-4 rounded-2xl bg-web-destructive p-4 md:grid-cols-[48px_1fr]">
+        <div className="flex size-8 items-center justify-center rounded-2xl bg-web-muted md:size-12">
+          <TriangleAlert className="size-5 text-web-destructive md:size-8" />
+        </div>
+
+        <Lead className="text-center sm:text-lg md:text-left md:text-xl">
+          আপনি জানেন কি ? বর্তমানে ক্যান্সার এর তালিকায় ১৪ তম স্থানে আছে গ্যাস্ট্রিক থেকে হওয়া
+          ক্যান্সার রোগী
+        </Lead>
+      </div>
 
       <CTAButton label="👉 এখনই অর্ডার করুন" />
     </Container>
@@ -75,24 +74,26 @@ export const CTA = () => (
 );
 
 export const ProductFeatures = () => (
-  <Section className="bg-web-background" id="product-features">
-    <Container className="grid grid-cols-1 items-center justify-center xl:grid-cols-[1fr_720px]">
-      <div className="flex flex-col items-center justify-center gap-4 xl:items-start">
-        <H2 className="text-balance text-center text-web-foreground xl:text-start">
-          কেন আপনি <span className="text-web-accent">মেথি মিক্স</span>
-          <br /> পাউডারটি কিনবেন?
-        </H2>
+  <Section className="bg-web-secondary" id="product-features">
+    <Container className="grid grid-cols-1 items-center justify-center">
+      <div className="mx-auto flex w-full max-w-4xl flex-col justify-center overflow-hidden rounded-2xl">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <H2 className="w-full text-balance bg-web-inverse p-4 text-center text-web-inverse-foreground">
+            কেন আপনি <span className="text-web-accent">মেথি মিক্স</span>
+            <br /> পাউডারটি কিনবেন?
+          </H2>
+        </div>
 
-        <CTAButton className="hidden xl:flex" label="👉 এখনই অর্ডার করুন" />
+        <div className="flex flex-col gap-4 rounded-b-2xl border border-web-primary p-2 md:p-4">
+          <div className="mx-auto grid grid-cols-1 justify-center gap-2">
+            {features.map((feature, idx) => (
+              <FeatureCard {...feature} className="bg-stone-50" key={idx} />
+            ))}
+          </div>
+
+          <CTAButton className="mx-auto" label="👉 এখনই অর্ডার করুন" />
+        </div>
       </div>
-
-      <div className="mx-auto grid max-w-3xl grid-cols-1 justify-center gap-2 sm:grid-cols-2 md:grid-cols-3">
-        {features.map((feature, idx) => (
-          <FeatureCard {...feature} className="bg-stone-50" key={idx} />
-        ))}
-      </div>
-
-      <CTAButton className="mx-auto xl:hidden" label="👉 এখনই অর্ডার করুন" />
     </Container>
   </Section>
 );

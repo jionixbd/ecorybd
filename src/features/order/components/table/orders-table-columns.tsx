@@ -12,6 +12,7 @@ import type {
   OrderWithRelations,
 } from "@/features/order/types/order";
 import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { ArrowUpRight, CircleDashed } from "lucide-react";
 import Link from "next/link";
 import type { Dispatch, SetStateAction } from "react";
@@ -36,11 +37,23 @@ export function ordersTableColumns(
       label: "selection",
       type: "selection",
     }),
-    buildDataColumn({
+    {
       accessorKey: "createdAt",
-      label: "Date",
-      type: "date",
-    }),
+      cell: ({ getValue }) => (
+        <pre className="whitespace-nowrap font-mono">
+          {format(
+            new Date(getValue() as string | number | Date),
+            "MMM d h:mm a"
+          )}
+        </pre>
+      ),
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label="Date" />
+      ),
+      meta: {
+        label: "Created At",
+      },
+    },
     buildDataColumn({
       accessorKey: "orderNumber",
       enableFiltering: true,
@@ -66,15 +79,6 @@ export function ordersTableColumns(
       ),
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label="Subtotal" />
-      ),
-    },
-    {
-      accessorKey: "shippingTotal",
-      cell: ({ getValue }) => (
-        <DataTablePriceCell currency="BDT" locale="bn-BD" value={getValue()} />
-      ),
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} label="Shipping" />
       ),
     },
     {

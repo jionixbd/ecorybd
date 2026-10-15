@@ -4,7 +4,7 @@ export function H1({ className, ...props }: React.ComponentProps<"h1">) {
   return (
     <h1
       className={cn(
-        "font-bold font-hind text-3xl tracking-tight sm:text-4xl md:text-5xl lg:text-6xl",
+        "font-bold font-hind text-[28px] tracking-tight sm:text-4xl md:text-5xl lg:text-6xl",
         className
       )}
       {...props}

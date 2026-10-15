@@ -20,7 +20,7 @@ export const FeatureCard = ({
 }: FeaturesCardProps) => (
   <div
     className={cn(
-      "flex aspect-auto max-w-auto flex-row gap-4 rounded-2xl border border-web-border bg-web-card p-4 lg:aspect-square lg:flex-col",
+      "flex aspect-auto max-w-auto flex-row items-center gap-2 rounded-2xl border border-web-border bg-web-card p-2.5 md:gap-4 md:p-4",
       className
     )}
   >
@@ -36,15 +36,9 @@ export const FeatureCard = ({
         }}
       />
     </div>
-    <div>
-      {/* <Lead className="text-web-card-foreground">{title}</Lead> */}
-      {/* <Text className="7b8d84] text-sm text-web-card-foreground/70">
-        {description}
-      </Text> */}
 
-      <Lead className="text-web-card-foreground/80 leading-6">
-        {description}
-      </Lead>
-    </div>
+    <Lead className="text-web-card-foreground/80 leading-6 sm:text-lg md:text-xl">
+      {description}
+    </Lead>
   </div>
 );

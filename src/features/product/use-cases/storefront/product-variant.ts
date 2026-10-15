@@ -31,28 +31,24 @@ export async function getProductVariantsUseCase({
   );
 
   try {
-    const rawRows = await db.transaction(async (trx) => {
-      const existing = await findProductSlug({
-        client: trx,
-        slug: productSlug,
-      });
+    const existing = await findProductSlug({
+      client: db,
+      slug: productSlug,
+    });
 
-      if (!existing) {
-        throw new NotFoundError("Product not found");
-      }
+    if (!existing) {
+      throw new NotFoundError("Product not found");
+    }
 
-      const variants = await findPublicProductVariants({
-        client: trx,
-        organizationId,
-        productId: existing.productId,
-      });
-
-      return { product: existing, variants };
+    const rawRows = await findPublicProductVariants({
+      client: db,
+      organizationId,
+      productId: existing.productId,
     });
 
     return {
-      product: rawRows.product,
-      variants: toPublicProductVariants({ rawRows: rawRows.variants }),
+      product: existing,
+      variants: toPublicProductVariants({ rawRows }),
     };
   } catch (error) {
     const appError = normalizeError(error);
@@ -86,42 +82,38 @@ export async function getProductVariantUseCase({
   );
 
   try {
-    const rawRow = await db.transaction(async (trx) => {
-      const existing = await findProductSlug({
-        client: trx,
-        slug: productSlug,
-      });
-
-      if (!existing) {
-        throw new NotFoundError("Product not found");
-      }
-
-      const existingVariant = await existsProductVariantSlugProductId({
-        client: trx,
-        productId: existing.productId,
-        productVariantSlug,
-      });
-
-      if (!existingVariant) {
-        throw new NotFoundError("Variant not found");
-      }
-
-      const variant = await findPublicProductVariant({
-        client: trx,
-        organizationId,
-        productVariantId: existingVariant.productVariantId,
-      });
-
-      if (!variant) {
-        throw new NotFoundError("Variant not found");
-      }
-
-      return { product: existing, variant };
+    const existing = await findProductSlug({
+      client: db,
+      slug: productSlug,
     });
 
+    if (!existing) {
+      throw new NotFoundError("Product not found");
+    }
+
+    const existingVariant = await existsProductVariantSlugProductId({
+      client: db,
+      productId: existing.productId,
+      productVariantSlug,
+    });
+
+    if (!existingVariant) {
+      throw new NotFoundError("Variant not found");
+    }
+
+    const variant = await findPublicProductVariant({
+      client: db,
+      organizationId,
+      productVariantId: existingVariant.productVariantId,
+    });
+
+    if (!variant) {
+      throw new NotFoundError("Variant not found");
+    }
+
     return {
-      product: rawRow.product,
-      variant: toPublicProductVariant({ rawRow: rawRow.variant }),
+      product: existing,
+      variant: toPublicProductVariant({ rawRow: variant }),
     };
   } catch (error) {
     const appError = normalizeError(error);
