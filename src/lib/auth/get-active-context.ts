@@ -33,56 +33,56 @@ export const getActiveContext = cache(async (): Promise<ActiveContext> => {
       };
     }
 
-    const context = await db.transaction(async (trx) => {
-      const user = await findUserClerkId({ clerkUserId, client: trx });
+    const user = await findUserClerkId({ clerkUserId, client: db });
 
-      if (!user) {
-        return {
-          membership: null,
-          organization: null,
-          user: null,
-        };
-      }
+    if (!user) {
+      return {
+        membership: null,
+        organization: null,
+        user: null,
+      };
+    }
 
-      if (!clerkOrganizationId) {
-        return {
-          membership: null,
-          organization: null,
-          user,
-        };
-      }
+    if (!clerkOrganizationId) {
+      return {
+        membership: null,
+        organization: null,
+        user,
+      };
+    }
 
-      const organization = await findOrganizationClerkId({
-        clerkOrganizationId,
-        client: trx,
-      });
-
-      if (!organization) {
-        return {
-          membership: null,
-          organization: null,
-          user,
-        };
-      }
-
-      const membership = await findOrganizationMembershipId({
-        client: trx,
-        organizationId: organization.organizationId,
-        userId: user.userId,
-      });
-
-      if (!membership) {
-        return {
-          membership: null,
-          organization,
-          user,
-        };
-      }
-
-      return { membership, organization, user };
+    const organization = await findOrganizationClerkId({
+      clerkOrganizationId,
+      client: db,
     });
 
-    return context;
+    if (!organization) {
+      return {
+        membership: null,
+        organization: null,
+        user,
+      };
+    }
+
+    const membership = await findOrganizationMembershipId({
+      client: db,
+      organizationId: organization.organizationId,
+      userId: user.userId,
+    });
+
+    if (!membership) {
+      return {
+        membership: null,
+        organization,
+        user,
+      };
+    }
+
+    return {
+      membership,
+      organization,
+      user,
+    };
   } catch (error) {
     throw normalizeError(error);
   }

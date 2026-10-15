@@ -28,23 +28,20 @@ function getConnectionString(): string {
 }
 
 function createPool(): Pool {
-  // const pool = new Pool({
-  //   connectionString: getConnectionString(),
-  //   connectionTimeoutMillis: 10_000,
-  //   idleTimeoutMillis: 5000,
-  //   keepAlive: true,
-  //   max: 5,
-  // });
-
   const pool = new Pool({
+    allowExitOnIdle: true,
     connectionString: getConnectionString(),
-    connectionTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 5000,
     idleTimeoutMillis: 5000,
     keepAlive: true,
     keepAliveInitialDelayMillis: 10_000,
-    max: 5,
+    max: process.env.VERCEL ? 10 : 5,
     query_timeout: 25_000,
     statement_timeout: 20_000,
+  });
+
+  pool.on("error", (error) => {
+    console.warn("Idle PostgreSQL client error", { message: error.message });
   });
 
   pool.on("connect", (client) => {
@@ -72,6 +69,14 @@ export const db =
   });
 
 globalForDatabase.__ecorybdDrizzle = db;
+
+export function getPoolStats() {
+  return {
+    idle: pool.idleCount,
+    total: pool.totalCount,
+    waiting: pool.waitingCount,
+  };
+}
 
 export type Database = typeof db;
 export type Transaction = Parameters<Parameters<Database["transaction"]>[0]>[0];

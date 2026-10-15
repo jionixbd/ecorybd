@@ -89,7 +89,20 @@ export function parseDrizzleError(error: unknown): string {
     case "40001":
       return "The operation could not be completed. Please try again.";
 
+    case "28000":
+    case "3D000":
+      return "Database authentication failed. Please try again.";
+
+    case "08001":
+    case "08003":
+    case "08006":
+    case "08007":
+      return "Unable to connect to the database. Please try again.";
+
     default:
+      if (code) {
+        console.warn(`[database] Unknown error code: ${code}`, error);
+      }
       return "Database operation failed.";
   }
 }

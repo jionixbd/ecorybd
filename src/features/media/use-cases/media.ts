@@ -33,23 +33,16 @@ export async function getMediaUseCase({
   );
 
   try {
-    const { rawRows, rowCount } = await db.transaction(async (trx) => {
-      const rows = await findMedia({
-        client: trx,
-        organizationId,
-        search,
-      });
+    const rawRows = await findMedia({
+      client: db,
+      organizationId,
+      search,
+    });
 
-      const count = await countMedia({
-        client: trx,
-        organizationId,
-        search,
-      });
-
-      return {
-        rawRows: rows,
-        rowCount: count,
-      };
+    const rowCount = await countMedia({
+      client: db,
+      organizationId,
+      search,
     });
 
     return {

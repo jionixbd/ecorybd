@@ -298,12 +298,9 @@ export async function getOrdersUseCase({
   cacheTag(orderCache.tags.list({ organizationId }));
 
   try {
-    const { rawRows, rowCount } = await db.transaction(async (trx) => {
-      const rows = await findOrders({ client: trx, organizationId, search });
-      const count = await countOrders({ client: trx, organizationId, search });
+    const rawRows = await findOrders({ client: db, organizationId, search });
 
-      return { rawRows: rows, rowCount: count };
-    });
+    const rowCount = await countOrders({ client: db, organizationId, search });
 
     return {
       meta: buildPaginationMeta({
@@ -363,30 +360,28 @@ export async function updateOrderStatusUseCase({
   };
 }) {
   try {
-    const res = await db.transaction(async (trx) => {
-      const order = await existsOrderOrganizationId({
-        client: trx,
-        orderId,
-        organizationId,
-      });
+    const order = await existsOrderOrganizationId({
+      client: db,
+      orderId,
+      organizationId,
+    });
 
-      if (!order) {
-        throw new NotFoundError("Order not found");
-      }
+    if (!order) {
+      throw new NotFoundError("Order not found");
+    }
 
-      return await setOrderStatus({
-        client: trx,
-        orderId,
-        organizationId,
-        values: input,
-      });
+    const result = await setOrderStatus({
+      client: db,
+      orderId,
+      organizationId,
+      values: input,
     });
 
     updateTag(orderCache.tags.list({ organizationId }));
     updateTag(orderCache.tags.detailId({ orderId, organizationId }));
     revalidateTag(orderCache.tags.statistics({ organizationId }), "max");
 
-    return res;
+    return result;
   } catch (error) {
     throw normalizeError(error);
   }
@@ -442,22 +437,18 @@ export async function deleteOrderUseCase({
   organizationId: string;
 }) {
   try {
-    const res = await db.transaction(async (trx) => {
-      const order = await existsOrderOrganizationId({
-        client: trx,
-        orderId,
-        organizationId,
-      });
-
-      if (!order) {
-        throw new NotFoundError("Order not found");
-      }
-
-      return await deleteOrder({
-        client: trx,
-        orderId,
-        organizationId,
-      });
+    const order = await existsOrderOrganizationId({
+      client: db,
+      orderId,
+      organizationId,
+    });
+    if (!order) {
+      throw new NotFoundError("Order not found");
+    }
+    const res = await deleteOrder({
+      client: db,
+      orderId,
+      organizationId,
     });
 
     updateTag(orderCache.tags.list({ organizationId }));
@@ -548,22 +539,22 @@ export async function orderStatisticsUseCase({
   cacheTag(orderCache.tags.statistics({ organizationId }));
 
   try {
-    const rows = await db.transaction(async (trx) => {
-      const status = await orderStatusCountStatistics({
-        client: trx,
-        organizationId,
-      });
-      const created = await orderCreationStatistics({
-        client: trx,
-        organizationId,
-      });
-      const monetary = await orderMonetaryStatistics({
-        client: trx,
-        organizationId,
-      });
-
-      return { created, monetary, status };
+    const status = await orderStatusCountStatistics({
+      client: db,
+      organizationId,
     });
+
+    const created = await orderCreationStatistics({
+      client: db,
+      organizationId,
+    });
+
+    const monetary = await orderMonetaryStatistics({
+      client: db,
+      organizationId,
+    });
+
+    const rows = { created, monetary, status };
 
     return {
       amountByStatus: rows.monetary.filter((m) =>
