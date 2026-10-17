@@ -288,7 +288,7 @@ export function OrderFormClient({
 
   return (
     <Card className="mx-auto max-w-5xl bg-[#ffffff] py-4 lg:py-16">
-      <CardContent className="px-4">
+      <CardContent className="px-2.5 md:px-4">
         <form
           className="mx-auto grid w-full max-w-xl gap-8 lg:max-w-4xl"
           id={ORDER_FROM}

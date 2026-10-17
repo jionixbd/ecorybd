@@ -30,7 +30,7 @@ export const OrderFormVariantCard = ({
       className="relative w-full rounded-2xl border border-web-border bg-web-card p-2 has-data-checked:border-web-border has-data-checked:bg-web-inverse-muted/40"
       htmlFor={inputId}
     >
-      <FieldContent className="grid grid-cols-[64px_1fr] items-center gap-4 md:grid-cols-[80px_1fr]">
+      <FieldContent className="grid grid-cols-[64px_1fr] items-center gap-2 md:grid-cols-[80px_1fr] md:gap-4">
         <div>
           {variant.media ? (
             <Image
@@ -48,12 +48,12 @@ export const OrderFormVariantCard = ({
         </div>
 
         <div>
-          <FieldTitle className="font-hind text-base text-web-card-foreground">
+          <FieldTitle className="w-full font-hind text-base text-web-card-foreground">
             {variant.name}
           </FieldTitle>
 
           {!!variant.badge && (
-            <Badge className="absolute top-1 right-1 bg-web-accent px-3! font-hind text-web-accent-foreground">
+            <Badge className="absolute top-1 right-1 bg-web-accent px-1! font-hind text-web-accent-foreground md:px-3!">
               {variant.badge}
             </Badge>
           )}
